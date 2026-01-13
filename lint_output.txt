@@ -1,0 +1,87 @@
+
+> safeguard-desktop@0.0.0 lint
+> eslint .
+
+
+C:\Users\dthompson\Documents\CODE\safeguard-desktop\src\data\atoms.ts
+  73:3  error  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+
+C:\Users\dthompson\Documents\CODE\safeguard-desktop\src\desktop-enhanced\Layout.tsx
+  59:26  error  Unsafe assignment of an `any` value       @typescript-eslint/no-unsafe-assignment
+  59:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dthompson\Documents\CODE\safeguard-desktop\src\desktop-enhanced\components\Breadcrumbs.tsx
+  32:19   error  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+  32:118  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  33:19   error  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+  33:26   error  Unsafe call of a(n) `any` typed value             @typescript-eslint/no-unsafe-call
+  33:33   error  Unsafe member access .children on an `any` value  @typescript-eslint/no-unsafe-member-access
+  33:51   error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  33:61   error  Unsafe member access .id on an `any` value        @typescript-eslint/no-unsafe-member-access
+  34:37   error  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+  34:49   error  Unsafe member access .name on an `any` value      @typescript-eslint/no-unsafe-member-access
+  34:55   error  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+  34:65   error  Unsafe member access .id on an `any` value        @typescript-eslint/no-unsafe-member-access
+  34:81   error  Unsafe member access .type on an `any` value      @typescript-eslint/no-unsafe-member-access
+  35:36   error  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+  35:47   error  Unsafe member access .name on an `any` value      @typescript-eslint/no-unsafe-member-access
+  35:53   error  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+  35:62   error  Unsafe member access .id on an `any` value        @typescript-eslint/no-unsafe-member-access
+  35:77   error  Unsafe member access .type on an `any` value      @typescript-eslint/no-unsafe-member-access
+
+C:\Users\dthompson\Documents\CODE\safeguard-desktop\src\desktop-enhanced\components\TreeView.tsx
+  113:8   warning  React Hook useEffect has a missing dependency: 'facilityNodes'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  128:31  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  129:50  error    Unsafe member access .id on an `any` value                                                                        @typescript-eslint/no-unsafe-member-access
+  130:41  error    Unsafe argument of type `any` assigned to a parameter of type `string`                                            @typescript-eslint/no-unsafe-argument
+  130:46  error    Unsafe member access .id on an `any` value                                                                        @typescript-eslint/no-unsafe-member-access
+  134:30  error    Unsafe member access .type on an `any` value                                                                      @typescript-eslint/no-unsafe-member-access
+  134:43  error    Unsafe member access .id on an `any` value                                                                        @typescript-eslint/no-unsafe-member-access
+  135:21  error    Unsafe assignment of an `any` value                                                                               @typescript-eslint/no-unsafe-assignment
+  135:26  error    Unsafe member access .id on an `any` value                                                                        @typescript-eslint/no-unsafe-member-access
+  136:24  error    Unsafe assignment of an `any` value                                                                               @typescript-eslint/no-unsafe-assignment
+  136:29  error    Unsafe member access .name on an `any` value                                                                      @typescript-eslint/no-unsafe-member-access
+  137:23  error    Unsafe assignment of an `any` value                                                                               @typescript-eslint/no-unsafe-assignment
+  137:28  error    Unsafe member access .type on an `any` value                                                                      @typescript-eslint/no-unsafe-member-access
+  138:25  error    Unsafe assignment of an `any` value                                                                               @typescript-eslint/no-unsafe-assignment
+  138:30  error    Unsafe member access .missed on an `any` value                                                                    @typescript-eslint/no-unsafe-member-access
+  139:28  error    Unsafe assignment of an `any` value                                                                               @typescript-eslint/no-unsafe-assignment
+  139:33  error    Unsafe member access .secondary on an `any` value                                                                 @typescript-eslint/no-unsafe-member-access
+  143:46  error    Unsafe argument of type `any` assigned to a parameter of type `string`                                            @typescript-eslint/no-unsafe-argument
+  143:51  error    Unsafe member access .id on an `any` value                                                                        @typescript-eslint/no-unsafe-member-access
+  144:44  error    Unsafe argument of type `any` assigned to a parameter of type `SelectionType`                                     @typescript-eslint/no-unsafe-argument
+  144:49  error    Unsafe member access .type on an `any` value                                                                      @typescript-eslint/no-unsafe-member-access
+  144:55  error    Unsafe argument of type `any` assigned to a parameter of type `string`                                            @typescript-eslint/no-unsafe-argument
+  144:60  error    Unsafe member access .id on an `any` value                                                                        @typescript-eslint/no-unsafe-member-access
+  146:18  error    Unsafe call of a(n) `any` typed value                                                                             @typescript-eslint/no-unsafe-call
+  146:23  error    Unsafe member access .children on an `any` value                                                                  @typescript-eslint/no-unsafe-member-access
+  146:45  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+
+C:\Users\dthompson\Documents\CODE\safeguard-desktop\src\desktop-enhanced\data\mockData.ts
+   40:9    error  Unsafe assignment of an `any` value                                                                                         @typescript-eslint/no-unsafe-assignment
+   40:32   error  Unexpected any. Specify a different type                                                                                    @typescript-eslint/no-explicit-any
+  109:141  error  Unsafe argument of type `any` assigned to a parameter of type `{ group?: string | undefined; unit?: string | undefined; }`  @typescript-eslint/no-unsafe-argument
+  113:22   error  Unexpected any. Specify a different type                                                                                    @typescript-eslint/no-explicit-any
+
+C:\Users\dthompson\Documents\CODE\safeguard-desktop\src\desktop-enhanced\hooks\useTreeData.ts
+  31:29  error  Unexpected any. Specify a different type                                @typescript-eslint/no-explicit-any
+  33:19  error  Unsafe assignment of an `any` value                                     @typescript-eslint/no-unsafe-assignment
+  33:29  error  Unsafe member access .group on an `any` value                           @typescript-eslint/no-unsafe-member-access
+  34:19  error  Unsafe assignment of an `any` value                                     @typescript-eslint/no-unsafe-assignment
+  34:29  error  Unsafe member access .unit on an `any` value                            @typescript-eslint/no-unsafe-member-access
+  35:27  error  Unsafe argument of type `any` assigned to a parameter of type `string`  @typescript-eslint/no-unsafe-argument
+  36:38  error  Unsafe argument of type `any` assigned to a parameter of type `string`  @typescript-eslint/no-unsafe-argument
+  36:62  error  Unsafe argument of type `any` assigned to a parameter of type `string`  @typescript-eslint/no-unsafe-argument
+  37:33  error  Unsafe argument of type `any` assigned to a parameter of type `string`  @typescript-eslint/no-unsafe-argument
+  37:41  error  Unsafe argument of type `any` assigned to a parameter of type `string`  @typescript-eslint/no-unsafe-argument
+
+C:\Users\dthompson\Documents\CODE\safeguard-desktop\src\desktop\components\DesktopToolbar.tsx
+  56:13  error  Unsafe assignment of an `any` value       @typescript-eslint/no-unsafe-assignment
+  56:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dthompson\Documents\CODE\safeguard-desktop\src\desktop\mockHistoricalData.ts
+  290:39  error  This assertion is unnecessary since it does not change the type of the expression  @typescript-eslint/no-unnecessary-type-assertion
+
+Γ£û 63 problems (62 errors, 1 warning)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+

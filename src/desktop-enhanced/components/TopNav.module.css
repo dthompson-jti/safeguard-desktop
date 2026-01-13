@@ -1,0 +1,23 @@
+.topNav {
+    width: 100%;
+    height: 40px;
+    background-color: var(--surface-bg-brand-section);
+    border-bottom: 1px solid var(--surface-border-secondary);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--spacing-2p5);
+    flex-shrink: 0;
+}
+
+.title {
+    color: var(--surface-fg-primary_on_brand);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.01em;
+}
+
+.placeholder {
+    color: var(--surface-fg-primary_on_brand);
+    font-weight: 500;
+}

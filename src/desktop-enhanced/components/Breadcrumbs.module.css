@@ -1,0 +1,70 @@
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: var(--spacing-3) var(--spacing-3);
+    height: 44px;
+    /* Explicit height to match panels */
+    box-sizing: border-box;
+    /* Ensure padding includes border/height */
+    background-color: var(--surface-bg-primary);
+    border-bottom: 1px solid var(--surface-border-secondary);
+}
+
+.parts {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.part {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.text {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--surface-fg-quaternary);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.15s;
+    white-space: nowrap;
+}
+
+.text:hover {
+    color: var(--surface-fg-primary);
+    text-decoration: underline;
+}
+
+.part:last-child .text {
+    color: var(--control-fg-secondary);
+    cursor: default;
+    pointer-events: none;
+    font-weight: var(--font-weight-bold);
+}
+
+.part:not(:last-child) .text:hover {
+    color: var(--surface-fg-primary);
+    cursor: pointer;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.activeAction {
+    background-color: var(--control-bg-selected) !important;
+    color: var(--control-fg-selected) !important;
+    border: 2px solid var(--control-border-selected) !important;
+}
+
+.activeAction:hover {
+    border-color: var(--control-border-selected) !important;
+}

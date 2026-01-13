@@ -1,0 +1,192 @@
+/* src/components/SegmentedControl.module.css */
+/* PRD-07: Segmented control with row, column (vertical), and grid layouts */
+/* 
+ * ARCHITECTURE: Each layout has its own container class that FULLY controls
+ * the appearance of items within it. Base .segmentedControlItem only contains
+ * shared styles (not layout-specific corners or margins).
+ */
+
+/* =========================================
+   Base Item Styles (shared across all layouts)
+   ========================================= */
+.segmentedControlItem {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-3) var(--spacing-2);
+    background: var(--surface-bg-primary);
+    border: 1px solid var(--surface-border-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--surface-fg-secondary);
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    min-height: var(--control-height-lg);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    /* Reset all corners - each layout sets its own */
+    border-radius: 0;
+    margin: 0;
+}
+
+/* Vertical item layout - icon above label */
+.itemColumn {
+    flex-direction: column;
+    gap: var(--spacing-1);
+}
+
+.segmentedControlItem .material-symbols-rounded {
+    font-size: 1.25rem;
+}
+
+/* Hover - only on devices that support it */
+@media (hover: hover) {
+    .segmentedControlItem:not([data-state="on"]):hover {
+        background-color: var(--control-bg-secondary-hover);
+        color: var(--control-fg-secondary_hover);
+        border-color: var(--control-border-secondary-hover);
+        z-index: 1;
+        position: relative;
+    }
+}
+
+/* Active state - universal feedback */
+.segmentedControlItem:not([data-state="on"]):active {
+    background-color: var(--control-bg-selected-hover);
+    color: var(--control-fg-selected);
+    border-color: var(--control-border-selected-hover);
+    z-index: 2;
+    position: relative;
+}
+
+/* Selected state */
+.segmentedControlItem[data-state="on"] {
+    background-color: var(--control-bg-selected);
+    color: var(--control-fg-selected);
+    border-color: var(--control-border-selected);
+    z-index: 2;
+    position: relative;
+}
+
+/* =========================================
+   ROW LAYOUT (Horizontal - original style)
+   Items in a single horizontal line
+   ========================================= */
+.segmentedControl {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+}
+
+.segmentedControl .segmentedControlItem {
+    margin-left: -1px;
+}
+
+.segmentedControl .segmentedControlItem:first-child {
+    margin-left: 0;
+    border-top-left-radius: var(--radius-sm);
+    border-bottom-left-radius: var(--radius-sm);
+}
+
+.segmentedControl .segmentedControlItem:last-child {
+    border-top-right-radius: var(--radius-sm);
+    border-bottom-right-radius: var(--radius-sm);
+}
+
+/* =========================================
+   COLUMN LAYOUT (Vertical Stack)
+   Items stack downward, left-aligned text
+   ========================================= */
+.columnContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+}
+
+.columnContainer .segmentedControlItem {
+    margin-top: -1px;
+    justify-content: flex-start;
+    padding-left: var(--spacing-4);
+}
+
+.columnContainer .segmentedControlItem:first-child {
+    margin-top: 0;
+    border-top-left-radius: var(--radius-sm);
+    border-top-right-radius: var(--radius-sm);
+}
+
+.columnContainer .segmentedControlItem:last-child {
+    border-bottom-left-radius: var(--radius-sm);
+    border-bottom-right-radius: var(--radius-sm);
+}
+
+/* =========================================
+   GRID LAYOUT (2-column grid)
+   Handles any number of items with proper corners
+   ========================================= */
+.gridContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+}
+
+.gridContainer .segmentedControlItem {
+    flex: none;
+}
+
+/* Border overlap for grid */
+/* Right column items (positions 2, 4, 6, ...) */
+.gridContainer .segmentedControlItem:nth-child(even) {
+    margin-left: -1px;
+}
+
+/* Row 2+ items (positions 3, 4, 5, ...) */
+.gridContainer .segmentedControlItem:nth-child(n+3) {
+    margin-top: -1px;
+}
+
+/* Top-left: always item 1 */
+.gridContainer .segmentedControlItem:nth-child(1) {
+    border-top-left-radius: var(--radius-sm);
+}
+
+/* Top-right: always item 2 */
+.gridContainer .segmentedControlItem:nth-child(2) {
+    border-top-right-radius: var(--radius-sm);
+}
+
+/* Bottom-left: second-to-last when in left column (odd position) */
+.gridContainer .segmentedControlItem:nth-last-child(2):nth-child(odd) {
+    border-bottom-left-radius: var(--radius-sm);
+}
+
+/* Bottom-left: last item when in left column (odd position, no dead cell) */
+.gridContainer .segmentedControlItem:last-child:nth-child(odd) {
+    border-bottom-left-radius: var(--radius-sm);
+}
+
+/* Bottom-right: last item when in right column (even position) */
+.gridContainer .segmentedControlItem:last-child:nth-child(even) {
+    border-bottom-right-radius: var(--radius-sm);
+}
+
+/* =========================================
+   DEAD CELL (for grid with odd item count)
+   ========================================= */
+.deadCell {
+    background-color: var(--surface-bg-tertiary);
+    border: 1px solid var(--surface-border-primary);
+    margin-left: -1px;
+    margin-top: -1px;
+    min-height: var(--control-height-lg);
+    pointer-events: none;
+    border-radius: 0;
+}
+
+/* Dead cell gets bottom-right corner */
+.gridContainer .deadCell:last-child {
+    border-bottom-right-radius: var(--radius-sm);
+}

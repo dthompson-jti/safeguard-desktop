@@ -1,0 +1,31 @@
+/* src/components/UserAvatar.module.css */
+
+.avatar {
+    width: var(--avatar-size-sm);
+    height: var(--avatar-size-sm);
+    border-radius: 50%;
+    background-color: var(--surface-bg-brand-solid);
+    /* Static blue - overridden by inline style when feature flag is on */
+    color: var(--surface-fg-primary_on_brand);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 0.875rem;
+    font-weight: 600;
+
+
+    cursor: pointer;
+    user-select: none;
+
+    transition: transform 0.15s ease;
+}
+
+.avatar:hover {
+    transform: scale(1.05);
+}
+
+.avatar:active {
+    transform: scale(0.98);
+}

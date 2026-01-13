@@ -1,0 +1,63 @@
+/* src/components/UserMenu.module.css */
+
+.menuContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    padding: var(--spacing-2);
+    min-width: var(--side-menu-min-width);
+}
+
+/* Centered Header with Secondary Background */
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-4);
+    background: var(--surface-bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.avatarLarge {
+    width: var(--avatar-size-md);
+    height: var(--avatar-size-md);
+    border-radius: 50%;
+    /* Background set via inline style to match header avatar color */
+    color: var(--surface-fg-on-solid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.displayName {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--surface-fg-primary);
+    text-align: center;
+}
+
+/* Section Wrapper */
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    padding: 0 var(--spacing-3);
+    --swatch-display: none;
+}
+
+.sectionLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--surface-fg-secondary);
+
+}
+
+/* Divider */
+.divider {
+    height: 1px;
+    background: var(--surface-border-secondary);
+    margin: 0;
+}

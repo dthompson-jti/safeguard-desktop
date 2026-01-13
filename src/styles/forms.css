@@ -1,0 +1,119 @@
+/* src/styles/forms.css */
+
+/* --- Base Text Inputs, Textareas --- */
+:is(input[type="text"], input[type="password"], input[type="email"], input[type="search"], input[type="url"], input[type="tel"]),
+textarea {
+  font-family: var(--font-family-sans);
+  width: 100%;
+  height: var(--control-height-md);
+  /* Standardized height */
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--surface-border-primary);
+  /* Standardized border */
+  border-radius: var(--radius-sm);
+  font-size: 0.9em;
+  background-color: var(--surface-bg-primary);
+  color: var(--surface-fg-primary);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+@media (hover: hover) {
+
+  :is(input[type="text"], input[type="password"], input[type="email"], input[type="search"], input[type="url"], input[type="tel"]):not(:disabled):hover,
+  textarea:not(:disabled):hover {
+    background-color: var(--surface-bg-primary);
+    border-color: var(--control-border-tertiary-hover);
+  }
+}
+
+:is(input[type="text"], input[type="password"], input[type="email"], input[type="search"], input[type="url"], input[type="tel"]):focus,
+textarea:focus {
+  border-color: var(--surface-border-theme);
+  box-shadow: 0 0 0 2px var(--control-focus-ring-standard);
+  /* Standardized outer focus ring */
+  background-color: var(--surface-bg-primary);
+}
+
+:is(input[type="text"], input[type="password"], input[type="email"], input[type="search"], input[type="url"], input[type="tel"]):disabled,
+textarea:disabled {
+  background-color: var(--control-bg-disabled_subtle);
+  color: var(--control-fg-disabled);
+  border-color: var(--control-border-disabled);
+  cursor: not-allowed;
+}
+
+textarea {
+  height: auto;
+  /* Allow textarea to have variable height */
+  min-height: 80px;
+  resize: vertical;
+}
+
+
+/* --- Custom Checkbox Component --- */
+input[type="checkbox"] {
+  appearance: none;
+  margin: 0;
+  width: var(--control-width-checkbox);
+  height: var(--control-width-checkbox);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  border: 1px solid var(--surface-border-primary);
+  background: var(--surface-bg-primary);
+  transition: all 0.1s ease-in-out;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 12px;
+  height: 9px;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  background-image: url("data:image/svg+xml,%3csvg width='12' height='9' viewBox='0 0 12 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M10.6666 1.5L4.24992 7.91667L1.33325 5' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+@media (hover: hover) {
+  input[type="checkbox"]:not(:checked):hover {
+    border: 1.5px solid var(--control-border-secondary-hover);
+    background: var(--control-bg-secondary-hover);
+  }
+
+  input[type="checkbox"]:checked:hover {
+    background: var(--control-bg-theme-pressed);
+  }
+}
+
+input[type="checkbox"]:checked {
+  border: 1.5px solid transparent;
+  background: var(--control-bg-theme);
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+/* --- Required Field Indicator --- */
+.required-indicator {
+  color: var(--surface-fg-alert-primary);
+  margin-left: var(--spacing-1);
+  font-weight: 600;
+}
+
+/* 
+  ARCHITECTURE: Data-attribute styling for invalid form fields.
+  The `TextInput` component adds `data-invalid="true"` when its `isInvalid`
+  prop is set, allowing for a clean, declarative way to style error states.
+*/
+:is(input[type="text"], input[type="password"])[data-invalid='true'] {
+  border-color: var(--surface-border-alert);
+}
+
+:is(input[type="text"], input[type="password"])[data-invalid='true']:focus {
+  border-color: var(--surface-border-alert);
+  box-shadow: 0 0 0 2px var(--control-focus-ring-error);
+}

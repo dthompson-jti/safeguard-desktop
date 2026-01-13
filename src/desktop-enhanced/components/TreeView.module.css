@@ -1,0 +1,172 @@
+.tree {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 24px;
+}
+
+.row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: 0 6px 6px 0;
+    /* Clear left for bar */
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-bottom: 2px;
+    color: var(--surface-fg-secondary);
+    min-height: 32px;
+}
+
+.row:hover {
+    background-color: var(--surface-bg-secondary_hover);
+    color: var(--surface-fg-primary);
+}
+
+.row.selected {
+    background-color: var(--control-bg-selected);
+    color: var(--control-fg-selected);
+}
+
+/* Selection Accent Bar */
+.row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 4px;
+    bottom: 4px;
+    width: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 0 2px 2px 0;
+    transition: background-color 0.15s ease;
+}
+
+.row.selected::before {
+    background-color: var(--control-fg-selected);
+}
+
+/* Children Indentation & Guide Line */
+.children {
+    padding-left: var(--tree-indent-step);
+    border-left: 1px solid var(--surface-border-tertiary);
+    /* margin-left: calc(18px + 1px); /* Icon width (24) / 2 + margin (4) + adjustment */
+    /* Centered under parent icon: 24px icon + 4px margin. Center is 12px + 4px = 16px?
+       Actually, icon is 24px wide. Center is 12px. Chevron also 24px.
+       Current margin-left 19px seems to work, but let's make it more robust.
+    */
+    margin-left: calc(12px + 4px - 1px);
+    /* Chevron center (12px) + margin (4px) - border (1px) */
+}
+
+.iconSpacer {
+    width: 12px;
+    /* Pulling back halfway as requested */
+    height: 24px;
+    margin-right: 4px;
+    flex-shrink: 0;
+}
+
+.rootIcon {
+    width: 24px;
+    display: flex;
+    justify-content: center;
+    margin-right: 4px;
+    color: var(--surface-fg-tertiary);
+}
+
+.rootIcon span {
+    font-size: 20px;
+}
+
+.chevron {
+    background: none;
+    border: none;
+    color: var(--surface-fg-tertiary);
+    font-size: 10px;
+    margin-right: 4px;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.chevron:hover {
+    color: var(--surface-fg-primary);
+    background-color: var(--surface-bg-secondary_hover);
+}
+
+.chevron span {
+    transition: transform 0.2s ease;
+}
+
+.row:focus-visible {
+    outline: 2px solid var(--control-border-focus);
+    outline-offset: -2px;
+}
+
+.label {
+    flex: 1;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Color inherited from row */
+}
+
+.selected .label {
+    font-weight: 500;
+}
+
+.badges {
+    display: flex;
+    gap: 2px;
+    margin-left: auto;
+    /* Push to right */
+    align-items: center;
+}
+
+.badges[data-view-mode="live"] .badgeSlot {
+    width: 32px;
+    /* Fixed width for columnar alignment in Live view */
+}
+
+.badges[data-view-mode="live"] .badgePlaceholder {
+    width: 32px;
+}
+
+.badgeSlot {
+    display: flex;
+    justify-content: flex-end;
+    /* Cluster badges to the right */
+}
+
+.badgePlaceholder {
+    height: 16px;
+    /* Slot collapses width-wise when not in live mode */
+}
+
+.badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 24px;
+    text-align: center;
+}
+
+.danger {
+    background-color: var(--surface-bg-error-primary);
+    color: var(--surface-fg-alert-primary);
+    border: 1px solid var(--surface-border-alert);
+}
+
+.warning {
+    background-color: var(--surface-bg-warning-primary);
+    color: var(--surface-fg-warning-primary);
+    border: 1px solid var(--surface-border-warning);
+}

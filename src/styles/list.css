@@ -1,0 +1,160 @@
+/* src/styles/list.css */
+
+/* 
+  The "Golden Row" List Pattern.
+  Designed for high-density, high-craft lists in sheets and menus.
+  
+  ARCHITECTURE:
+  - .list-item-root: Handles interaction, height, and the full-width separator.
+  - .list-item-leading: Fixed-width container for icons/avatars.
+  - .list-item-content: Fluid container for text and trailing elements.
+*/
+
+.list-group {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface-bg-primary);
+}
+
+.list-item-root {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: var(--control-min-touch);
+  /* CRITICAL: Touch target standard (44px+) */
+  padding: 0;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  outline: none;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+
+  /* 
+    CRITICAL: Full-width separator logic.
+    The border sits on the root element to span edge-to-edge.
+    Do not move this to .list-item-content unless reverting to inset dividers.
+  */
+  border-bottom: 1px solid var(--surface-border-secondary);
+}
+
+/* Active State */
+.list-item-root:active:not(:disabled) {
+  background-color: var(--surface-bg-primary_hover);
+}
+
+/* Disabled State */
+.list-item-root:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Remove border from the last item in a group to prevent double borders with container */
+.list-item-root:last-child {
+  border-bottom: none;
+}
+
+/* 
+  Leading Section (Icon, Checkbox, Avatar) 
+  Fixed width ensures vertical alignment of text across different rows 
+  regardless of icon shape.
+*/
+.list-item-leading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--list-leading-width);
+  /* 16px padding + 24px icon + 8px gap */
+  flex-shrink: 0;
+  color: var(--surface-fg-quaternary);
+}
+
+.list-item-leading .material-symbols-rounded {
+  font-size: var(--icon-size-md);
+}
+
+/* 
+  Content Body
+  Wraps Text + Trailing Elements.
+*/
+.list-item-content {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  /* Standard Padding */
+  padding-right: var(--spacing-4);
+  padding-top: var(--spacing-3);
+  padding-bottom: var(--spacing-3);
+
+  min-height: var(--control-min-touch);
+  gap: var(--spacing-3);
+  min-width: 0;
+}
+
+/* 
+  Layout Stability:
+  If there is no leading icon, the content block must provide the left padding 
+  so text doesn't hit the screen edge.
+  Controlled via data-has-leading="false" on the root.
+*/
+.list-item-root[data-has-leading="false"] .list-item-content {
+  padding-left: var(--spacing-4);
+}
+
+.list-item-text-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  /* CRITICAL: Enables text truncation in flex children */
+}
+
+/* Typography */
+.list-item-label {
+  font-family: var(--font-family-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--surface-fg-primary);
+  line-height: 1.4;
+}
+
+.list-item-sublabel {
+  font-family: var(--font-family-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--surface-fg-secondary);
+  line-height: 1.4;
+  margin-top: var(--spacing-0p5);
+
+  /* Truncation */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Trailing Section */
+.list-item-trailing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--surface-fg-tertiary);
+}
+
+.list-item-trailing .material-symbols-rounded {
+  font-size: var(--icon-size-md);
+}
+
+/* Selected State Overrides */
+.list-item-root[aria-selected="true"] .list-item-label {
+  color: var(--surface-fg-theme-primary);
+}
+
+.list-item-root[aria-selected="true"] .list-item-leading,
+.list-item-root[aria-selected="true"] .list-item-trailing {
+  color: var(--surface-fg-theme-primary);
+}

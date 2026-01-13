@@ -1,0 +1,41 @@
+/* src/styles/popover.css */
+
+.popover-content {
+  background-color: var(--surface-bg-primary);
+  color: var(--surface-fg-primary);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--surface-border-secondary);
+  box-shadow: var(--surface-shadow-xl);
+  z-index: 1100;
+  /* Above most UI, below modals */
+}
+
+/* Tooltip variant - black background, high contrast */
+.popover-content-tooltip {
+  background-color: var(--primitives-grey-900);
+  color: var(--surface-fg-white);
+  border-radius: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: 0.85em;
+  font-weight: 500;
+  line-height: 1.4;
+  box-shadow: var(--surface-shadow-md);
+  border: 1px solid var(--primitives-grey-800);
+  user-select: none;
+  z-index: 1100;
+}
+
+.popover-arrow {
+  fill: var(--surface-bg-primary);
+}
+
+/* REFACTOR: Use the standardized global keyframes from animations.css */
+.popover-content[data-state='open'] {
+  animation: scaleIn 150ms ease-out;
+}
+
+.popover-content[data-state='closed'] {
+  animation: scaleOut 150ms ease-in;
+}
+
+/* Dark mode styling is handled by semantic tokens - no overrides needed */

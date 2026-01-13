@@ -1,0 +1,59 @@
+/* src/styles/base.css */
+/* Contains foundational, global styles for the 'base' layer. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/*
+  This reset ensures the entire chain from <html> to our React #root
+  forms a perfect, non-scrolling, 100% height foundation for the app.
+  This is the definitive fix for mobile viewport height and scrollbar issues.
+*/
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  /* Prevent body-level scrolling */
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-sans);
+  background-color: var(--surface-bg-secondary);
+  color: var(--surface-fg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- NEW: Global Weight Reset --- */
+b,
+strong {
+  font-weight: var(--font-weight-semibold);
+}
+
+/* --- NEW: Global Link Styles --- */
+a {
+  color: var(--surface-fg-theme-primary);
+  color: var(--surface-fg-theme-primary);
+  font-weight: var(--font-weight-medium);
+  text-decoration: underline;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--surface-fg-theme-strong);
+}
+
+/* --- Global Heading Sizes --- */
+h3 {
+  font-size: var(--font-size-sm);
+  /* 14px */
+}

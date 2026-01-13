@@ -1,0 +1,43 @@
+.toggleContainer {
+    display: flex;
+    align-items: center;
+    background-color: var(--surface-bg-tertiary);
+    border-radius: var(--radius-md);
+    /* 8px */
+    padding: 2px;
+    margin: var(--spacing-4) var(--spacing-4) var(--spacing-2) var(--spacing-4);
+    /* Match search bar margins/layout */
+    height: 36px;
+    box-sizing: border-box;
+    border: 1px solid var(--surface-border-tertiary);
+    gap: 2px;
+}
+
+.toggleButton {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--surface-fg-tertiary);
+    background-color: transparent;
+    padding: var(--spacing-1p5) var(--spacing-4);
+    border-radius: var(--radius-sm);
+    /* 6px + 2px padding = 8px concentric */
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.toggleButton:hover:not(.active) {
+    color: var(--surface-fg-tertiary_hover);
+    background-color: var(--surface-bg-primary_hover);
+    /* Subtler hover */
+}
+
+.toggleButton.active {
+    background-color: var(--surface-bg-primary);
+    color: var(--surface-fg-primary);
+    box-shadow: var(--surface-shadow-sm);
+}
+
+/* Divider removed as per request */

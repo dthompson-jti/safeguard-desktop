@@ -1,0 +1,39 @@
+.container {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    background-color: transparent;
+    padding: 0;
+    margin: 4px 0;
+    margin-left: auto;
+    justify-content: flex-end;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    cursor: default;
+}
+
+.label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--surface-fg-secondary_on_brand);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--surface-fg-primary_on_brand);
+    min-width: 12px;
+}
+
+.divider {
+    width: 1px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    opacity: 0.5;
+}
