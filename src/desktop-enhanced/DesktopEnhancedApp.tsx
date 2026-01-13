@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import * as ToastPrimitive from '@radix-ui/react-toast';
 import { AnimatePresence } from 'framer-motion';
 import { Layout } from './Layout';
 import { NavigationPanel } from './components/NavigationPanel';
@@ -18,6 +19,10 @@ import { EnhancedLiveMonitorView as LiveMonitorView } from './components/Enhance
 import { EnhancedHistoricalReviewView as HistoricalReviewView } from './components/EnhancedHistoricalReviewView';
 import { DesktopToolbar } from '../desktop/components/DesktopToolbar';
 import { DetailPanel } from '../desktop/components/DetailPanel';
+import { SupervisorNoteModal } from '../desktop/components/SupervisorNoteModal';
+import { ToastContainer } from '../components/ToastContainer';
+import { ToastMessage } from '../components/Toast';
+import { toastsAtom } from '../data/toastAtoms';
 
 export default function DesktopEnhancedApp() {
     const view = useAtomValue(desktopEnhancedViewAtom);
@@ -27,15 +32,21 @@ export default function DesktopEnhancedApp() {
     const activeRecord = useAtomValue(activeDetailRecordAtom);
     const isPanelOpen = useAtomValue(isDetailPanelOpenAtom);
     const panelWidth = useAtomValue(panelWidthAtom);
+    const toasts = useAtomValue(toastsAtom);
 
     // Selection counts for panel empty states
-    const selectedLive = useAtomValue(selectedLiveRowsAtom);
-    const selectedHistory = useAtomValue(selectedHistoryRowsAtom);
+    const [selectedLive, setSelectedLive] = useAtom(selectedLiveRowsAtom);
+    const [selectedHistory, setSelectedHistory] = useAtom(selectedHistoryRowsAtom);
+    const setActiveRecord = useSetAtom(activeDetailRecordAtom);
     const totalSelected = selectedLive.size + selectedHistory.size;
 
     // Sync View Mode to Legacy Atom (so Toolbar works)
     useEffect(() => {
         setDesktopView(view);
+        // Clear active record and selections on view switch to prevent stale states
+        setActiveRecord(null);
+        setSelectedLive(new Set());
+        setSelectedHistory(new Set());
 
         // Apply default filters when switching to historical
         if (view === 'historical') {
@@ -57,7 +68,7 @@ export default function DesktopEnhancedApp() {
                 dateEnd: null,
             }));
         }
-    }, [view, setDesktopView, setFilter]);
+    }, [view, setDesktopView, setFilter, setActiveRecord, setSelectedLive, setSelectedHistory]);
 
     // Sync Selection to Desktop Filter
     useEffect(() => {
@@ -82,40 +93,52 @@ export default function DesktopEnhancedApp() {
 
     return (
         <Layout leftPanel={<NavigationPanel />}>
-            <div
-                data-platform="desktop"
-                data-view-mode={view}
-                className="desktop-enhanced-main-container"
-                data-panel-open={showPanel}
-                style={{
-                    height: '100%',
-                    display: 'grid',
-                    gridTemplateColumns: showPanel ? `1fr ${panelWidth}px` : '1fr',
-                    flex: 1,
-                    backgroundColor: 'var(--surface-bg-primary)',
-                    overflow: 'hidden',
-                    transition: 'grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                } as React.CSSProperties}
-            >
-                <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
-                    <Breadcrumbs />
-                    <div style={{ flexShrink: 0 }}>
-                        <DesktopToolbar />
-                    </div>
-
-                    <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                        {view === 'live' ? <LiveMonitorView /> : <HistoricalReviewView />}
-                    </div>
-                </div>
-
-                <AnimatePresence>
-                    {showPanel && (
-                        <div style={{ borderLeft: '1px solid var(--surface-border-secondary)', height: '100%', position: 'relative' }}>
-                            <DetailPanel record={activeRecord} selectedCount={totalSelected} />
+            <ToastPrimitive.Provider swipeDirection="right" swipeThreshold={80}>
+                <div
+                    data-platform="desktop"
+                    data-view-mode={view}
+                    className="desktop-enhanced-main-container"
+                    data-panel-open={showPanel}
+                    style={{
+                        height: '100%',
+                        display: 'grid',
+                        gridTemplateColumns: showPanel ? `1fr ${panelWidth}px` : '1fr',
+                        flex: 1,
+                        backgroundColor: 'var(--surface-bg-primary)',
+                        overflow: 'hidden',
+                        transition: 'grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    } as React.CSSProperties}
+                >
+                    <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+                        <Breadcrumbs />
+                        <div style={{ flexShrink: 0 }}>
+                            <DesktopToolbar isEnhanced={true} />
                         </div>
-                    )}
-                </AnimatePresence>
-            </div>
+
+                        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                            {view === 'live' ? <LiveMonitorView /> : <HistoricalReviewView />}
+                        </div>
+                    </div>
+
+                    <AnimatePresence>
+                        {showPanel && (
+                            <div style={{ borderLeft: '1px solid var(--surface-border-secondary)', height: '100%', position: 'relative' }}>
+                                <DetailPanel record={activeRecord} selectedCount={totalSelected} />
+                            </div>
+                        )}
+                    </AnimatePresence>
+
+                    <SupervisorNoteModal />
+
+                    {/* Toast System */}
+                    <AnimatePresence>
+                        {toasts.map((toast) => (
+                            <ToastMessage key={toast.id} {...toast} />
+                        ))}
+                    </AnimatePresence>
+                    <ToastContainer platform="desktop" />
+                </div>
+            </ToastPrimitive.Provider>
         </Layout>
     );
 }

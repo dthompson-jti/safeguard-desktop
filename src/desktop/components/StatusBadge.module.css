@@ -72,3 +72,14 @@
     color: var(--surface-fg-secondary);
     border-color: var(--surface-border-secondary);
 }
+
+/* Special Status */
+.badge[data-status='special'] {
+    background: var(--surface-bg-secondary);
+    color: var(--surface-fg-secondary);
+    border-color: var(--surface-border-secondary);
+}
+
+.badge[data-status='special'] .icon {
+    color: var(--surface-fg-primary);
+}

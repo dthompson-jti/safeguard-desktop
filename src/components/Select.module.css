@@ -60,6 +60,11 @@
   max-height: 256px;
 }
 
+.selectContent {
+  width: var(--radix-select-trigger-width);
+  min-width: var(--radix-select-trigger-width);
+}
+
 .selectItemIcon {
   color: var(--surface-fg-tertiary);
   font-size: 18px;

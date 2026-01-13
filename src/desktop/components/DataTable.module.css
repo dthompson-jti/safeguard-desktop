@@ -235,7 +235,9 @@
 .residentCell {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--spacing-1p5);
+    width: 100%;
 }
 
 .riskIcon {

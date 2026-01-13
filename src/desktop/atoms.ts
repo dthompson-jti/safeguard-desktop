@@ -35,6 +35,9 @@ export const selectedLiveRowsAtom = atom<Set<string>>(new Set<string>());
 /** Historical checks data (mock) */
 export const historicalChecksAtom = atom<HistoricalCheck[]>(enhancedMockData.historicalData);
 
+/** Counter changed to trigger re-fetches in views */
+export const historicalRefreshAtom = atom(0);
+
 /** Derived: filtered historical checks */
 export const filteredHistoricalChecksAtom = atom((get) => {
     const checks = get(historicalChecksAtom);
@@ -156,7 +159,10 @@ export const nextRefreshSecondsAtom = atom((get) => {
 // ============================================================================
 
 /** Desktop-specific counts for header tabs - now pulling from unified enhanced mock data */
-export const desktopTabCountsAtom = atom(() => {
+export const desktopTabCountsAtom = atom((get) => {
+    // We get historicalRefreshAtom to ensure this re-runs when data is updated via modal
+    get(historicalRefreshAtom);
+
     // Live counts - Strictly active overdue
     const overdue = enhancedMockData.liveData.filter(c => c.status === 'overdue').length;
     const due = enhancedMockData.liveData.filter(c => c.status === 'due').length;

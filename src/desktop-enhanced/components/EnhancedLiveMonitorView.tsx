@@ -1,18 +1,44 @@
 // src/desktop-enhanced/components/EnhancedLiveMonitorView.tsx
 import { useMemo, useCallback, useState, useEffect } from 'react';
-import { useAtomValue } from 'jotai';
-import { ColumnDef } from '@tanstack/react-table';
-import { desktopFilterAtom } from '../../desktop/atoms';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { ColumnDef, RowSelectionState } from '@tanstack/react-table';
+import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom, isDetailPanelOpenAtom, PanelData } from '../../desktop/atoms';
 import { LiveCheckRow } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
 import { RowContextMenu } from '../../desktop/components/RowContextMenu';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
 import { loadEnhancedLivePage } from '../data/mockData';
-import { COLUMN_WIDTHS } from '../../desktop/components/tableConstants';
 import styles from '../../desktop/components/DataTable.module.css';
 
 export const EnhancedLiveMonitorView = () => {
     const filter = useAtomValue(desktopFilterAtom);
+    const [selectedRows, setSelectedRows] = useAtom(selectedLiveRowsAtom);
+    const setActiveRecord = useSetAtom(activeDetailRecordAtom);
+    const setPanelOpen = useSetAtom(isDetailPanelOpenAtom);
+
+    // Convert Set<string> to TanStack RowSelectionState
+    const rowSelection: RowSelectionState = useMemo(() => {
+        const selection: RowSelectionState = {};
+        selectedRows.forEach(id => {
+            selection[id] = true;
+        });
+        return selection;
+    }, [selectedRows]);
+
+    const handleSelectionChange = useCallback((updater: RowSelectionState | ((prev: RowSelectionState) => RowSelectionState)) => {
+        const nextSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
+        const nextSet = new Set<string>();
+        Object.keys(nextSelection).forEach(id => {
+            if (nextSelection[id]) nextSet.add(id);
+        });
+        setSelectedRows(nextSet);
+
+        // If selection becomes empty or multiple, clear active single record
+        if (nextSet.size !== 1) {
+            setActiveRecord(null);
+        }
+    }, [rowSelection, setSelectedRows, setActiveRecord]);
+
 
     // Pagination State
     const [loadedData, setLoadedData] = useState<LiveCheckRow[]>([]);
@@ -20,6 +46,67 @@ export const EnhancedLiveMonitorView = () => {
     const [hasMore, setHasMore] = useState(true);
     const [cursor, setCursor] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
+
+    const handleRowClick = useCallback((row: LiveCheckRow, event: React.MouseEvent) => {
+        const isMeta = event.ctrlKey || event.metaKey;
+        const isShift = event.shiftKey;
+
+        setSelectedRows((prev: Set<string>) => {
+            const next = new Set(prev);
+            if (isMeta) {
+                if (next.has(row.id)) next.delete(row.id);
+                else next.add(row.id);
+            } else if (isShift && prev.size > 0) {
+                const lastId = Array.from(prev).pop();
+                if (lastId) {
+                    const allIds = loadedData.map((r) => r.id);
+                    const startIdx = allIds.indexOf(lastId);
+                    const endIdx = allIds.indexOf(row.id);
+                    const range = allIds.slice(Math.min(startIdx, endIdx), Math.max(startIdx, endIdx) + 1);
+                    range.forEach((id) => next.add(id));
+                }
+            } else {
+                // Toggle behavior: if clicking the only selected row, clear it
+                if (next.has(row.id) && next.size === 1) {
+                    next.delete(row.id);
+                } else {
+                    next.clear();
+                    next.add(row.id);
+                }
+            }
+            return next;
+        });
+    }, [loadedData, setSelectedRows]);
+
+    // Sync active record and panel state with selection
+    useEffect(() => {
+        if (selectedRows.size === 1) {
+            const id = Array.from(selectedRows)[0];
+            const row = loadedData.find(r => r.id === id);
+            if (row) {
+                const panelData: PanelData = {
+                    id: row.id,
+                    source: 'live',
+                    residentName: row.residents.map(r => r.name).join(', '),
+                    location: row.location,
+                    status: row.status,
+                    timeScheduled: row.originalCheck?.dueDate || new Date().toISOString(),
+                    timeActual: row.lastCheckTime,
+                    officerName: row.lastCheckOfficer || 'Pending',
+                    hasHighRisk: row.hasHighRisk,
+                    riskType: row.riskType,
+                };
+                setActiveRecord(panelData);
+                setPanelOpen(true);
+            }
+        } else {
+            setActiveRecord(null);
+            // Don't auto-close panel if multi-selecting, as we want to see the multi-select empty state
+            if (selectedRows.size === 0) {
+                setPanelOpen(false);
+            }
+        }
+    }, [selectedRows, loadedData, setActiveRecord, setPanelOpen]);
 
     // Initial load and filter reset
     useEffect(() => {
@@ -50,7 +137,8 @@ export const EnhancedLiveMonitorView = () => {
             {
                 id: 'resident',
                 header: 'Resident',
-                ...COLUMN_WIDTHS.RESIDENT,
+                size: 300,
+                minSize: 240,
                 accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
                 cell: ({ row }) => (
                     <div className={styles.residentCell}>
@@ -58,9 +146,7 @@ export const EnhancedLiveMonitorView = () => {
                             {row.original.residents.map((r) => r.name).join(', ')}
                         </a>
                         {row.original.hasHighRisk && (
-                            <span className={`material-symbols-rounded ${styles.alertIconInline}`} title="High Risk">
-                                warning
-                            </span>
+                            <StatusBadge status="special" label="SR" fill />
                         )}
                     </div>
                 ),
@@ -68,33 +154,41 @@ export const EnhancedLiveMonitorView = () => {
             {
                 id: 'group',
                 header: 'Group',
+                size: 100,
+                minSize: 80,
                 accessorKey: 'group',
-                ...COLUMN_WIDTHS.GROUP,
             },
             {
                 id: 'unit',
                 header: 'Unit',
+                size: 80,
+                minSize: 60,
                 accessorKey: 'unit',
-                ...COLUMN_WIDTHS.UNIT,
             },
             {
                 id: 'location',
                 header: 'Room',
-                ...COLUMN_WIDTHS.LOCATION,
+                size: 90,
+                minSize: 70,
                 accessorKey: 'location',
             },
             {
                 id: 'scheduled',
                 header: 'Scheduled',
-                ...COLUMN_WIDTHS.TIMESTAMP,
+                size: 180,
+                minSize: 160,
                 cell: () => new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
             },
             {
                 id: 'status',
                 header: 'Status',
-                ...COLUMN_WIDTHS.STATUS,
+                size: 154,
+                minSize: 154,
                 accessorKey: 'status',
-                cell: ({ row }) => <StatusBadge status={row.original.status as StatusBadgeType} />,
+                cell: ({ row }) => {
+                    const status = row.original.status;
+                    return <StatusBadge status={status as StatusBadgeType} />;
+                },
             },
             {
                 id: 'spacer',
@@ -113,7 +207,10 @@ export const EnhancedLiveMonitorView = () => {
                         </span>
                     </div>
                 ),
-                ...COLUMN_WIDTHS.ACTIONS,
+                size: 48,
+                minSize: 48,
+                maxSize: 48,
+                enableResizing: false,
                 enableSorting: false,
                 cell: () => (
                     <RowContextMenu
@@ -137,6 +234,10 @@ export const EnhancedLiveMonitorView = () => {
             isLoading={isLoading}
             hasMore={hasMore}
             onLoadMore={handleLoadMore}
+            enableRowSelection={true}
+            rowSelection={rowSelection}
+            onRowSelectionChange={handleSelectionChange}
+            onRowClick={handleRowClick}
         />
     );
 };

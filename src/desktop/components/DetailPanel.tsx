@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import { motion } from 'framer-motion';
-import { supervisorNoteModalAtom, isDetailPanelOpenAtom, PanelData, panelWidthAtom } from '../atoms';
+import { supervisorNoteModalAtom, isDetailPanelOpenAtom, PanelData, panelWidthAtom, selectedHistoryRowsAtom, selectedLiveRowsAtom } from '../atoms';
 import { StatusBadge, StatusBadgeType } from './StatusBadge';
 import { Button } from '../../components/Button';
 import { Tooltip } from '../../components/Tooltip';
@@ -24,7 +24,14 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
     const panelRef = useRef<HTMLDivElement>(null);
     const widthRef = useRef(panelWidth);
 
-    const handleClose = () => setPanelOpen(false);
+    const setSelectedLive = useSetAtom(selectedLiveRowsAtom);
+    const setSelectedHistory = useSetAtom(selectedHistoryRowsAtom);
+
+    const handleClose = () => {
+        setPanelOpen(false);
+        setSelectedLive(new Set());
+        setSelectedHistory(new Set());
+    };
 
     const handleOpenNoteModal = () => {
         if (!record) return;
@@ -36,7 +43,9 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
 
     const formatTime = (iso: string | null) => {
         if (!iso) return '—';
-        return new Date(iso).toLocaleTimeString('en-US', {
+        const date = new Date(iso);
+        if (isNaN(date.getTime())) return iso; // Fallback for pre-formatted strings
+        return date.toLocaleTimeString('en-US', {
             hour: 'numeric',
             minute: '2-digit',
             hour12: true,
@@ -120,7 +129,7 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
             <div className={styles.header}>
                 <div className={styles.titleGroup}>
                     <h3 className={styles.residentName}>
-                        {record ? record.residentName : 'No selection'}
+                        {record ? record.residentName : (selectedCount > 1 ? `${selectedCount} Selected` : 'No selection')}
                     </h3>
                 </div>
                 <div className={styles.headerActions}>
@@ -158,17 +167,29 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
 
                 {!record ? (
                     <div className={styles.emptyState}>
-                        <span className={`material-symbols-rounded ${styles.placeholderIcon}`}>
-                            {selectedCount > 1 ? 'rule' : 'info'}
-                        </span>
+                        <div className={styles.mockupIconContainer}>
+                            <div className={styles.mockupSquare}>
+                                {selectedCount > 1 ? (
+                                    <>
+                                        <div className={styles.dotsContainer}>
+                                            {[...Array(12)].map((_, i) => (
+                                                <div key={i} className={styles.dot} />
+                                            ))}
+                                        </div>
+                                        <span className="material-symbols-rounded" style={{ fontSize: '24px', color: 'var(--surface-fg-tertiary)' }}>
+                                            check_box_outline_blank
+                                        </span>
+                                    </>
+                                ) : (
+                                    <span className="material-symbols-rounded" style={{ fontSize: '32px', color: 'var(--surface-fg-tertiary)' }}>
+                                        touch_app
+                                    </span>
+                                )}
+                            </div>
+                        </div>
                         <h4 className={styles.emptyTitle}>
-                            {selectedCount > 1 ? 'Multiple Records Selected' : 'No Record Selected'}
+                            Select an item to see the details
                         </h4>
-                        <p className={styles.emptyText}>
-                            {selectedCount > 1
-                                ? 'Select a single record to view its complete check history.'
-                                : 'Select a row from the monitor to view detailed check logs and officer notes.'}
-                        </p>
                     </div>
                 ) : (
                     <>
@@ -240,14 +261,14 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                 <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
                                     <button className={styles.actionButton} onClick={handleOpenNoteModal}>
                                         <span className="material-symbols-rounded" style={{ fontSize: 18 }}>
-                                            {record.supervisorNote ? 'edit' : 'add_comment'}
+                                            add_comment
                                         </span>
-                                        {record.supervisorNote ? 'Edit Note' : 'Add Note'}
+                                        {record.supervisorNote ? 'Edit Comment' : 'Add Comment'}
                                     </button>
                                     {record.supervisorNote && (
                                         <button
                                             className={styles.actionButton}
-                                            onClick={() => console.log('Delete note')}
+                                            onClick={() => { /* Delete note functionality */ }}
                                             style={{ color: 'var(--surface-fg-alert-primary)' }}
                                         >
                                             <span className="material-symbols-rounded" style={{ fontSize: 18 }}>delete</span>

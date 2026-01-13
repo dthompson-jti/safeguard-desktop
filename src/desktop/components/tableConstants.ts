@@ -40,8 +40,8 @@ export const COLUMN_WIDTHS = {
         minSize: 160, // Fits merged "MM/DD/YYYY  HH:MM AM/PM" comfortably
     },
     RESIDENT: {
-        size: 250,
-        minSize: 200, // Names need space
+        size: 300,
+        minSize: 240, // Names need space for badges
     },
     LOCATION: {
         size: 90,

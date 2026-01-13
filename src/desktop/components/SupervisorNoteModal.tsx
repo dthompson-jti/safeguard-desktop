@@ -7,51 +7,83 @@ import {
     supervisorNoteModalAtom,
     historicalChecksAtom,
     selectedHistoryRowsAtom,
+    historicalRefreshAtom,
 } from '../atoms';
 import { SUPERVISOR_NOTE_REASONS, SupervisorNoteReason } from '../types';
 import { addToastAtom } from '../../data/toastAtoms';
+import { updateHistoricalCheck } from '../../desktop-enhanced/data/mockData';
+import { Select, SelectItem } from '../../components/Select';
+import { Button } from '../../components/Button';
 import styles from './SupervisorNoteModal.module.css';
 
 export const SupervisorNoteModal = () => {
     const [modalState, setModalState] = useAtom(supervisorNoteModalAtom);
     const setHistoricalChecks = useSetAtom(historicalChecksAtom);
     const setSelectedRows = useSetAtom(selectedHistoryRowsAtom);
+    const setRefreshTrigger = useSetAtom(historicalRefreshAtom);
     const addToast = useSetAtom(addToastAtom);
 
     const [reason, setReason] = useState<SupervisorNoteReason>('Unit Lockdown');
     const [additionalNotes, setAdditionalNotes] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleClose = () => {
+        if (isSaving) return;
         setModalState({ isOpen: false, selectedIds: [] });
         setReason('Unit Lockdown');
         setAdditionalNotes('');
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        if (isSaving) return;
+        setIsSaving(true);
+
         const note = additionalNotes
             ? `${reason} - ${additionalNotes}`
             : reason;
 
-        // Update historical checks
-        setHistoricalChecks((checks) =>
-            checks.map((check) =>
-                modalState.selectedIds.includes(check.id)
-                    ? { ...check, supervisorNote: note, reviewStatus: 'verified' as const }
-                    : check
-            )
-        );
+        const updates = {
+            supervisorNote: note,
+            reviewStatus: 'verified' as const
+        };
 
-        // Clear selection
-        setSelectedRows(new Set());
+        try {
+            // 1. Update Mock Database (for enhanced view re-fetches)
+            await updateHistoricalCheck(modalState.selectedIds, updates);
 
-        // Show confirmation
-        addToast({
-            message: `Note saved for ${modalState.selectedIds.length} check${modalState.selectedIds.length !== 1 ? 's' : ''}`,
-            icon: 'check_circle',
-            variant: 'success',
-        });
+            // 2. Update historical checks Atom (for immediate local updates in legacy views if any)
+            setHistoricalChecks((checks) =>
+                checks.map((check) =>
+                    modalState.selectedIds.includes(check.id)
+                        ? { ...check, ...updates }
+                        : check
+                )
+            );
 
-        handleClose();
+            // 3. Trigger re-fetch in enhanced views
+            setRefreshTrigger(prev => prev + 1);
+
+            // 4. Clear selection
+            setSelectedRows(new Set());
+
+            // 5. Show confirmation
+            addToast({
+                message: `Comment saved for ${modalState.selectedIds.length} check${modalState.selectedIds.length !== 1 ? 's' : ''}`,
+                icon: 'check_circle',
+                variant: 'success',
+            });
+
+            handleClose();
+        } catch (error) {
+            console.error('Failed to save comment:', error);
+            addToast({
+                message: 'Failed to save comment.',
+                icon: 'error',
+                variant: 'alert',
+            });
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -60,28 +92,29 @@ export const SupervisorNoteModal = () => {
                 <Dialog.Overlay className={styles.overlay} />
                 <Dialog.Content className={styles.content} data-platform="desktop">
                     <div className={styles.header}>
-                        <Dialog.Title className={styles.title}>Add Supervisor Note</Dialog.Title>
+                        <Dialog.Title className={styles.title}>Add Supervisor Comment</Dialog.Title>
                         <Dialog.Close asChild>
-                            <button className={styles.closeButton} aria-label="Close">
+                            <Button variant="tertiary" size="s" iconOnly aria-label="Close" disabled={isSaving}>
                                 <span className="material-symbols-rounded">close</span>
-                            </button>
+                            </Button>
                         </Dialog.Close>
                     </div>
 
                     <div className={styles.body}>
                         <div className={styles.field}>
                             <label className={styles.label}>Reason for missed check(s)</label>
-                            <select
-                                className={styles.select}
+                            <Select
                                 value={reason}
-                                onChange={(e) => setReason(e.target.value as SupervisorNoteReason)}
+                                onValueChange={(val) => setReason(val as SupervisorNoteReason)}
+                                placeholder="Select a reason..."
+                                disabled={isSaving}
                             >
                                 {SUPERVISOR_NOTE_REASONS.map((r) => (
-                                    <option key={r} value={r}>
+                                    <SelectItem key={r} value={r}>
                                         {r}
-                                    </option>
+                                    </SelectItem>
                                 ))}
-                            </select>
+                            </Select>
                         </div>
 
                         <div className={styles.field}>
@@ -94,26 +127,39 @@ export const SupervisorNoteModal = () => {
                                 onChange={(e) => setAdditionalNotes(e.target.value)}
                                 placeholder="Enter additional context..."
                                 rows={3}
+                                disabled={isSaving}
                             />
                         </div>
 
-                        <p className={styles.hint}>
-                            This note will be applied to {modalState.selectedIds.length} selected check
-                            {modalState.selectedIds.length !== 1 ? 's' : ''}.
-                        </p>
+                        <div className={styles.hint}>
+                            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>info</span>
+                            <span>
+                                Applying to {modalState.selectedIds.length} selected check
+                                {modalState.selectedIds.length !== 1 ? 's' : ''}.
+                            </span>
+                        </div>
                     </div>
 
                     <div className={styles.footer}>
-                        <button className={styles.cancelButton} onClick={handleClose}>
-                            Cancel
-                        </button>
-                        <button
-                            className={styles.saveButton}
-                            onClick={handleSave}
+                        <Button
+                            variant="primary"
+                            className={styles.footerButton}
+                            style={{ minWidth: 120 }}
+                            onClick={() => { void handleSave(); }}
+                            loading={isSaving}
                             disabled={reason === 'Other' && !additionalNotes.trim()}
                         >
-                            Save Note
-                        </button>
+                            Save Comment
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            className={styles.footerButton}
+                            style={{ minWidth: 100 }}
+                            onClick={handleClose}
+                            disabled={isSaving}
+                        >
+                            Cancel
+                        </Button>
                     </div>
                 </Dialog.Content>
             </Dialog.Portal>

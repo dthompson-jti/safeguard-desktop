@@ -1,25 +1,43 @@
 /* src/desktop/components/BulkActionFooter.module.css */
-/* Floating action bar following Reference II pattern */
 
 .footer {
     position: fixed;
-    bottom: var(--spacing-12);
+    bottom: 48px;
+    /* var(--spacing-12) */
     left: 50%;
     transform: translateX(-50%);
 
     display: flex;
     align-items: center;
-    gap: var(--spacing-1);
+    gap: 12px;
+    /* Increased items gap */
 
     background-color: var(--surface-bg-brand-solid);
     color: var(--control-fg-on-solid);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-1p5);
+    border-radius: 18px;
+    /* Concentric with 10px buttons + 8px padding */
+    padding: 8px;
+    /* 8px uniform padding */
+    box-sizing: border-box;
     box-shadow: var(--surface-shadow-lg);
     z-index: 50;
 
     animation: fadeIn 0.15s ease-out;
     white-space: nowrap;
+}
+
+/* Force pixel-perfect dimensions and centering for buttons inside the bar */
+.footer :global(.btn) {
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+    border-radius: 10px !important;
+    border: 1px solid transparent !important;
+    /* Force symmetric 1px border */
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 @keyframes fadeIn {
@@ -34,33 +52,82 @@
     }
 }
 
-/* Count text with dismiss button */
 .countSection {
     display: flex;
     align-items: center;
-    gap: var(--spacing-2);
-    /* Increased gap per user feedback */
-    height: 32px;
-    /* Synced with Button size="s" height (32px) */
-    padding-left: var(--spacing-1);
+    gap: 4px;
+    /* Tight 4px gap for selection subcontainer */
 }
 
 .count {
     font-size: var(--font-size-sm);
     font-weight: 600;
     color: var(--control-fg-on-solid);
+    line-height: 1;
     display: flex;
-    /* Changed from inline-flex to flex */
     align-items: center;
-    height: 100%;
-    /* Ensure it fills the container for centering */
+    transform: translateY(-2px);
+    /* Baseline adjustment */
+    padding-left: 4px;
+    /* Extra 4px padding as requested */
 }
 
-/* Divider between count and actions */
 .divider {
     width: 2px;
     height: 20px;
-    background-color: var(--surface-border-theme);
-    margin: 0 var(--spacing-1);
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 0 4px;
+    /* 4px margin + 8px gap = 12px visual separation */
     flex-shrink: 0;
+}
+
+/* Menu Styles */
+.menuBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.menu {
+    background: white;
+    border: 1px solid var(--surface-border-primary);
+    border-radius: 8px;
+    box-shadow: var(--surface-shadow-lg);
+    min-width: 220px;
+    padding: 4px 0;
+    z-index: 1001;
+    overflow: hidden;
+    color: black;
+}
+
+.menuItem {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--surface-fg-primary);
+    cursor: pointer;
+    text-align: left;
+}
+
+.menuItem:hover {
+    background: var(--surface-bg-secondary);
+}
+
+.menuItem.destructive {
+    color: var(--surface-fg-alert-primary);
+}
+
+.menuSeparator {
+    height: 1px;
+    background: var(--surface-border-secondary);
+    margin: 4px 0;
 }

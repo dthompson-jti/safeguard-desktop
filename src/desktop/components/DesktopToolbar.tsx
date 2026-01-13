@@ -36,7 +36,19 @@ const TIME_RANGE_OPTIONS = [
     { value: 'custom', label: 'Custom Range...' },
 ];
 
-export const DesktopToolbar = () => {
+const AREA_OPTIONS = [
+    { value: 'all', label: 'All Facility Areas' },
+    { value: 'area-a', label: 'Facility Area Alpha' },
+    { value: 'area-b', label: 'Facility Area Bravo' },
+    { value: 'area-c', label: 'Facility Area Charlie' },
+    { value: 'area-d', label: 'Facility Area Delta' },
+];
+
+interface DesktopToolbarProps {
+    isEnhanced?: boolean;
+}
+
+export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
     const view = useAtomValue(desktopViewAtom);
     const [filter, setFilter] = useAtom(desktopFilterAtom);
 
@@ -60,6 +72,13 @@ export const DesktopToolbar = () => {
     const handleTimeRangeChange = (val: string) => {
         // Mocking time range logic
         console.log('Time range changed:', val);
+    };
+
+    const handleAreaFilterChange = (val: string) => {
+        setFilter((prev) => ({
+            ...prev,
+            facility: val
+        }));
     };
 
     const hasChanges = useMemo(() => {
@@ -170,6 +189,23 @@ export const DesktopToolbar = () => {
                             placeholder="Time Range"
                         >
                             {TIME_RANGE_OPTIONS.map((opt) => (
+                                <SelectItem key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                    </div>
+                )}
+
+                {/* Facility Area Filter (Not in enhanced mode) */}
+                {!isEnhanced && (
+                    <div style={{ width: 220 }}>
+                        <Select
+                            value={filter.facility}
+                            onValueChange={handleAreaFilterChange}
+                            placeholder="Facility Area"
+                        >
+                            {AREA_OPTIONS.map((opt) => (
                                 <SelectItem key={opt.value} value={opt.value}>
                                     {opt.label}
                                 </SelectItem>

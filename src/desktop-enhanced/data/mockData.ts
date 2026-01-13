@@ -153,7 +153,16 @@ export const generateEnhancedData = () => {
             unit: room.unit,
             lastCheckTime: formatTimeDisplay(scheduledTime), // This is what LiveMonitorView displays
             lastCheckOfficer: officer,
-            originalCheck: null as never,
+            originalCheck: {
+                id: `check-${room.id}`,
+                type: 'scheduled',
+                status: liveStatus === 'upcoming' ? 'pending' : (liveStatus === 'due' ? 'due' : 'missed'),
+                residents: [{ id: `res-${room.id}`, name: room.resident, location: room.location }],
+                dueDate: scheduledTime.toISOString(),
+                walkingOrderIndex: roomIdx,
+                generationId: 1,
+                baseInterval: 15
+            },
         });
 
         // Generate Historical checks (past 24 hours, every 15 mins)
@@ -278,5 +287,19 @@ export const loadEnhancedHistoricalPage = (
             const nextCursor = (cursor + pageSize < filtered.length) ? cursor + pageSize : null;
             resolve({ data, nextCursor, totalCount: filtered.length });
         }, 200);
+    });
+};
+
+/**
+ * Update one or more historical checks in the mock database.
+ */
+export const updateHistoricalCheck = (ids: string[], updates: Partial<HistoricalCheck>): Promise<void> => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            cachedData.historicalData = cachedData.historicalData.map(check =>
+                ids.includes(check.id) ? { ...check, ...updates } : check
+            );
+            resolve();
+        }, 100);
     });
 };

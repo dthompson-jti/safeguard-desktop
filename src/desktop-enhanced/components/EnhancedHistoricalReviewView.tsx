@@ -7,6 +7,7 @@ import {
     activeDetailRecordAtom,
     desktopFilterAtom,
     supervisorNoteModalAtom,
+    historicalRefreshAtom,
     PanelData,
 } from '../../desktop/atoms';
 import { HistoricalCheck } from '../../desktop/types';
@@ -15,7 +16,6 @@ import { BulkActionFooter } from '../../desktop/components/BulkActionFooter';
 import { RowContextMenu } from '../../desktop/components/RowContextMenu';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
 import { loadEnhancedHistoricalPage } from '../data/mockData';
-import { COLUMN_WIDTHS } from '../../desktop/components/tableConstants';
 import styles from '../../desktop/components/DataTable.module.css';
 
 const formatTime = (isoString: string): string => {
@@ -40,8 +40,9 @@ export const EnhancedHistoricalReviewView = () => {
 
     const filter = useAtomValue(desktopFilterAtom);
     const setModalState = useSetAtom(supervisorNoteModalAtom);
+    const refreshCount = useAtomValue(historicalRefreshAtom);
 
-    // Initial load
+    // Initial load & Re-fetch on refreshCount change
     useEffect(() => {
         setIsLoading(true);
         void loadEnhancedHistoricalPage(0, 50, filter).then(({ data, nextCursor, totalCount }) => {
@@ -51,7 +52,7 @@ export const EnhancedHistoricalReviewView = () => {
             setTotalCount(totalCount);
             setIsLoading(false);
         });
-    }, [filter]);
+    }, [filter, refreshCount]);
 
     const handleLoadMore = useCallback(() => {
         if (isLoading || !hasMore) return;
@@ -76,8 +77,13 @@ export const EnhancedHistoricalReviewView = () => {
             const newSelection = typeof updaterOrValue === 'function' ? updaterOrValue(rowSelection) : updaterOrValue;
             const newSet = new Set(Object.keys(newSelection).filter((k) => newSelection[k]));
             setSelectedRows(newSet);
+
+            // If selection becomes empty or multiple, clear active single record
+            if (newSet.size !== 1) {
+                setDetailRecord(null);
+            }
         },
-        [rowSelection, setSelectedRows]
+        [rowSelection, setSelectedRows, setDetailRecord]
     );
 
     const handleRowClick = useCallback((row: HistoricalCheck, event: React.MouseEvent) => {
@@ -99,27 +105,38 @@ export const EnhancedHistoricalReviewView = () => {
                     range.forEach((id: string) => next.add(id));
                 }
             } else {
-                next.clear();
-                next.add(row.id);
+                // Toggle behavior: if clicking the only selected row, clear it
+                if (next.has(row.id) && next.size === 1) {
+                    next.delete(row.id);
+                } else {
+                    next.clear();
+                    next.add(row.id);
+                }
             }
+
+            // Sync detail record: only show if exactly one item is selected after click
+            if (next.size === 1) {
+                const panelData: PanelData = {
+                    id: row.id,
+                    source: 'historical',
+                    residentName: row.residents.map(r => r.name).join(', '),
+                    location: row.location,
+                    status: row.status,
+                    timeScheduled: row.scheduledTime,
+                    timeActual: row.actualTime,
+                    varianceMinutes: row.varianceMinutes,
+                    officerName: row.officerName,
+                    officerNote: row.officerNote,
+                    supervisorNote: row.supervisorNote,
+                    reviewStatus: row.reviewStatus,
+                };
+                setDetailRecord(panelData);
+            } else {
+                setDetailRecord(null);
+            }
+
             return next;
         });
-
-        const panelData: PanelData = {
-            id: row.id,
-            source: 'historical',
-            residentName: row.residents.map(r => r.name).join(', '),
-            location: row.location,
-            status: row.status,
-            timeScheduled: row.scheduledTime,
-            timeActual: row.actualTime,
-            varianceMinutes: row.varianceMinutes,
-            officerName: row.officerName,
-            officerNote: row.officerNote,
-            supervisorNote: row.supervisorNote,
-            reviewStatus: row.reviewStatus,
-        };
-        setDetailRecord(panelData);
     }, [loadedData, setSelectedRows, setDetailRecord]);
 
     const handleOpenNoteModal = useCallback((checkId: string) => {
@@ -153,26 +170,37 @@ export const EnhancedHistoricalReviewView = () => {
                         />
                     </div>
                 ),
-                ...COLUMN_WIDTHS.CHECKBOX,
+                size: 44,
+                minSize: 44,
+                maxSize: 44,
+                enableResizing: false,
             },
             {
                 id: 'resident',
                 header: 'Resident',
-                ...COLUMN_WIDTHS.RESIDENT,
+                size: 300,
+                minSize: 240,
                 accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
                 cell: ({ row }) => (
-                    <a href="#" className={styles.linkText} onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleRowClick(row.original, e); }}>
-                        {row.original.residents.map((r) => r.name).join(', ')}
-                    </a>
+                    <div className={styles.residentCell}>
+                        <a href="#" className={styles.linkText} onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleRowClick(row.original, e); }}>
+                            {row.original.residents.map((r) => r.name).join(', ')}
+                        </a>
+                        {/* Assuming special status if variance is high or other condition */}
+                        {row.original.status === 'missed' && (
+                            <StatusBadge status="special" label="SR" fill />
+                        )}
+                    </div>
                 ),
             },
-            { id: 'group', header: 'Group', accessorKey: 'group', ...COLUMN_WIDTHS.GROUP },
-            { id: 'unit', header: 'Unit', accessorKey: 'unit', ...COLUMN_WIDTHS.UNIT },
-            { id: 'location', header: 'Room', ...COLUMN_WIDTHS.LOCATION, accessorKey: 'location' },
+            { id: 'group', header: 'Group', accessorKey: 'group', size: 100, minSize: 80 },
+            { id: 'unit', header: 'Unit', accessorKey: 'unit', size: 80, minSize: 60 },
+            { id: 'location', header: 'Room', size: 90, minSize: 70, accessorKey: 'location' },
             {
                 id: 'scheduled',
                 header: 'Scheduled',
-                ...COLUMN_WIDTHS.TIMESTAMP,
+                size: 180,
+                minSize: 160,
                 accessorFn: (row) => row.scheduledTime,
                 cell: ({ row }) => {
                     const dateObj = new Date(row.original.scheduledTime);
@@ -189,18 +217,24 @@ export const EnhancedHistoricalReviewView = () => {
             {
                 id: 'actual',
                 header: 'Actual',
-                ...COLUMN_WIDTHS.TIMESTAMP,
+                size: 180,
+                minSize: 160,
                 accessorFn: (row) => row.actualTime ? formatTime(row.actualTime) : '—',
             },
             {
                 id: 'status',
                 header: 'Status',
-                ...COLUMN_WIDTHS.STATUS,
+                size: 154,
+                minSize: 154,
                 accessorKey: 'status',
                 cell: ({ row }) => (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)' }}>
-                        <StatusBadge status={row.original.status as StatusBadgeType} />
-                        {row.original.status === 'completed' && (
+                        {row.original.reviewStatus === 'verified' ? (
+                            <StatusBadge status="verified" label="Verified" />
+                        ) : (
+                            <StatusBadge status={row.original.status as StatusBadgeType} />
+                        )}
+                        {row.original.status === 'completed' && row.original.reviewStatus !== 'verified' && (
                             <span style={{ color: 'var(--surface-fg-tertiary)', fontWeight: 600, fontSize: '18px', lineHeight: 1 }}>...</span>
                         )}
                     </div>
@@ -217,7 +251,10 @@ export const EnhancedHistoricalReviewView = () => {
             {
                 id: 'actions',
                 header: () => null,
-                ...COLUMN_WIDTHS.ACTIONS,
+                size: 48,
+                minSize: 48,
+                maxSize: 48,
+                enableResizing: false,
                 enableSorting: false,
                 cell: ({ row }) => (
                     <RowContextMenu
@@ -233,12 +270,12 @@ export const EnhancedHistoricalReviewView = () => {
                                 onClick: () => console.log('Open room management:', row.original.location),
                             },
                             {
-                                label: row.original.supervisorNote ? 'Edit Note' : 'Add Note',
-                                icon: row.original.supervisorNote ? 'edit' : 'add_comment',
+                                label: row.original.supervisorNote ? 'Edit Comment' : 'Add Comment',
+                                icon: 'add_comment',
                                 onClick: () => handleOpenNoteModal(row.original.id),
                             },
                             ...(row.original.supervisorNote ? [{
-                                label: 'Delete Note',
+                                label: 'Delete Comment',
                                 icon: 'delete',
                                 onClick: () => console.log('Delete note for:', row.original.id),
                                 destructive: true,
@@ -275,7 +312,30 @@ export const EnhancedHistoricalReviewView = () => {
                             selectedIds: Array.from(selectedRows),
                         });
                     }}
-                    onClear={() => setSelectedRows(new Set())}
+                    onClear={() => {
+                        setSelectedRows(new Set());
+                        setDetailRecord(null);
+                    }}
+                    actions={[
+                        {
+                            label: 'Bulk Add Comment',
+                            icon: 'add_comment',
+                            onClick: () => {
+                                setModalState({
+                                    isOpen: true,
+                                    selectedIds: Array.from(selectedRows),
+                                });
+                            }
+                        },
+                        {
+                            label: 'Clear Selection',
+                            icon: 'close',
+                            onClick: () => {
+                                setSelectedRows(new Set());
+                                setDetailRecord(null);
+                            },
+                        }
+                    ]}
                 />
             )}
         </>

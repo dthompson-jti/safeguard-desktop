@@ -67,10 +67,10 @@ export const Select = ({ children, value, onValueChange, placeholder, disabled }
       </RadixSelect.Trigger>
       <RadixSelect.Portal>
         <RadixSelect.Content
-          className="menuPopover"
+          className={`menuPopover ${styles.selectContent}`}
           position="popper"
           sideOffset={5}
-          align="end"
+          align="start"
         >
           <RadixSelect.ScrollUpButton className={styles.scrollButton}>
             <span className="material-symbols-rounded">expand_less</span>
