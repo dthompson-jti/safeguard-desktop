@@ -28,7 +28,13 @@ const createLiveCheck = (
     const timerSeverity = status === 'missed' ? 'alert' : status === 'due' ? 'warning' : 'neutral';
 
     // Derive group and unit uniquely
-    const roomNum = parseInt(location, 10);
+    const getRoomNum = (loc: string) => {
+        const parts = loc.split(/[- ]/);
+        const lastPart = parts[parts.length - 1];
+        return parseInt(lastPart, 10) || 0;
+    };
+
+    const roomNum = getRoomNum(location);
     const groupIdx = roomNum % 4; // 0, 1, 2, 3
     const derivedGroup = options.group || GROUPS[groupIdx];
 

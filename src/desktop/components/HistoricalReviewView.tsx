@@ -14,7 +14,10 @@ import { DataTable } from './DataTable';
 import { BulkActionFooter } from './BulkActionFooter';
 import { RowContextMenu } from './RowContextMenu';
 import { StatusBadge, StatusBadgeType } from './StatusBadge';
-import { TOTAL_HISTORICAL_RECORDS, loadHistoricalChecksPage } from '../mockHistoricalData';
+import {
+    TOTAL_HISTORICAL_RECORDS,
+    loadEnhancedHistoricalPage as loadHistoricalChecksPage
+} from '../../desktop-enhanced/data/mockData';
 import { COLUMN_WIDTHS } from './tableConstants';
 import styles from './DataTable.module.css';
 
@@ -278,16 +281,26 @@ export const HistoricalReviewView = () => {
                     <RowContextMenu
                         actions={[
                             {
-                                label: row.original.reviewStatus === 'verified' ? 'Edit Note' : 'Add Note',
-                                icon: 'edit_note',
-                                onClick: () => handleOpenNoteModal(row.original.id),
+                                label: 'View Resident',
+                                icon: 'person',
+                                onClick: () => console.log('Navigate to resident:', row.original.residents[0]?.id),
                             },
                             {
-                                label: 'Flag for Review',
-                                icon: 'flag',
-                                onClick: () => console.log('Flag for review', row.original.id),
+                                label: 'Manage Room',
+                                icon: 'meeting_room',
+                                onClick: () => console.log('Open room management:', row.original.location),
+                            },
+                            {
+                                label: row.original.supervisorNote ? 'Edit Note' : 'Add Note',
+                                icon: row.original.supervisorNote ? 'edit' : 'add_comment',
+                                onClick: () => handleOpenNoteModal(row.original.id),
+                            },
+                            ...(row.original.supervisorNote ? [{
+                                label: 'Delete Note',
+                                icon: 'delete',
+                                onClick: () => console.log('Delete note for:', row.original.id),
                                 destructive: true,
-                            }
+                            }] : []),
                         ]}
                     />
                 ),

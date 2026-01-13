@@ -8,6 +8,7 @@ export type SelectionType = 'root' | 'group' | 'unit';
 export interface SelectionState {
     type: SelectionType;
     id: string;
+    parentId?: string;
 }
 
 export const desktopEnhancedSelectionAtom = atom<SelectionState>({

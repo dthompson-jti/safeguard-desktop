@@ -1,14 +1,22 @@
 import React from 'react';
 import styles from './TopNav.module.css';
 import { GlobalStatusWidget } from './GlobalStatusWidget';
+import { TopNavAvatar } from './TopNavAvatar';
+import { TopNavMenu } from './TopNavMenu';
 
 export const TopNav = React.forwardRef<HTMLDivElement>((_, ref) => {
     return (
         <div className={styles.topNav} ref={ref}>
-            <div className={styles.title}>
-                eSupervision
+            <div className={styles.leftSection}>
+                <TopNavMenu />
+                <div className={styles.title}>
+                    eSupervision
+                </div>
             </div>
-            <GlobalStatusWidget />
+            <div className={styles.rightSection}>
+                <GlobalStatusWidget />
+                <TopNavAvatar />
+            </div>
         </div>
     );
 });

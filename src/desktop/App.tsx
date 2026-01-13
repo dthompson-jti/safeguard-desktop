@@ -1,9 +1,9 @@
 import { useAtom, useAtomValue } from 'jotai';
 import * as ToastPrimitive from '@radix-ui/react-toast';
 import { AnimatePresence } from 'framer-motion';
-import { AuthGate } from '../components/AuthGate';
 import { toastsAtom } from '../data/toastAtoms';
 import { desktopViewAtom, activeDetailRecordAtom, isDetailPanelOpenAtom, selectedHistoryRowsAtom, selectedLiveRowsAtom, panelWidthAtom } from './atoms';
+import { Layout } from '../desktop-enhanced/Layout';
 import { DesktopHeader } from './components/DesktopHeader';
 import { DesktopToolbar } from './components/DesktopToolbar';
 import { LiveMonitorView } from './components/LiveMonitorView';
@@ -36,7 +36,7 @@ export default function App() {
     const showPanel = view === 'historical' && isPanelOpen;
 
     return (
-        <AuthGate>
+        <Layout>
             <ToastPrimitive.Provider swipeDirection="right" swipeThreshold={80}>
                 <div
                     className={styles.app}
@@ -78,6 +78,6 @@ export default function App() {
                     <ToastContainer platform="desktop" />
                 </div>
             </ToastPrimitive.Provider>
-        </AuthGate>
+        </Layout>
     );
 }

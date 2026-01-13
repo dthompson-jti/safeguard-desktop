@@ -174,7 +174,7 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                     <>
                         {/* SECTION 1: METRICS GRID ("The Dashboard") */}
                         <div className={styles.section}>
-                            <span className={styles.sectionTitle}>Operational Data</span>
+                            <span className={styles.sectionTitle}>Details</span>
                             <div className={styles.metricsGrid}>
                                 <div className={styles.metricCard}>
                                     <span className={styles.metricLabel}>Scheduled</span>
@@ -237,12 +237,24 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                     <span className={styles.emptyNote}>No supervisor comments.</span>
                                 )}
 
-                                <button className={styles.actionButton} onClick={handleOpenNoteModal} style={{ marginTop: 8 }}>
-                                    <span className="material-symbols-rounded" style={{ fontSize: 18 }}>
-                                        {record.supervisorNote ? 'edit' : 'add_comment'}
-                                    </span>
-                                    {record.supervisorNote ? 'Edit Note' : 'Add Note'}
-                                </button>
+                                <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
+                                    <button className={styles.actionButton} onClick={handleOpenNoteModal}>
+                                        <span className="material-symbols-rounded" style={{ fontSize: 18 }}>
+                                            {record.supervisorNote ? 'edit' : 'add_comment'}
+                                        </span>
+                                        {record.supervisorNote ? 'Edit Note' : 'Add Note'}
+                                    </button>
+                                    {record.supervisorNote && (
+                                        <button
+                                            className={styles.actionButton}
+                                            onClick={() => console.log('Delete note')}
+                                            style={{ color: 'var(--surface-fg-alert-primary)' }}
+                                        >
+                                            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>delete</span>
+                                            Delete
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </>

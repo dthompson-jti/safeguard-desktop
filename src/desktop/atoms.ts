@@ -4,7 +4,7 @@ import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { STORAGE_PREFIX } from '../config';
 import { DesktopView, DesktopFilter, HistoricalCheck } from './types';
-import { historicalChecks } from './mockHistoricalData';
+import { enhancedMockData } from '../desktop-enhanced/data/mockData';
 // We'll need access to live data for the polymorphic resolver. 
 // Ideally this should be exported from real stores, but for now we might need to rely on the view pushing data or a shared store.
 // To keep it simple and clean: The View will push the *full object* to the panel atom when clicked.
@@ -33,7 +33,7 @@ export const selectedHistoryRowsAtom = atom<Set<string>>(new Set<string>());
 export const selectedLiveRowsAtom = atom<Set<string>>(new Set<string>());
 
 /** Historical checks data (mock) */
-export const historicalChecksAtom = atom<HistoricalCheck[]>(historicalChecks);
+export const historicalChecksAtom = atom<HistoricalCheck[]>(enhancedMockData.historicalData);
 
 /** Derived: filtered historical checks */
 export const filteredHistoricalChecksAtom = atom((get) => {
@@ -155,22 +155,23 @@ export const nextRefreshSecondsAtom = atom((get) => {
 // DESKTOP STATUS COUNTS
 // ============================================================================
 
-import { getLiveCounts } from './mockLiveData';
-import { getHistoricalCounts } from './mockHistoricalData';
+/** Desktop-specific counts for header tabs - now pulling from unified enhanced mock data */
+export const desktopTabCountsAtom = atom(() => {
+    // Live counts - Strictly active overdue
+    const overdue = enhancedMockData.liveData.filter(c => c.status === 'overdue').length;
+    const due = enhancedMockData.liveData.filter(c => c.status === 'due').length;
 
-/** Desktop-specific counts for header tabs - now pulling from desktop mock data */
-export const desktopTabCountsAtom = atom((get) => {
-    const filter = get(desktopFilterAtom);
-
-    const live = getLiveCounts({ search: filter.search });
-    const history = getHistoricalCounts(filter);
+    // Historical count (unreviewed / need comment)
+    const unreviewed = enhancedMockData.historicalData.filter(c =>
+        (c.status === 'missed' || c.status === 'late') && !c.supervisorNote
+    ).length;
 
     return {
         // Live View badges
-        missed: live.missed,     // 🔔 red bell
-        due: live.due,           // ⏰ amber clock
+        missed: overdue,     // 🔔 red bell
+        due: due,            // ⏰ amber clock
 
         // Historical View badge
-        unreviewed: history.unreviewed, // 👤⚠ gray
+        unreviewed: unreviewed, // 👤⚠ gray
     };
 });

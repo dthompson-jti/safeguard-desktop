@@ -10,6 +10,23 @@ const UNIT_PREFIXES = ['A', 'B', 'C', 'D'];
  * Mirroring the "Upcoming", "Due", "Overdue" and "Completed", "Missed" model.
  */
 
+const RESIDENT_NAMES = [
+    'James Wilson', 'Maria Garcia', 'Robert Taylor', 'Linda Johnson', 'Michael Brown',
+    'Elizabeth Davis', 'William Miller', 'Susan Wilson', 'David Moore', 'Jessica Taylor',
+    'John Anderson', 'Karen Thomas', 'Christopher Jackson', 'Nancy White', 'Matthew Harris',
+    'Sarah Martin', 'Daniel Thompson', 'Lisa Garcia', 'Anthony Martinez', 'Dorothy Robinson'
+];
+
+const OFFICER_NAMES = [
+    'Brett Corbin', 'Sarah Jenkins', 'John Doe', 'Alice Miller', 'Robert Smith'
+];
+
+const NOTE_SNIPPETS = [
+    'Resident is sleeping.', 'Resident is awake and alert.', 'Room is tidy.',
+    'Resident refused check.', 'Resident is in common area.', 'Checked vitals.',
+    'Assisted with mobility.', 'Resident is watching TV.', 'Observation complete.'
+];
+
 const createEnhancedLiveCheck = (
     id: string,
     residentName: string,
@@ -24,6 +41,7 @@ const createEnhancedLiveCheck = (
     } = {}
 ): LiveCheckRow => {
     const timerSeverity = status === 'overdue' ? 'alert' : status === 'due' ? 'warning' : 'neutral';
+    const officer = OFFICER_NAMES[Math.floor(Math.random() * OFFICER_NAMES.length)];
 
     return {
         id,
@@ -36,7 +54,7 @@ const createEnhancedLiveCheck = (
         group: options.group || GROUPS[0],
         unit: options.unit || 'A1',
         lastCheckTime: options.lastCheckTime || null,
-        lastCheckOfficer: 'Brett Corbin',
+        lastCheckOfficer: officer,
         originalCheck: null as never,
     };
 };
@@ -45,9 +63,10 @@ const createEnhancedHistoricalCheck = (
     id: string,
     residentName: string,
     location: string,
-    status: 'completed' | 'missed',
+    status: 'completed' | 'missed' | 'late',
     scheduledTime: string,
     actualTime: string | null,
+    varianceMinutes: number,
     options: {
         group?: string;
         unit?: string;
@@ -55,6 +74,7 @@ const createEnhancedHistoricalCheck = (
         supervisorNote?: string;
     } = {}
 ): HistoricalCheck => {
+    const officer = OFFICER_NAMES[Math.floor(Math.random() * OFFICER_NAMES.length)];
     return {
         id,
         residents: [{ id: `res-${id}`, name: residentName, location }],
@@ -62,13 +82,13 @@ const createEnhancedHistoricalCheck = (
         scheduledTime,
         actualTime,
         status,
-        varianceMinutes: actualTime ? 1 : Infinity,
+        varianceMinutes,
         group: options.group || GROUPS[0],
         unit: options.unit || 'A1',
-        officerName: 'Brett Corbin',
+        officerName: officer,
         officerNote: options.officerNote,
         supervisorNote: options.supervisorNote,
-        reviewStatus: status === 'completed' ? 'verified' : 'pending',
+        reviewStatus: (status === 'completed' || status === 'late') ? 'verified' : 'pending',
     };
 };
 
@@ -78,44 +98,93 @@ export const generateEnhancedData = () => {
     const historicalData: HistoricalCheck[] = [];
 
     const now = new Date();
-    const isoDate = now.toISOString().split('T')[0];
 
     // Generate ~20-30 checks per unit for high density
     GROUPS.forEach((group, gIdx) => {
         for (let u = 1; u <= 3; u++) {
             const unit = `${UNIT_PREFIXES[gIdx]}${u}`;
 
+            // Unit-level random performance factor (some units are just better)
+            const unitPerformanceSeed = Math.random();
+            const isPerfectUnit = group === 'Delta' || unitPerformanceSeed < 0.4; // 40% of non-Delta units are also perfect
+
             // Live Checks
             for (let i = 1; i <= 25; i++) {
                 const id = `live-${group}-${unit}-${i}`;
                 const room = `${unit}-${100 + i}`;
-                const status = i <= 5 ? 'overdue' : i <= 10 ? 'due' : 'upcoming';
-                const timerText = status === 'overdue' ? `Overdue ${i}m` : status === 'due' ? `Due in ${15 - i}m` : `Due in ${15 + i}m`;
 
-                liveData.push(createEnhancedLiveCheck(id, `Resident ${group}-${unit}-${i}`, room, status, timerText, {
+                // Randomized status distribution
+                const rand = Math.random();
+                let status: 'upcoming' | 'due' | 'overdue' = 'upcoming';
+                let timerText = '';
+
+                if (!isPerfectUnit && rand < 0.1) { // Reduced from 0.15
+                    status = 'overdue';
+                    const mins = Math.floor(Math.random() * 45) + 1;
+                    timerText = `Overdue ${mins}m`;
+                } else if (!isPerfectUnit && rand < 0.3) { // Reduced from 0.40
+                    status = 'due';
+                    const mins = Math.floor(Math.random() * 15);
+                    timerText = `Due in ${mins}m`;
+                } else {
+                    status = 'upcoming';
+                    const mins = Math.floor(Math.random() * 120) + 15;
+                    timerText = `Due in ${mins}m`;
+                }
+
+                const name = RESIDENT_NAMES[(gIdx * 10 + u * 5 + i) % RESIDENT_NAMES.length];
+
+                liveData.push(createEnhancedLiveCheck(id, name, room, status, timerText, {
                     group,
                     unit,
-                    hasHighRisk: i % 10 === 0,
+                    hasHighRisk: (i + gIdx) % 7 === 0,
                 }));
             }
 
-            // Historical Checks
-            for (let i = 1; i <= 40; i++) {
-                const id = `hist-${group}-${unit}-${i}`;
-                const room = `${unit}-${100 + i}`;
-                const status = i % 8 === 0 ? 'missed' : 'completed';
-                const schedTime = `${isoDate}T${String(8 + Math.floor(i / 4)).padStart(2, '0')}:${String((i % 4) * 15).padStart(2, '0')}:00`;
-                const actTime = status === 'completed' ? schedTime.replace('T', 'T') : null; // Simulating same time completion
+            // Historical Checks - Generate for multiple days to prevent date-filter mismatches
+            const dates = [
+                new Date(now.getTime() - 48 * 60 * 60 * 1000).toISOString().split('T')[0],
+                new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                now.toISOString().split('T')[0]
+            ];
 
-                // Add comments to some records
-                const officerNote = (i % 5 === 0) ? `Regular check, resident is ${i % 2 === 0 ? 'sleeping' : 'awake'}.` : undefined;
+            dates.forEach((isoDateForHist, dIdx) => {
+                // Reduce volume per day to keep total manageable (e.g., 20 per day = 60 total)
+                for (let i = 1; i <= 20; i++) {
+                    const id = `hist-${group}-${unit}-d${dIdx}-${i}`;
+                    const room = `${unit}-${100 + i}`;
+                    const isMissed = !isPerfectUnit && Math.random() < 0.02;
 
-                historicalData.push(createEnhancedHistoricalCheck(id, `Resident H-${group}-${unit}-${i}`, room, status, schedTime, actTime, {
-                    group,
-                    unit,
-                    officerNote,
-                }));
-            }
+                    const hour = 8 + Math.floor(i / 2);
+                    const minute = (i % 2) * 30;
+                    const schedTime = `${isoDateForHist}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00`;
+
+                    let actTime = null;
+                    let variance = Infinity;
+                    let status: 'completed' | 'missed' | 'late' = 'missed';
+
+                    if (!isMissed) {
+                        variance = isPerfectUnit
+                            ? Math.floor(Math.random() * 5) - 2
+                            : Math.floor(Math.random() * 35) - 5;
+
+                        const actDate = new Date(new Date(schedTime).getTime() + variance * 60000);
+                        actTime = actDate.toISOString();
+                        status = variance > 15 ? 'late' : 'completed';
+                    }
+
+                    const name = RESIDENT_NAMES[(gIdx * 10 + u * 5 + i + dIdx) % RESIDENT_NAMES.length];
+                    const officerNote = (i % 3 === 0) ? NOTE_SNIPPETS[Math.floor(Math.random() * NOTE_SNIPPETS.length)] : undefined;
+                    const supervisorNote = (!isPerfectUnit && i % 15 === 0) ? 'Follow up required.' : undefined;
+
+                    historicalData.push(createEnhancedHistoricalCheck(id, name, room, status, schedTime, actTime, variance, {
+                        group,
+                        unit,
+                        officerNote,
+                        supervisorNote,
+                    }));
+                }
+            });
         }
     });
 
@@ -123,6 +192,9 @@ export const generateEnhancedData = () => {
 };
 
 const cachedData = generateEnhancedData();
+export const enhancedMockData = cachedData;
+export const TOTAL_LIVE_RECORDS = cachedData.liveData.length;
+export const TOTAL_HISTORICAL_RECORDS = cachedData.historicalData.length;
 
 export const loadEnhancedLivePage = (
     cursor: number,
@@ -142,7 +214,10 @@ export const loadEnhancedLivePage = (
                 }
                 if (filter.group && filter.group !== 'all') filtered = filtered.filter(r => r.group === filter.group);
                 if (filter.unit && filter.unit !== 'all') filtered = filtered.filter(r => r.unit === filter.unit);
-                if (filter.statusFilter && filter.statusFilter !== 'all') filtered = filtered.filter(r => r.status === filter.statusFilter);
+                if (filter.statusFilter && filter.statusFilter !== 'all') {
+                    // Strictly match status. 'missed' is historical per user request.
+                    filtered = filtered.filter(r => r.status === filter.statusFilter);
+                }
             }
 
             const data = filtered.slice(cursor, cursor + pageSize);
@@ -170,7 +245,15 @@ export const loadEnhancedHistoricalPage = (
                 }
                 if (filter.group && filter.group !== 'all') filtered = filtered.filter(r => r.group === filter.group);
                 if (filter.unit && filter.unit !== 'all') filtered = filtered.filter(r => r.unit === filter.unit);
-                if (filter.statusFilter && filter.statusFilter !== 'all') filtered = filtered.filter(r => r.status === filter.statusFilter);
+                if (filter.statusFilter && filter.statusFilter !== 'all') {
+                    if (filter.statusFilter === 'unreviewed') {
+                        filtered = filtered.filter(r =>
+                            (r.status === 'missed' || r.status === 'late') && !r.supervisorNote
+                        );
+                    } else {
+                        filtered = filtered.filter(r => r.status === filter.statusFilter);
+                    }
+                }
 
                 // Date Range Filter
                 if (filter.dateStart || filter.dateEnd) {

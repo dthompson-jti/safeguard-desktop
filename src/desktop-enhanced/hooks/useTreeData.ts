@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai';
 import { desktopEnhancedViewAtom } from '../atoms';
-import { mockLiveChecks } from '../../desktop/mockLiveData';
-import { historicalChecks } from '../../desktop/mockHistoricalData';
+import { desktopFilterAtom } from '../../desktop/atoms';
+import { enhancedMockData } from '../data/mockData';
 
 import { LiveCheckRow } from '../../desktop/types';
 import { HistoricalCheck } from '../../desktop/types';
@@ -26,6 +26,7 @@ export interface TreeUnit {
 
 export const useTreeData = () => {
     const view = useAtomValue(desktopEnhancedViewAtom);
+    const filter = useAtomValue(desktopFilterAtom);
 
     // 1. Build a STABLE structure from ALL known groups/units across BOTH datasets
     const allGroups = new Set<string>();
@@ -41,8 +42,8 @@ export const useTreeData = () => {
         });
     };
 
-    scanData(mockLiveChecks);
-    scanData(historicalChecks);
+    scanData(enhancedMockData.liveData);
+    scanData(enhancedMockData.historicalData);
 
     // 2. Initialize counts for the stable structure
     const countsMap = new Map<string, { missed: number; secondary: number }>();
@@ -51,22 +52,46 @@ export const useTreeData = () => {
 
     // 3. Process counts only for the ACTIVE view
     if (view === 'live') {
-        mockLiveChecks.forEach(check => {
+        enhancedMockData.liveData.forEach(check => {
             const key = getCountKey(check.group || 'Other', check.unit || 'Other');
             const current = countsMap.get(key) || { missed: 0, secondary: 0 };
-            if (check.status === 'missed') current.missed++;
+            if (check.status === 'overdue') current.missed++;
             if (check.status === 'due') current.secondary++;
             countsMap.set(key, current);
         });
     } else {
-        historicalChecks.forEach(check => {
+        enhancedMockData.historicalData.forEach(check => {
             const key = getCountKey(check.group || 'Other', check.unit || 'Other');
             const current = countsMap.get(key) || { missed: 0, secondary: 0 };
 
-            const isMissedOrLate = check.status === 'missed' || check.status === 'late';
-            const hasNoNote = !check.supervisorNote;
-            if (isMissedOrLate && hasNoNote) current.missed++;
+            // Date filtering
+            if (filter.dateStart || filter.dateEnd) {
+                const checkDate = check.scheduledTime.split('T')[0];
+                if (filter.dateStart && checkDate < filter.dateStart) return;
+                if (filter.dateEnd && checkDate > filter.dateEnd) return;
+            }
 
+            // Status filtering (match table logic)
+            if (filter.statusFilter && filter.statusFilter !== 'all') {
+                if (filter.statusFilter === 'unreviewed') {
+                    // Unreviewed = (missed or late) AND no supervisorNote
+                    const isMissedOrLate = check.status === 'missed' || check.status === 'late';
+                    if (!isMissedOrLate || check.supervisorNote) return;
+                } else if (filter.statusFilter === 'missed' && check.status !== 'missed') {
+                    return;
+                } else if (filter.statusFilter === 'late' && check.status !== 'late') {
+                    return;
+                } else if (filter.statusFilter === 'completed' && check.status !== 'completed') {
+                    return;
+                }
+            }
+
+            // Comment filtering
+            if (filter.commentFilter === 'comment' && !check.officerNote) return;
+            if (filter.commentFilter === 'no-comment' && check.officerNote) return;
+
+            // If we get here, the check passes all filters. Count it.
+            current.missed++;
             countsMap.set(key, current);
         });
     }
@@ -113,12 +138,12 @@ export const useTreeData = () => {
     return [facilityRoot];
 };
 export const useGlobalSummary = () => {
-    // Overdue = missed in live
-    const overdue = mockLiveChecks.filter(c => c.status === 'missed').length;
+    // Overdue = overdue in live
+    const overdue = enhancedMockData.liveData.filter(c => c.status === 'overdue' || c.status === 'missed').length;
     // Due = due in live
-    const due = mockLiveChecks.filter(c => c.status === 'due').length;
+    const due = enhancedMockData.liveData.filter(c => c.status === 'due').length;
     // Need Comment = missed or late in historical AND no note
-    const needComment = historicalChecks.filter(c =>
+    const needComment = enhancedMockData.historicalData.filter(c =>
         (c.status === 'missed' || c.status === 'late') && !c.supervisorNote
     ).length;
 

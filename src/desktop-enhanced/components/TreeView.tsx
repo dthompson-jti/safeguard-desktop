@@ -122,8 +122,8 @@ export const TreeView: React.FC = () => {
         });
     }, [setExpanded]);
 
-    const selectNode = useCallback((type: SelectionType, id: string) => {
-        setSelection({ type, id });
+    const selectNode = useCallback((type: SelectionType, id: string, parentId?: string) => {
+        setSelection({ type, id, parentId });
     }, [setSelection]);
 
     const renderNode = (node: TreeGroup | TreeUnit) => {
@@ -142,7 +142,7 @@ export const TreeView: React.FC = () => {
                 isExpanded={isExpanded}
                 view={view}
                 onToggle={() => toggleExpand(node.id)}
-                onSelect={() => selectNode(node.type, node.id)}
+                onSelect={() => selectNode(node.type, node.id, 'parentId' in node ? node.parentId : undefined)}
             >
                 {'children' in node && node.children?.map((child) => renderNode(child))}
             </TreeItem>

@@ -37,8 +37,13 @@ const createCheck = (
     }
 
     // Standardize Group and Unit logic to match Live View (Unique Subunits)
-    const roomNumPart = location.split('-')[1] || location.split(' ')[1] || '0';
-    const roomNum = parseInt(roomNumPart, 10) || 0;
+    const getRoomNum = (loc: string) => {
+        const parts = loc.split(/[- ]/);
+        const lastPart = parts[parts.length - 1];
+        return parseInt(lastPart, 10) || 0;
+    };
+
+    const roomNum = getRoomNum(location);
 
     const groupIdx = roomNum % 4;
     const GROUPS = ['Alpha', 'Beta', 'Gamma', 'Delta'];

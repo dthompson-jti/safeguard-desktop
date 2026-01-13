@@ -29,7 +29,7 @@ export interface DesktopFilter {
     unit: string;      // 'all' or unit ID
     search: string;    // Resident name search
     showMissedOnly: boolean;
-    statusFilter: 'all' | 'missed' | 'late' | 'upcoming' | 'due' | 'overdue' | 'completed';  // Status filter for both views
+    statusFilter: 'all' | 'missed' | 'late' | 'upcoming' | 'due' | 'overdue' | 'completed' | 'unreviewed';  // Status filter for both views
     commentFilter: 'any' | 'comment' | 'no-comment';
     dateStart: string | null; // ISO Date string (YYYY-MM-DD)
     dateEnd: string | null;   // ISO Date string (YYYY-MM-DD)

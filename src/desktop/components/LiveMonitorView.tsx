@@ -6,7 +6,10 @@ import { LiveCheckRow } from '../types';
 import { DataTable } from './DataTable';
 import { RowContextMenu } from './RowContextMenu';
 import { StatusBadge, StatusBadgeType } from './StatusBadge';
-import { TOTAL_LIVE_RECORDS, loadLiveChecksPage } from '../mockLiveData';
+import {
+    TOTAL_LIVE_RECORDS,
+    loadEnhancedLivePage as loadLiveChecksPage
+} from '../../desktop-enhanced/data/mockData';
 import { COLUMN_WIDTHS } from './tableConstants';
 import styles from './DataTable.module.css';
 

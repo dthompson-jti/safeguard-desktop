@@ -56,8 +56,8 @@ export const COLUMN_WIDTHS = {
         minSize: 100,
     },
     NOTES: {
-        size: 200,
-        minSize: 150,
+        size: 300,
+        minSize: 200,
     },
     GROUP: {
         size: 100,

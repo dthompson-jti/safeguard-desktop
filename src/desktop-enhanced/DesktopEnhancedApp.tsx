@@ -18,7 +18,6 @@ import { EnhancedLiveMonitorView as LiveMonitorView } from './components/Enhance
 import { EnhancedHistoricalReviewView as HistoricalReviewView } from './components/EnhancedHistoricalReviewView';
 import { DesktopToolbar } from '../desktop/components/DesktopToolbar';
 import { DetailPanel } from '../desktop/components/DetailPanel';
-import { AuthGate } from '../components/AuthGate';
 
 export default function DesktopEnhancedApp() {
     const view = useAtomValue(desktopEnhancedViewAtom);
@@ -82,43 +81,41 @@ export default function DesktopEnhancedApp() {
     const showPanel = (view === 'historical' || view === 'live') && isPanelOpen;
 
     return (
-        <AuthGate>
-            <Layout leftPanel={<NavigationPanel />}>
-                <div
-                    data-platform="desktop"
-                    data-view-mode={view}
-                    className="desktop-enhanced-main-container"
-                    data-panel-open={showPanel}
-                    style={{
-                        height: '100%',
-                        display: 'grid',
-                        gridTemplateColumns: showPanel ? `1fr ${panelWidth}px` : '1fr',
-                        flex: 1,
-                        backgroundColor: 'var(--surface-bg-primary)',
-                        overflow: 'hidden',
-                        transition: 'grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    } as React.CSSProperties}
-                >
-                    <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
-                        <Breadcrumbs />
-                        <div style={{ flexShrink: 0 }}>
-                            <DesktopToolbar />
-                        </div>
-
-                        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                            {view === 'live' ? <LiveMonitorView /> : <HistoricalReviewView />}
-                        </div>
+        <Layout leftPanel={<NavigationPanel />}>
+            <div
+                data-platform="desktop"
+                data-view-mode={view}
+                className="desktop-enhanced-main-container"
+                data-panel-open={showPanel}
+                style={{
+                    height: '100%',
+                    display: 'grid',
+                    gridTemplateColumns: showPanel ? `1fr ${panelWidth}px` : '1fr',
+                    flex: 1,
+                    backgroundColor: 'var(--surface-bg-primary)',
+                    overflow: 'hidden',
+                    transition: 'grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                } as React.CSSProperties}
+            >
+                <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+                    <Breadcrumbs />
+                    <div style={{ flexShrink: 0 }}>
+                        <DesktopToolbar />
                     </div>
 
-                    <AnimatePresence>
-                        {showPanel && (
-                            <div style={{ borderLeft: '1px solid var(--surface-border-secondary)', height: '100%', position: 'relative' }}>
-                                <DetailPanel record={activeRecord} selectedCount={totalSelected} />
-                            </div>
-                        )}
-                    </AnimatePresence>
+                    <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                        {view === 'live' ? <LiveMonitorView /> : <HistoricalReviewView />}
+                    </div>
                 </div>
-            </Layout>
-        </AuthGate>
+
+                <AnimatePresence>
+                    {showPanel && (
+                        <div style={{ borderLeft: '1px solid var(--surface-border-secondary)', height: '100%', position: 'relative' }}>
+                            <DetailPanel record={activeRecord} selectedCount={totalSelected} />
+                        </div>
+                    )}
+                </AnimatePresence>
+            </div>
+        </Layout>
     );
 }

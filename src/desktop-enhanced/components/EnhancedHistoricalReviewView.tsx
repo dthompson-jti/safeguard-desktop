@@ -6,6 +6,7 @@ import {
     selectedHistoryRowsAtom,
     activeDetailRecordAtom,
     desktopFilterAtom,
+    supervisorNoteModalAtom,
     PanelData,
 } from '../../desktop/atoms';
 import { HistoricalCheck } from '../../desktop/types';
@@ -38,6 +39,7 @@ export const EnhancedHistoricalReviewView = () => {
     const [totalCount, setTotalCount] = useState(0);
 
     const filter = useAtomValue(desktopFilterAtom);
+    const setModalState = useSetAtom(supervisorNoteModalAtom);
 
     // Initial load
     useEffect(() => {
@@ -119,6 +121,13 @@ export const EnhancedHistoricalReviewView = () => {
         };
         setDetailRecord(panelData);
     }, [loadedData, setSelectedRows, setDetailRecord]);
+
+    const handleOpenNoteModal = useCallback((checkId: string) => {
+        setModalState({
+            isOpen: true,
+            selectedIds: [checkId],
+        });
+    }, [setModalState]);
 
     const columns: ColumnDef<HistoricalCheck>[] = useMemo(
         () => [
@@ -213,8 +222,27 @@ export const EnhancedHistoricalReviewView = () => {
                 cell: ({ row }) => (
                     <RowContextMenu
                         actions={[
-                            { label: row.original.reviewStatus === 'verified' ? 'Edit Note' : 'Add Note', icon: 'edit_note', onClick: () => { } },
-                            { label: 'Flag for Review', icon: 'flag', onClick: () => { }, destructive: true }
+                            {
+                                label: 'View Resident',
+                                icon: 'person',
+                                onClick: () => console.log('Navigate to resident:', row.original.residents[0]?.id),
+                            },
+                            {
+                                label: 'Manage Room',
+                                icon: 'meeting_room',
+                                onClick: () => console.log('Open room management:', row.original.location),
+                            },
+                            {
+                                label: row.original.supervisorNote ? 'Edit Note' : 'Add Note',
+                                icon: row.original.supervisorNote ? 'edit' : 'add_comment',
+                                onClick: () => handleOpenNoteModal(row.original.id),
+                            },
+                            ...(row.original.supervisorNote ? [{
+                                label: 'Delete Note',
+                                icon: 'delete',
+                                onClick: () => console.log('Delete note for:', row.original.id),
+                                destructive: true,
+                            }] : []),
                         ]}
                     />
                 ),
@@ -241,7 +269,12 @@ export const EnhancedHistoricalReviewView = () => {
             {selectedRows.size > 0 && (
                 <BulkActionFooter
                     selectedCount={selectedRows.size}
-                    onAction={() => { }}
+                    onAction={() => {
+                        setModalState({
+                            isOpen: true,
+                            selectedIds: Array.from(selectedRows),
+                        });
+                    }}
                     onClear={() => setSelectedRows(new Set())}
                 />
             )}

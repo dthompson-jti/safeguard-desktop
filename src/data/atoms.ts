@@ -16,15 +16,18 @@ export const slowTickerAtom = atom<number>(Date.now());
 // =================================================================
 
 import type { User } from './users';
+import { MOCK_USERS } from './users';
 
 interface Session {
   isAuthenticated: boolean;
   user: User | null;
 }
 
+const DEFAULT_USER = MOCK_USERS.find(u => u.username === 'dthompson') || MOCK_USERS[0];
+
 export const sessionAtom = atom<Session>({
-  isAuthenticated: false,
-  user: null,
+  isAuthenticated: true,
+  user: DEFAULT_USER,
 });
 
 // User preferences (avatar color overrides)

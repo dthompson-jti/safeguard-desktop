@@ -27,8 +27,11 @@ try {
 // --------------------
 
 const getApp = () => {
+  const pathname = window.location.pathname;
+
   // 1. Explicit Route for Desktop Enhanced
-  if (window.location.pathname.includes('/desktop-enhanced')) {
+  // We check if the pathname (normalized) includes desktop-enhanced
+  if (pathname.includes('desktop-enhanced')) {
     return <DesktopEnhancedApp />;
   }
 

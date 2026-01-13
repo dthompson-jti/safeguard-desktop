@@ -1,22 +1,40 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import styles from './Layout.module.css';
 import { TopNav } from './components/TopNav';
 import { ExtremeLeftNav } from './components/ExtremeLeftNav';
-import { desktopEnhancedPanelWidthAtom } from './atoms';
+import { desktopEnhancedPanelWidthAtom, desktopEnhancedSelectionAtom } from './atoms';
+import { desktopFilterAtom } from '../desktop/atoms';
 import { useLayoutRegistration } from '../data/useLayoutRegistration';
 import { headerHeightAtom } from '../data/layoutAtoms';
 
 interface LayoutProps {
-    leftPanel: React.ReactNode;
+    leftPanel?: React.ReactNode;
     children: React.ReactNode;
 }
 
 export const Layout: React.FC<LayoutProps> = ({ leftPanel, children }) => {
     const [width, setWidth] = useAtom(desktopEnhancedPanelWidthAtom);
+    const selection = useAtomValue(desktopEnhancedSelectionAtom);
+    const setFilter = useSetAtom(desktopFilterAtom);
     const [isResizing, setIsResizing] = useState(false);
     const widthRef = useRef(width);
     const topNavRef = useLayoutRegistration(headerHeightAtom);
+
+    // Sync selection to filter
+    useEffect(() => {
+        if (selection.type === 'root') {
+            setFilter(prev => ({ ...prev, group: 'all', unit: 'all' }));
+        } else if (selection.type === 'group') {
+            setFilter(prev => ({ ...prev, group: selection.id, unit: 'all' }));
+        } else if (selection.type === 'unit') {
+            setFilter(prev => ({
+                ...prev,
+                group: selection.parentId || 'all',
+                unit: selection.id
+            }));
+        }
+    }, [selection, setFilter]);
 
     const startResizing = useCallback((e: React.MouseEvent) => {
         setIsResizing(true);
@@ -59,18 +77,20 @@ export const Layout: React.FC<LayoutProps> = ({ leftPanel, children }) => {
             <TopNav ref={topNavRef as React.RefObject<HTMLDivElement>} />
             <div className={styles.body}>
                 <ExtremeLeftNav />
-                <div
-                    className={styles.leftPanelWrapper}
-                    style={{ width: `var(--desktop-panel-width, ${width}px)` }}
-                >
-                    {leftPanel}
+                {leftPanel && (
                     <div
-                        className={`${styles.resizer} ${isResizing ? styles.resizerActive : ''}`}
-                        onMouseDown={startResizing}
+                        className={styles.leftPanelWrapper}
+                        style={{ width: `var(--desktop-panel-width, ${width}px)` }}
                     >
-                        <div className={styles.resizeIndicator} />
+                        {leftPanel}
+                        <div
+                            className={`${styles.resizer} ${isResizing ? styles.resizerActive : ''}`}
+                            onMouseDown={startResizing}
+                        >
+                            <div className={styles.resizeIndicator} />
+                        </div>
                     </div>
-                </div>
+                )}
                 <main className={styles.mainContent}>
                     {children}
                 </main>

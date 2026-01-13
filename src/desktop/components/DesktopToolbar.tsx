@@ -19,8 +19,10 @@ const LIVE_STATUS_OPTIONS = [
 
 const HISTORICAL_STATUS_OPTIONS = [
     { value: 'all', label: 'All Status' },
+    { value: 'unreviewed', label: 'Needs Review' },
     { value: 'completed', label: 'Completed' },
     { value: 'missed', label: 'Missed' },
+    { value: 'late', label: 'Late' },
 ];
 
 const COMMENT_OPTIONS = [
@@ -85,8 +87,8 @@ export const DesktopToolbar = () => {
         } else {
             setFilter((prev) => ({
                 ...prev,
-                statusFilter: 'missed',
-                commentFilter: 'no-comment',
+                statusFilter: 'unreviewed',
+                commentFilter: 'any',
                 search: '',
                 dateStart: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                 dateEnd: new Date().toISOString().split('T')[0],
@@ -130,7 +132,7 @@ export const DesktopToolbar = () => {
                 )}
 
                 {/* Status Filter (Both views now, per request) */}
-                <div style={{ width: 140 }}>
+                <div style={{ width: 180 }}>
                     <Select
                         value={filter.statusFilter}
                         onValueChange={handleStatusFilterChange}
@@ -146,7 +148,7 @@ export const DesktopToolbar = () => {
 
                 {/* Comment Filter (Historical only) */}
                 {view === 'historical' && (
-                    <div style={{ width: 140 }}>
+                    <div style={{ width: 180 }}>
                         <Select
                             value={filter.commentFilter}
                             onValueChange={handleCommentFilterChange}
@@ -163,7 +165,7 @@ export const DesktopToolbar = () => {
 
                 {/* Time Range Filter (Historical only) */}
                 {view === 'historical' && (
-                    <div style={{ width: 160 }}>
+                    <div style={{ width: 200 }}>
                         <Select
                             value="last-24h" // Default for now
                             onValueChange={handleTimeRangeChange}
