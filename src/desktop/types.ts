@@ -13,7 +13,7 @@ export interface HistoricalCheck {
     scheduledTime: string;      // ISO string - when check was scheduled
     actualTime: string | null;  // ISO string or null if missed
     varianceMinutes: number;    // Positive = late, negative = early, Infinity = missed
-    status: 'done' | 'late' | 'missed' | 'completed';
+    status: 'completed' | 'missed';
     group: string;
     unit: string;
     officerName: string;
@@ -29,7 +29,7 @@ export interface DesktopFilter {
     unit: string;      // 'all' or unit ID
     search: string;    // Resident name search
     showMissedOnly: boolean;
-    statusFilter: 'all' | 'missed' | 'late' | 'upcoming' | 'due' | 'overdue' | 'completed' | 'unreviewed';  // Status filter for both views
+    statusFilter: 'all' | 'missed' | 'upcoming' | 'due' | 'overdue' | 'completed' | 'unreviewed';  // Status filter for both views
     commentFilter: 'any' | 'comment' | 'no-comment';
     dateStart: string | null; // ISO Date string (YYYY-MM-DD)
     dateEnd: string | null;   // ISO Date string (YYYY-MM-DD)
@@ -38,7 +38,7 @@ export interface DesktopFilter {
 /** Derived live check for table display */
 export interface LiveCheckRow {
     id: string;
-    status: 'missed' | 'due' | 'pending' | 'upcoming' | 'overdue';
+    status: 'due' | 'upcoming' | 'overdue';
     timerText: string;
     timerSeverity: 'alert' | 'warning' | 'neutral';
     location: string;

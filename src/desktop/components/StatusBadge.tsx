@@ -2,7 +2,7 @@
 import React from 'react';
 import styles from './StatusBadge.module.css';
 
-export type StatusBadgeType = 'missed' | 'due' | 'pending' | 'complete' | 'late' | 'verified' | 'done' | 'upcoming' | 'overdue' | 'completed';
+export type StatusBadgeType = 'missed' | 'due' | 'complete' | 'verified' | 'upcoming' | 'overdue' | 'completed';
 
 interface StatusBadgeProps {
     status: StatusBadgeType;
@@ -12,24 +12,17 @@ interface StatusBadgeProps {
 const getStatusConfig = (status: StatusBadgeType): { label: string; icon: string | null } => {
     switch (status) {
         case 'missed':
-            return { label: 'Overdue', icon: 'notifications_active' };
+            return { label: 'Missed', icon: 'error' };
         case 'due':
             return { label: 'Due', icon: 'schedule' };
-        case 'pending':
-            return { label: 'Upcoming', icon: 'event' };
-        case 'complete':
-        case 'verified':
-            return { label: 'Completed', icon: 'check_circle' };
-        case 'done':
-            return { label: 'Completed', icon: null };
         case 'upcoming':
             return { label: 'Upcoming', icon: 'event' };
         case 'overdue':
             return { label: 'Overdue', icon: 'notifications_active' };
+        case 'complete':
+        case 'verified':
         case 'completed':
-            return { label: 'Completed', icon: null };
-        case 'late':
-            return { label: 'Late', icon: 'history' };
+            return { label: 'Completed', icon: 'check_circle' };
         default:
             return { label: status, icon: null };
     }

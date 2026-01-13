@@ -8,7 +8,7 @@ import { Select, SelectItem } from '../../components/Select';
 import { Button } from '../../components/Button';
 import styles from './DesktopToolbar.module.css';
 
-type StatusFilterValue = 'all' | 'missed' | 'late' | 'upcoming' | 'due' | 'overdue' | 'completed';
+type StatusFilterValue = 'all' | 'missed' | 'upcoming' | 'due' | 'overdue' | 'completed';
 
 const LIVE_STATUS_OPTIONS = [
     { value: 'all', label: 'All Status' },
@@ -19,10 +19,8 @@ const LIVE_STATUS_OPTIONS = [
 
 const HISTORICAL_STATUS_OPTIONS = [
     { value: 'all', label: 'All Status' },
-    { value: 'unreviewed', label: 'Needs Review' },
     { value: 'completed', label: 'Completed' },
     { value: 'missed', label: 'Missed' },
-    { value: 'late', label: 'Late' },
 ];
 
 const COMMENT_OPTIONS = [
@@ -87,7 +85,7 @@ export const DesktopToolbar = () => {
         } else {
             setFilter((prev) => ({
                 ...prev,
-                statusFilter: 'unreviewed',
+                statusFilter: 'missed',
                 commentFilter: 'any',
                 search: '',
                 dateStart: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],

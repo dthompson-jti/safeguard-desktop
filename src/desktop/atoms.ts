@@ -61,7 +61,7 @@ export const filteredHistoricalChecksAtom = atom((get) => {
         if (filter.statusFilter === 'missed' && check.status !== 'missed') {
             return false;
         }
-        if (filter.statusFilter === 'late' && check.status !== 'late') {
+        if (filter.statusFilter === 'completed' && check.status !== 'completed') {
             return false;
         }
 
@@ -161,9 +161,9 @@ export const desktopTabCountsAtom = atom(() => {
     const overdue = enhancedMockData.liveData.filter(c => c.status === 'overdue').length;
     const due = enhancedMockData.liveData.filter(c => c.status === 'due').length;
 
-    // Historical count (unreviewed / need comment)
+    // Historical count (missed / need comment)
     const unreviewed = enhancedMockData.historicalData.filter(c =>
-        (c.status === 'missed' || c.status === 'late') && !c.supervisorNote
+        c.status === 'missed' && !c.supervisorNote
     ).length;
 
     return {

@@ -63,12 +63,10 @@ export const LiveMonitorView = () => {
             });
         }
 
-        // Sort by urgency, then by risk level (high risk first within same urgency)
+        // Sort by urgency: overdue first, then due, then upcoming
         rows.sort((a, b) => {
-            const statusOrder: Record<string, number> = { missed: 0, due: 1, pending: 2, overdue: 0 };
-            const aStatus = a.status === 'missed' ? 'overdue' : a.status;
-            const bStatus = b.status === 'missed' ? 'overdue' : b.status;
-            const statusDiff = (statusOrder[aStatus] ?? 99) - (statusOrder[bStatus] ?? 99);
+            const statusOrder: Record<string, number> = { overdue: 0, due: 1, upcoming: 2 };
+            const statusDiff = (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99);
             if (statusDiff !== 0) return statusDiff;
             // High risk residents bubble to top
             if (a.hasHighRisk && !b.hasHighRisk) return -1;
@@ -133,20 +131,10 @@ export const LiveMonitorView = () => {
                 id: 'scheduled',
                 header: 'Scheduled',
                 ...COLUMN_WIDTHS.TIMESTAMP,
-                accessorFn: () => {
-                    // Constant date for mock sorting/display
-                    return new Date().toISOString();
-                },
-                cell: () => {
-                    const now = new Date();
-                    return now.toLocaleString('en-US', {
-                        month: '2-digit',
-                        day: '2-digit',
-                        year: 'numeric',
-                        hour: 'numeric',
-                        minute: '2-digit',
-                        hour12: true,
-                    });
+                accessorFn: (row) => row.lastCheckTime || '',
+                cell: ({ row }) => {
+                    // Display the scheduled time from the row data
+                    return row.original.lastCheckTime || '--';
                 },
             },
             // 6. Status column

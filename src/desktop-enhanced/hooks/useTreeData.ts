@@ -73,17 +73,7 @@ export const useTreeData = () => {
 
             // Status filtering (match table logic)
             if (filter.statusFilter && filter.statusFilter !== 'all') {
-                if (filter.statusFilter === 'unreviewed') {
-                    // Unreviewed = (missed or late) AND no supervisorNote
-                    const isMissedOrLate = check.status === 'missed' || check.status === 'late';
-                    if (!isMissedOrLate || check.supervisorNote) return;
-                } else if (filter.statusFilter === 'missed' && check.status !== 'missed') {
-                    return;
-                } else if (filter.statusFilter === 'late' && check.status !== 'late') {
-                    return;
-                } else if (filter.statusFilter === 'completed' && check.status !== 'completed') {
-                    return;
-                }
+                if (check.status !== filter.statusFilter) return;
             }
 
             // Comment filtering
@@ -139,12 +129,12 @@ export const useTreeData = () => {
 };
 export const useGlobalSummary = () => {
     // Overdue = overdue in live
-    const overdue = enhancedMockData.liveData.filter(c => c.status === 'overdue' || c.status === 'missed').length;
+    const overdue = enhancedMockData.liveData.filter(c => c.status === 'overdue').length;
     // Due = due in live
     const due = enhancedMockData.liveData.filter(c => c.status === 'due').length;
-    // Need Comment = missed or late in historical AND no note
+    // Need Comment = missed in historical AND no note
     const needComment = enhancedMockData.historicalData.filter(c =>
-        (c.status === 'missed' || c.status === 'late') && !c.supervisorNote
+        c.status === 'missed' && !c.supervisorNote
     ).length;
 
     return { overdue, due, needComment };
