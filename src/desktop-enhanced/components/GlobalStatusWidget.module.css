@@ -4,7 +4,7 @@
     gap: var(--spacing-2);
     background-color: transparent;
     padding: 0;
-    margin: 4px 0;
+    margin: var(--spacing-1) 0;
     margin-left: auto;
     justify-content: flex-end;
 }
@@ -17,7 +17,7 @@
 }
 
 .label {
-    font-size: 11px;
+    font-size: var(--font-size-2xs);
     font-weight: 600;
     color: var(--surface-fg-secondary_on_brand);
     text-transform: uppercase;
@@ -25,7 +25,7 @@
 }
 
 .value {
-    font-size: 15px;
+    font-size: var(--font-size-md);
     font-weight: 700;
     color: var(--surface-fg-primary_on_brand);
     min-width: 12px;

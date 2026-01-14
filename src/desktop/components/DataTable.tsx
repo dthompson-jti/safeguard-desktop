@@ -61,7 +61,7 @@ export function DataTable<T>({
         const context = canvas.getContext('2d');
         if (!context) return;
 
-        context.font = '500 14px Inter, sans-serif'; // Match .th/.td font
+        context.font = '500 0.875rem Inter, sans-serif'; // Match --font-size-sm
 
         let maxWidth = 0;
 
