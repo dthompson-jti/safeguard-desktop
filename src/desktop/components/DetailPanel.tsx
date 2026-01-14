@@ -167,28 +167,11 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
 
                 {!record ? (
                     <div className={styles.emptyState}>
-                        <div className={styles.mockupIconContainer}>
-                            <div className={styles.mockupSquare}>
-                                {selectedCount > 1 ? (
-                                    <>
-                                        <div className={styles.dotsContainer}>
-                                            {[...Array(12)].map((_, i) => (
-                                                <div key={i} className={styles.dot} />
-                                            ))}
-                                        </div>
-                                        <span className="material-symbols-rounded" style={{ fontSize: '24px', color: 'var(--surface-fg-tertiary)' }}>
-                                            check_box_outline_blank
-                                        </span>
-                                    </>
-                                ) : (
-                                    <span className="material-symbols-rounded" style={{ fontSize: '32px', color: 'var(--surface-fg-tertiary)' }}>
-                                        touch_app
-                                    </span>
-                                )}
-                            </div>
-                        </div>
+                        <span className={`material-symbols-rounded ${styles.placeholderIcon}`}>
+                            {selectedCount > 1 ? 'select_all' : 'touch_app'}
+                        </span>
                         <h4 className={styles.emptyTitle}>
-                            Select an item to see the details
+                            {selectedCount > 1 ? 'Multiple items selected' : 'Select an item to see the details'}
                         </h4>
                     </div>
                 ) : (

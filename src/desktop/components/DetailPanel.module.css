@@ -257,13 +257,14 @@
     color: var(--surface-fg-quinary);
     opacity: 0.5;
     font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 64;
+    margin-bottom: var(--spacing-2);
 }
 
 .emptyTitle {
     margin: 0;
-    font-size: var(--font-size-md);
+    font-size: 16px;
     font-weight: 600;
-    color: var(--surface-fg-primary);
+    color: var(--surface-fg-quaternary);
 }
 
 .emptyText {
@@ -297,52 +298,4 @@
 .tag.verified {
     background: var(--status-complete-bg);
     color: var(--status-complete-fg);
-}
-
-.mockupIconContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: var(--spacing-4);
-}
-
-.mockupSquare {
-    width: 64px;
-    height: 64px;
-    background: var(--surface-bg-secondary);
-    border: 1px solid var(--surface-border-secondary);
-    border-radius: var(--radius-md);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.dotsContainer {
-    position: absolute;
-    inset: -12px;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: space-between;
-    justify-content: space-between;
-    pointer-events: none;
-}
-
-.dot {
-    width: 3px;
-    height: 3px;
-    background: var(--surface-fg-quinary);
-    border-radius: var(--radius-full);
-    opacity: 0.3;
-}
-
-/* Position dots in 4x4 or similar arrangement around the square */
-.dotsContainer::before {
-    content: '';
-    position: absolute;
-    inset: 4px;
-    border: 1px dashed var(--surface-border-secondary);
-    border-radius: inherit;
-    opacity: 0.2;
 }

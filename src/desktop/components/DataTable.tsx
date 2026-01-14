@@ -455,24 +455,24 @@ export function DataTable<T>({
                         <p>No data to display</p>
                     </div>
                 )}
-            </div>
 
-            {/* Table Footer */}
-            <div className={styles.tableFooter}>
-                <div className={styles.footerLeft}>
-                    {/* If fetching, show just text. If done, show count. */}
-                    {isLoading ? (
-                        <div className={styles.loadingIndicator}>
-                            <span className={`material-symbols-rounded ${styles.loadingSpinner}`}>
-                                progress_activity
-                            </span>
-                            <span>Loading records...</span>
-                        </div>
-                    ) : (
-                        <div className={styles.footerCount}>
-                            {data.length.toLocaleString()} of {(totalCount ?? data.length).toLocaleString()} records
-                        </div>
-                    )}
+                {/* Table Footer - Moved inside scrollArea for better sticky behavior */}
+                <div className={styles.tableFooter}>
+                    <div className={styles.footerLeft}>
+                        {/* If fetching, show just text. If done, show count. */}
+                        {isLoading ? (
+                            <div className={styles.loadingIndicator}>
+                                <span className={`material-symbols-rounded ${styles.loadingSpinner}`}>
+                                    progress_activity
+                                </span>
+                                <span>Loading records...</span>
+                            </div>
+                        ) : (
+                            <div className={styles.footerCount}>
+                                {data.length.toLocaleString()} of {(totalCount ?? data.length).toLocaleString()} records
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

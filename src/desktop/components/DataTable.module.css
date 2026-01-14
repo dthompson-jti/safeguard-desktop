@@ -12,7 +12,7 @@
 }
 
 .scrollArea {
-    flex: 1;
+    flex: 0 1 auto;
     overflow: auto;
     min-height: 0;
     background: var(--surface-bg-tertiary);
@@ -609,11 +609,15 @@
     display: flex;
     align-items: center;
     border-top: 1px solid var(--surface-border-primary);
-    /* Removed redundant border-bottom as it's the bottom of the app */
     background: var(--surface-bg-primary);
     font-size: var(--font-size-sm);
     color: var(--surface-fg-secondary);
     flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 30;
     /* Above scrollarea content */
 }
