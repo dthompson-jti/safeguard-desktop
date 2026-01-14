@@ -87,7 +87,7 @@ export default function DesktopEnhancedApp() {
         });
     }, [selection, setFilter]);
 
-    const showPanel = (view === 'historical' || view === 'live') && isPanelOpen;
+    const showPanel = view === 'historical' && isPanelOpen;
 
     return (
         <Layout leftPanel={<NavigationPanel />}>

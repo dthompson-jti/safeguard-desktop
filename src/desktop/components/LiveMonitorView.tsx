@@ -63,8 +63,13 @@ export const LiveMonitorView = () => {
             });
         }
 
-        // Sort by urgency: overdue first, then due, then upcoming
+        // Sort by Location: Group -> Unit -> Room
         rows.sort((a, b) => {
+            const locA = `${a.group} ${a.unit} ${a.location}`;
+            const locB = `${b.group} ${b.unit} ${b.location}`;
+            const locDiff = locA.localeCompare(locB);
+            if (locDiff !== 0) return locDiff;
+
             const statusOrder: Record<string, number> = { overdue: 0, due: 1, upcoming: 2 };
             const statusDiff = (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99);
             if (statusDiff !== 0) return statusDiff;
@@ -105,26 +110,21 @@ export const LiveMonitorView = () => {
                     </div>
                 ),
             },
-            // 2. Group column
-            {
-                id: 'group',
-                header: 'Group',
-                accessorKey: 'group',
-                ...COLUMN_WIDTHS.GROUP,
-            },
-            // 3. Unit column
-            {
-                id: 'unit',
-                header: 'Unit',
-                accessorKey: 'unit',
-                ...COLUMN_WIDTHS.UNIT,
-            },
-            // 4. Room column (location)
+            // 2. Merged Location column (Group > Unit > Room)
             {
                 id: 'location',
-                header: 'Room',
-                ...COLUMN_WIDTHS.LOCATION,
-                accessorKey: 'location',
+                header: 'Location',
+                ...COLUMN_WIDTHS.MERGED_LOCATION,
+                accessorFn: (row) => `${row.group} ${row.unit} ${row.location}`,
+                cell: ({ row }) => (
+                    <div className={styles.locationCell} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span>{row.original.group}</span>
+                        <span className="material-symbols-rounded" style={{ fontSize: '16px', color: 'var(--surface-fg-quaternary)' }}>navigate_next</span>
+                        <span>{row.original.unit}</span>
+                        <span className="material-symbols-rounded" style={{ fontSize: '16px', color: 'var(--surface-fg-quaternary)' }}>navigate_next</span>
+                        <span>{row.original.location}</span>
+                    </div>
+                ),
             },
             // 5. Scheduled column
             {
@@ -179,7 +179,7 @@ export const LiveMonitorView = () => {
                                 onClick: () => console.log('View resident', row.original.id),
                             },
                             {
-                                label: 'Manage room',
+                                label: 'Facility management',
                                 icon: 'door_front',
                                 onClick: () => console.log('Manage room', row.original.location),
                             }

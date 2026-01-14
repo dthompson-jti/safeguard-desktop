@@ -15,8 +15,12 @@
 }
 
 .icon {
-    font-size: 14px !important;
+    font-size: var(--icon-size-sm) !important;
     font-variation-settings: 'opsz' 14, 'wght' 600;
+}
+
+.iconFilled {
+    font-variation-settings: 'FILL' 1, 'wght' 600 !important;
 }
 
 /* Label has no specific styles - inherits from badge */

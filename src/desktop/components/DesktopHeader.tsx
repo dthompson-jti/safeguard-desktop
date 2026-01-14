@@ -3,7 +3,6 @@
 import { useAtomValue } from 'jotai';
 import { desktopViewAtom } from '../atoms';
 import { DesktopTabGroup } from './DesktopTabGroup';
-import { CountdownWidget } from './CountdownWidget';
 import styles from './DesktopHeader.module.css';
 
 interface DesktopHeaderProps {
@@ -30,8 +29,6 @@ export const DesktopHeader = ({ onTogglePanel, isPanelOpen }: DesktopHeaderProps
 
             {/* Right: Countdown Widget (Live) or Actions (Historical) */}
             <div className={styles.rightSection}>
-                {view === 'live' && <CountdownWidget />}
-
                 {view === 'historical' && (
                     <>
                         <button
@@ -41,15 +38,6 @@ export const DesktopHeader = ({ onTogglePanel, isPanelOpen }: DesktopHeaderProps
                             aria-label="Export data"
                         >
                             Export
-                        </button>
-                        <button
-                            className="btn"
-                            data-variant="secondary"
-                            data-size="s"
-                            data-icon-only="true"
-                            aria-label="More actions"
-                        >
-                            <span className="material-symbols-rounded">more_vert</span>
                         </button>
 
                         <button

@@ -22,7 +22,7 @@ const getStatusConfig = (status: StatusBadgeType): { label: string; icon: string
         case 'upcoming':
             return { label: 'Upcoming', icon: 'event' };
         case 'overdue':
-            return { label: 'Overdue', icon: 'notifications_active' };
+            return { label: 'Missed', icon: 'notifications_active' };
         case 'complete':
         case 'verified':
         case 'completed':
@@ -42,8 +42,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label: customL
         <div className={styles.badge} data-status={status}>
             {config.icon && (
                 <span
-                    className={`material-symbols-rounded ${styles.icon}`}
-                    style={fill ? { fontVariationSettings: "'FILL' 1, 'wght' 600" } : undefined}
+                    className={`material-symbols-rounded ${styles.icon} ${fill ? styles.iconFilled : ''}`}
                 >
                     {config.icon}
                 </span>

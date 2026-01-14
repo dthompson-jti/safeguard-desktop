@@ -16,6 +16,7 @@ import { BulkActionFooter } from '../../desktop/components/BulkActionFooter';
 import { RowContextMenu } from '../../desktop/components/RowContextMenu';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
 import { loadEnhancedHistoricalPage } from '../data/mockData';
+import { COLUMN_WIDTHS } from '../../desktop/components/tableConstants';
 import styles from '../../desktop/components/DataTable.module.css';
 
 const formatTime = (isoString: string): string => {
@@ -192,9 +193,26 @@ export const EnhancedHistoricalReviewView = () => {
                     </div>
                 ),
             },
-            { id: 'group', header: 'Group', accessorKey: 'group', size: 100, minSize: 80 },
-            { id: 'unit', header: 'Unit', accessorKey: 'unit', size: 80, minSize: 60 },
-            { id: 'location', header: 'Room', size: 90, minSize: 70, accessorKey: 'location' },
+            {
+                id: 'location',
+                header: 'Location',
+                ...COLUMN_WIDTHS.MERGED_LOCATION,
+                accessorFn: (row) => `${row.group} ${row.unit} ${row.location}`,
+                sortingFn: (rowA, rowB) => {
+                    const a = `${rowA.original.group} ${rowA.original.unit} ${rowA.original.location}`;
+                    const b = `${rowB.original.group} ${rowB.original.unit} ${rowB.original.location}`;
+                    return a.localeCompare(b);
+                },
+                cell: ({ row }) => (
+                    <div className={styles.locationCell}>
+                        <span>{row.original.group}</span>
+                        <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
+                        <span>{row.original.unit}</span>
+                        <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
+                        <span>{row.original.location}</span>
+                    </div>
+                ),
+            },
             {
                 id: 'scheduled',
                 header: 'Scheduled',
@@ -216,9 +234,31 @@ export const EnhancedHistoricalReviewView = () => {
             {
                 id: 'actual',
                 header: 'Actual',
-                size: 180,
-                minSize: 160,
-                accessorFn: (row) => row.actualTime ? formatTime(row.actualTime) : '—',
+                ...COLUMN_WIDTHS.TIMESTAMP,
+                accessorFn: (row) => row.actualTime || '—',
+                cell: ({ row }) => {
+                    if (!row.original.actualTime) return <span className={styles.secondaryText}>—</span>;
+                    const dateObj = new Date(row.original.actualTime);
+                    const dateStr = dateObj.toLocaleDateString('en-US', {
+                        month: '2-digit',
+                        day: '2-digit',
+                        year: 'numeric',
+                    });
+                    const timeStr = formatTime(row.original.actualTime);
+
+                    return (
+                        <div className={styles.singleRowCell}>
+                            <span className={styles.primaryText}>{dateStr}</span>
+                            <span className={styles.secondaryText}>{timeStr}</span>
+                        </div>
+                    );
+                }
+            },
+            {
+                id: 'officer',
+                header: 'Officer',
+                ...COLUMN_WIDTHS.OFFICER,
+                accessorKey: 'officerName',
             },
             {
                 id: 'status',
@@ -265,8 +305,8 @@ export const EnhancedHistoricalReviewView = () => {
                                 onClick: () => console.log('Navigate to resident:', row.original.residents[0]?.id),
                             },
                             {
-                                label: 'Manage Room',
-                                icon: 'meeting_room',
+                                label: 'Facility management',
+                                icon: 'door_front',
                                 onClick: () => console.log('Open room management:', row.original.location),
                             },
                             {
@@ -285,7 +325,7 @@ export const EnhancedHistoricalReviewView = () => {
                 ),
             },
         ],
-        [handleRowClick]
+        [handleRowClick, handleOpenNoteModal]
     );
 
     return (
@@ -317,26 +357,6 @@ export const EnhancedHistoricalReviewView = () => {
                         setSelectedRows(new Set());
                         setDetailRecord(null);
                     }}
-                    actions={[
-                        {
-                            label: 'Bulk Add Comment',
-                            icon: 'add_comment',
-                            onClick: () => {
-                                setModalState({
-                                    isOpen: true,
-                                    selectedIds: Array.from(selectedRows),
-                                });
-                            }
-                        },
-                        {
-                            label: 'Clear Selection',
-                            icon: 'close',
-                            onClick: () => {
-                                setSelectedRows(new Set());
-                                setDetailRecord(null);
-                            },
-                        }
-                    ]}
                 />
             )}
         </>

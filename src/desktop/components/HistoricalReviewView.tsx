@@ -201,26 +201,21 @@ export const HistoricalReviewView = () => {
                     </a>
                 ),
             },
-            // 2. Group
-            {
-                id: 'group',
-                header: 'Group',
-                accessorKey: 'group',
-                ...COLUMN_WIDTHS.GROUP,
-            },
-            // 3. Unit
-            {
-                id: 'unit',
-                header: 'Unit',
-                accessorKey: 'unit',
-                ...COLUMN_WIDTHS.UNIT,
-            },
-            // 4. Room
+            // 2. Merged Location column (Group > Unit > Room)
             {
                 id: 'location',
-                header: 'Room',
-                ...COLUMN_WIDTHS.LOCATION,
-                accessorKey: 'location',
+                header: 'Location',
+                ...COLUMN_WIDTHS.MERGED_LOCATION,
+                accessorFn: (row) => `${row.group} ${row.unit} ${row.location}`,
+                cell: ({ row }) => (
+                    <div className={styles.locationCell} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span>{row.original.group}</span>
+                        <span className="material-symbols-rounded" style={{ fontSize: '16px', color: 'var(--surface-fg-quaternary)' }}>navigate_next</span>
+                        <span>{row.original.unit}</span>
+                        <span className="material-symbols-rounded" style={{ fontSize: '16px', color: 'var(--surface-fg-quaternary)' }}>navigate_next</span>
+                        <span>{row.original.location}</span>
+                    </div>
+                ),
             },
             // 5. Scheduled (Date + Time Merged)
             {
@@ -245,12 +240,36 @@ export const HistoricalReviewView = () => {
                     );
                 }
             },
-            // 7. Actual
+            // 7. Actual (Date + Time Merged)
             {
                 id: 'actual',
                 header: 'Actual',
                 ...COLUMN_WIDTHS.TIMESTAMP,
-                accessorFn: (row) => row.actualTime ? formatTime(row.actualTime) : '—',
+                accessorFn: (row) => row.actualTime || '—',
+                cell: ({ row }) => {
+                    if (!row.original.actualTime) return <span className={styles.secondaryText}>—</span>;
+                    const dateObj = new Date(row.original.actualTime);
+                    const dateStr = dateObj.toLocaleDateString('en-US', {
+                        month: '2-digit',
+                        day: '2-digit',
+                        year: 'numeric',
+                    });
+                    const timeStr = formatTime(row.original.actualTime);
+
+                    return (
+                        <div className={styles.singleRowCell}>
+                            <span className={styles.primaryText}>{dateStr}</span>
+                            <span className={styles.secondaryText}>{timeStr}</span>
+                        </div>
+                    );
+                }
+            },
+            // 8. Officer
+            {
+                id: 'officer',
+                header: 'Officer',
+                ...COLUMN_WIDTHS.OFFICER,
+                accessorKey: 'officerName',
             },
             // 8. Status
             {
@@ -286,8 +305,8 @@ export const HistoricalReviewView = () => {
                                 onClick: () => console.log('Navigate to resident:', row.original.residents[0]?.id),
                             },
                             {
-                                label: 'Manage Room',
-                                icon: 'meeting_room',
+                                label: 'Facility management',
+                                icon: 'door_front',
                                 onClick: () => console.log('Open room management:', row.original.location),
                             },
                             {

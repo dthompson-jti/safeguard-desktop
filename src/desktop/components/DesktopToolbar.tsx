@@ -13,7 +13,7 @@ const LIVE_STATUS_OPTIONS = [
     { value: 'all', label: 'All Status' },
     { value: 'upcoming', label: 'Upcoming' },
     { value: 'due', label: 'Due' },
-    { value: 'overdue', label: 'Overdue' },
+    { value: 'overdue', label: 'Missed' },
 ];
 
 const HISTORICAL_STATUS_OPTIONS = [
@@ -109,7 +109,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                 <SearchInput
                     value={filter.search}
                     onChange={(val) => setFilter((prev) => ({ ...prev, search: val }))}
-                    placeholder="Search residents..."
+                    placeholder="Search..."
                     variant="standalone"
                 />
 

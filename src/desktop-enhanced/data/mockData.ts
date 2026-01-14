@@ -116,12 +116,12 @@ export const generateEnhancedData = () => {
         if (deltaMinutes > 15) {
             // More than 15 mins past scheduled time
             liveStatus = 'overdue';
-            timerText = `Overdue ${deltaMinutes}m`;
+            timerText = `Missed ${deltaMinutes}m`;
             timerSeverity = 'alert';
         } else if (deltaMinutes > 5) {
             // 6-15 mins past scheduled time
             liveStatus = 'overdue';
-            timerText = `Overdue ${deltaMinutes}m`;
+            timerText = `Missed ${deltaMinutes}m`;
             timerSeverity = 'alert';
         } else if (deltaMinutes >= 0) {
             // 0-5 mins past scheduled time (grace period) → Due
@@ -205,7 +205,7 @@ export const generateEnhancedData = () => {
                 varianceMinutes: variance,
                 group: room.group,
                 unit: room.unit,
-                officerName: officer,
+                officerName: isMissed ? '' : officer,
                 officerNote,
                 supervisorNote,
                 reviewStatus: isMissed ? (supervisorNote ? 'verified' : 'pending') : 'verified',

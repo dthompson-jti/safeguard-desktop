@@ -8,6 +8,7 @@ import { DataTable } from '../../desktop/components/DataTable';
 import { RowContextMenu } from '../../desktop/components/RowContextMenu';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
 import { loadEnhancedLivePage } from '../data/mockData';
+import { COLUMN_WIDTHS } from '../../desktop/components/tableConstants';
 import styles from '../../desktop/components/DataTable.module.css';
 
 export const EnhancedLiveMonitorView = () => {
@@ -152,25 +153,24 @@ export const EnhancedLiveMonitorView = () => {
                 ),
             },
             {
-                id: 'group',
-                header: 'Group',
-                size: 100,
-                minSize: 80,
-                accessorKey: 'group',
-            },
-            {
-                id: 'unit',
-                header: 'Unit',
-                size: 80,
-                minSize: 60,
-                accessorKey: 'unit',
-            },
-            {
                 id: 'location',
-                header: 'Room',
-                size: 90,
-                minSize: 70,
-                accessorKey: 'location',
+                header: 'Location',
+                ...COLUMN_WIDTHS.MERGED_LOCATION,
+                accessorFn: (row) => `${row.group} ${row.unit} ${row.location}`,
+                sortingFn: (rowA, rowB) => {
+                    const a = `${rowA.original.group} ${rowA.original.unit} ${rowA.original.location}`;
+                    const b = `${rowB.original.group} ${rowB.original.unit} ${rowB.original.location}`;
+                    return a.localeCompare(b);
+                },
+                cell: ({ row }) => (
+                    <div className={styles.locationCell} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span>{row.original.group}</span>
+                        <span className="material-symbols-rounded" style={{ fontSize: '16px', color: 'var(--surface-fg-quaternary)' }}>navigate_next</span>
+                        <span>{row.original.unit}</span>
+                        <span className="material-symbols-rounded" style={{ fontSize: '16px', color: 'var(--surface-fg-quaternary)' }}>navigate_next</span>
+                        <span>{row.original.location}</span>
+                    </div>
+                ),
             },
             {
                 id: 'scheduled',
@@ -228,7 +228,7 @@ export const EnhancedLiveMonitorView = () => {
                     <RowContextMenu
                         actions={[
                             { label: 'View resident', icon: 'person', onClick: () => { } },
-                            { label: 'Manage room', icon: 'door_front', onClick: () => { } }
+                            { label: 'Facility management', icon: 'door_front', onClick: () => { } }
                         ]}
                     />
                 ),
@@ -250,7 +250,7 @@ export const EnhancedLiveMonitorView = () => {
             rowSelection={rowSelection}
             onRowSelectionChange={handleSelectionChange}
             onRowClick={handleRowClick}
-            initialSorting={[{ id: 'status', desc: true }]}
+            initialSorting={[{ id: 'location', desc: false }]}
         />
     );
 };

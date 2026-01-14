@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './TopNav.module.css';
-import { GlobalStatusWidget } from './GlobalStatusWidget';
 import { TopNavAvatar } from './TopNavAvatar';
 import { TopNavMenu } from './TopNavMenu';
 
@@ -24,7 +23,6 @@ export const TopNav = React.forwardRef<HTMLDivElement>((_, ref) => {
             </div>
 
             <div className={styles.rightSection}>
-                <GlobalStatusWidget />
                 <TopNavAvatar />
             </div>
         </div>

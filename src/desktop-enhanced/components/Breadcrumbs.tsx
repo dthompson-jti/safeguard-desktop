@@ -62,7 +62,7 @@ export const Breadcrumbs = () => {
             </div>
 
             <div className={styles.actions}>
-                {(view === 'historical' || view === 'live') && (
+                {view === 'historical' && (
                     <Button
                         variant="secondary"
                         size="s"
