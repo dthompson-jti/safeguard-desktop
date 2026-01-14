@@ -44,23 +44,10 @@
     background-color: var(--control-border-primary);
 }
 
-.resizeHandle::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 4px;
-    height: 32px;
-    background: var(--surface-border-primary);
-    border-radius: var(--radius-full);
-    opacity: 0;
-    transition: opacity 0.15s;
-}
-
-.resizeHandle:hover::after,
-.resizeHandle.active::after {
-    opacity: 1;
+.resizeHandle:hover .resizeIndicator,
+.resizeHandle.active .resizeIndicator {
+    width: 3px;
+    background-color: var(--control-border-primary);
 }
 
 .backdrop {

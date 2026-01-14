@@ -12,7 +12,17 @@ export const TopNav = React.forwardRef<HTMLDivElement>((_, ref) => {
                 <div className={styles.title}>
                     eSupervision
                 </div>
+                <div className={`${styles.skeletonBlock} ${styles.skeletonIcon}`} />
+                <div className={`${styles.skeletonBlock} ${styles.skeletonIcon}`} />
+                <div className={`${styles.skeletonBlock} ${styles.skeletonIcon}`} />
+                <div className={`${styles.skeletonBlock} ${styles.skeletonIcon}`} />
+                <div className={`${styles.skeletonBlock} ${styles.skeletonIcon}`} />
+                <div className={`${styles.skeletonBlock} ${styles.skeletonIcon}`} />
+                <div className={`${styles.skeletonBlock} ${styles.skeletonIcon}`} />
+                <div className={`${styles.skeletonBlock} ${styles.skeletonSearch}`} />
+                <div className={`${styles.skeletonBlock} ${styles.skeletonText}`} />
             </div>
+
             <div className={styles.rightSection}>
                 <GlobalStatusWidget />
                 <TopNavAvatar />

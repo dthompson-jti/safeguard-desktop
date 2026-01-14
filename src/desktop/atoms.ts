@@ -75,6 +75,14 @@ export const filteredHistoricalChecksAtom = atom((get) => {
             if (filter.dateEnd && checkDate > filter.dateEnd) return false;
         }
 
+        // Comment Filter (Supervisor Note)
+        if (filter.commentFilter === 'comment' && !check.supervisorNote) {
+            return false;
+        }
+        if (filter.commentFilter === 'no-comment' && check.supervisorNote) {
+            return false;
+        }
+
         return true;
     });
 });

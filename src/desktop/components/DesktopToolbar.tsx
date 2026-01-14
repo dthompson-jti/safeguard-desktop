@@ -105,7 +105,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
             setFilter((prev) => ({
                 ...prev,
                 statusFilter: 'missed',
-                commentFilter: 'any',
+                commentFilter: 'no-comment',
                 search: '',
                 dateStart: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                 dateEnd: new Date().toISOString().split('T')[0],

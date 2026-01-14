@@ -278,9 +278,9 @@ export const loadEnhancedHistoricalPage = (
                     });
                 }
                 if (filter.commentFilter === 'comment') {
-                    filtered = filtered.filter(r => !!r.officerNote);
+                    filtered = filtered.filter(r => !!r.supervisorNote);
                 } else if (filter.commentFilter === 'no-comment') {
-                    filtered = filtered.filter(r => !r.officerNote);
+                    filtered = filtered.filter(r => !r.supervisorNote);
                 }
             }
             const data = filtered.slice(cursor, cursor + pageSize);

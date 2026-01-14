@@ -1,8 +1,8 @@
 .topNav {
     width: 100%;
-    height: 40px;
-    background-color: var(--surface-bg-brand-section);
-    border-bottom: 1px solid var(--surface-border-secondary);
+    height: 48px;
+    background-color: #1a365d;
+    border-bottom: none;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -19,7 +19,16 @@
 .leftSection {
     display: flex;
     align-items: center;
-    gap: var(--spacing-1p5);
+    gap: var(--spacing-4);
+}
+
+.centerSection {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    flex: 1;
+    justify-content: center;
+    max-width: 600px;
 }
 
 .title {
@@ -33,4 +42,26 @@
 .placeholder {
     color: var(--surface-fg-primary_on_brand);
     font-weight: 500;
+}
+
+.skeletonBlock {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+.skeletonIcon {
+    width: 24px;
+    height: 24px;
+}
+
+.skeletonSearch {
+    width: 240px;
+    height: 32px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.skeletonText {
+    width: 120px;
+    height: 12px;
+    opacity: 0.6;
 }
