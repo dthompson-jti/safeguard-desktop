@@ -2,7 +2,7 @@
 import React from 'react';
 import styles from './StatusBadge.module.css';
 
-export type StatusBadgeType = 'missed' | 'due' | 'complete' | 'verified' | 'upcoming' | 'overdue' | 'completed' | 'special';
+export type StatusBadgeType = 'missed' | 'missed-uncommented' | 'missed-commented' | 'due' | 'complete' | 'verified' | 'upcoming' | 'overdue' | 'completed' | 'special';
 
 interface StatusBadgeProps {
     status: StatusBadgeType;
@@ -13,7 +13,10 @@ interface StatusBadgeProps {
 const getStatusConfig = (status: StatusBadgeType): { label: string; icon: string | null } => {
     switch (status) {
         case 'missed':
-            return { label: 'Missed', icon: 'error' };
+        case 'missed-uncommented':
+            return { label: 'Missed – No Comment', icon: 'error' };
+        case 'missed-commented':
+            return { label: 'Missed – Commented', icon: 'comment' };
         case 'due':
             return { label: 'Due', icon: 'schedule' };
         case 'upcoming':

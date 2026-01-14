@@ -71,14 +71,16 @@ export const useTreeData = () => {
                 if (filter.dateEnd && checkDate > filter.dateEnd) return;
             }
 
-            // Status filtering (match table logic)
-            if (filter.statusFilter && filter.statusFilter !== 'all') {
-                if (check.status !== filter.statusFilter) return;
+            // Combined historicalStatusFilter filtering
+            if (filter.historicalStatusFilter && filter.historicalStatusFilter !== 'all') {
+                if (filter.historicalStatusFilter === 'missed-uncommented') {
+                    if (check.status !== 'missed' || check.supervisorNote) return;
+                } else if (filter.historicalStatusFilter === 'missed-commented') {
+                    if (check.status !== 'missed' || !check.supervisorNote) return;
+                } else if (filter.historicalStatusFilter === 'completed') {
+                    if (check.status !== 'completed') return;
+                }
             }
-
-            // Comment filtering
-            if (filter.commentFilter === 'comment' && !check.officerNote) return;
-            if (filter.commentFilter === 'no-comment' && check.officerNote) return;
 
             // If we get here, the check passes all filters. Count it.
             current.missed++;

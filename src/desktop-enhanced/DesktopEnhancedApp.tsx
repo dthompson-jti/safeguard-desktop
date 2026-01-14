@@ -52,8 +52,7 @@ export default function DesktopEnhancedApp() {
         if (view === 'historical') {
             setFilter(prev => ({
                 ...prev,
-                statusFilter: 'missed',
-                commentFilter: 'no-comment',
+                historicalStatusFilter: 'missed-uncommented',
                 // Time range "Last 24h" (mock values)
                 dateStart: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                 dateEnd: new Date().toISOString().split('T')[0],
@@ -63,7 +62,6 @@ export default function DesktopEnhancedApp() {
             setFilter(prev => ({
                 ...prev,
                 statusFilter: 'all',
-                commentFilter: 'any',
                 dateStart: null,
                 dateEnd: null,
             }));

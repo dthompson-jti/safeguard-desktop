@@ -177,7 +177,12 @@ export const EnhancedLiveMonitorView = () => {
                 header: 'Scheduled',
                 size: 180,
                 minSize: 160,
-                cell: () => new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
+                accessorFn: (row) => row.originalCheck?.dueDate || '',
+                cell: ({ row }) => {
+                    const dueDate = row.original.originalCheck?.dueDate;
+                    if (!dueDate) return '—';
+                    return new Date(dueDate).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+                },
             },
             {
                 id: 'status',
@@ -185,6 +190,13 @@ export const EnhancedLiveMonitorView = () => {
                 size: 154,
                 minSize: 154,
                 accessorKey: 'status',
+                // Custom sort: overdue (2) > due (1) > upcoming (0)
+                sortingFn: (rowA, rowB) => {
+                    const priority: Record<string, number> = { overdue: 2, due: 1, upcoming: 0 };
+                    const a = priority[rowA.original.status] ?? 0;
+                    const b = priority[rowB.original.status] ?? 0;
+                    return a - b;
+                },
                 cell: ({ row }) => {
                     const status = row.original.status;
                     return <StatusBadge status={status as StatusBadgeType} />;
@@ -238,6 +250,7 @@ export const EnhancedLiveMonitorView = () => {
             rowSelection={rowSelection}
             onRowSelectionChange={handleSelectionChange}
             onRowClick={handleRowClick}
+            initialSorting={[{ id: 'status', desc: true }]}
         />
     );
 };

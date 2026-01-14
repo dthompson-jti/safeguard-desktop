@@ -24,7 +24,7 @@ const createCheck = (
     } = {}
 ): HistoricalCheck => {
     let varianceMinutes = 0;
-    let status: 'done' | 'late' | 'missed' = 'done';
+    let status: 'completed' | 'missed' = 'completed';
 
     if (actualTime === null) {
         varianceMinutes = Infinity;
@@ -33,7 +33,8 @@ const createCheck = (
         const scheduled = new Date(`2024-12-17T${scheduledTime}`);
         const actual = new Date(`2024-12-17T${actualTime}`);
         varianceMinutes = Math.round((actual.getTime() - scheduled.getTime()) / 60000);
-        status = varianceMinutes > 2 ? 'late' : 'done';
+        // All completed checks are just 'completed' now
+        status = 'completed';
     }
 
     // Standardize Group and Unit logic to match Live View (Unique Subunits)
@@ -68,7 +69,7 @@ const createCheck = (
         officerName,
         officerNote: options.officerNote,
         supervisorNote: options.supervisorNote,
-        reviewStatus: options.reviewStatus ?? (status === 'done' ? 'verified' : 'pending'),
+        reviewStatus: options.reviewStatus ?? (status === 'completed' ? 'verified' : 'pending'),
     };
 };
 
@@ -230,8 +231,14 @@ export function loadHistoricalChecksPage(
                     if (filter.group !== 'all' && check.group !== filter.group) return false;
                     if (filter.unit !== 'all' && check.unit !== filter.unit) return false;
 
-                    if (filter.statusFilter === 'missed' && check.status !== 'missed') return false;
-                    if (filter.statusFilter === 'late' && check.status !== 'late') return false;
+                    // Use historicalStatusFilter for filtering
+                    if (filter.historicalStatusFilter === 'missed-uncommented') {
+                        if (check.status !== 'missed' || check.supervisorNote) return false;
+                    } else if (filter.historicalStatusFilter === 'missed-commented') {
+                        if (check.status !== 'missed' || !check.supervisorNote) return false;
+                    } else if (filter.historicalStatusFilter === 'completed') {
+                        if (check.status !== 'completed') return false;
+                    }
 
                     if (filter.dateStart || filter.dateEnd) {
                         const checkDate = check.scheduledTime.split('T')[0];
@@ -269,14 +276,14 @@ export function loadHistoricalChecksPage(
 
                     let actualTime: string | null = null;
                     let varianceMinutes = Infinity;
-                    let status: 'done' | 'late' | 'missed' = 'missed';
+                    let status: 'completed' | 'missed' = 'missed';
 
                     if (!isMissed) {
                         const actualMin = (scheduledMin + (isLate ? 5 : 1)) % 60;
                         const actualHour = scheduledHour + (scheduledMin + (isLate ? 5 : 1) >= 60 ? 1 : 0);
                         actualTime = `${actualHour.toString().padStart(2, '0')}:${actualMin.toString().padStart(2, '0')}`;
                         varianceMinutes = isLate ? 5 : 1;
-                        status = isLate ? 'late' : 'done';
+                        status = 'completed';
                     }
 
                     return {
@@ -292,7 +299,7 @@ export function loadHistoricalChecksPage(
                         officerName: 'B. Corbin',
                         officerNote: undefined,
                         supervisorNote: undefined,
-                        reviewStatus: (status === 'done' ? 'verified' : 'pending'),
+                        reviewStatus: (status === 'completed' ? 'verified' : 'pending'),
                     };
                 });
                 data = [...data, ...generated];

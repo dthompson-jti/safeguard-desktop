@@ -185,7 +185,15 @@ export const generateEnhancedData = () => {
             const variance = isMissed ? Infinity : Math.floor(seededRandom(slotIndex * 3 + roomIdx) * 10) - 2;
             const actualTime = isMissed ? null : new Date(slotTime.getTime() + variance * MS_PER_MINUTE).toISOString();
             const officerNote = (slotIndex % 4 === 0) ? NOTE_SNIPPETS[slotIndex % NOTE_SNIPPETS.length] : undefined;
-            const supervisorNote = (isMissed && slotIndex % 10 === 0) ? 'Follow up required.' : undefined;
+
+            // Auto-comment missed checks older than 8 hours
+            // Recent missed checks (within 8h) remain uncommented for supervisor review
+            const checkAgeMs = now.getTime() - slotTime.getTime();
+            const MS_PER_HOUR = 60 * 60 * 1000; // 60 mins * 60 secs * 1000 ms
+            const isOlderThan8Hours = checkAgeMs > 8 * MS_PER_HOUR;
+            const supervisorNote = isMissed
+                ? (isOlderThan8Hours ? 'Reviewed and documented.' : undefined)
+                : undefined;
 
             historicalData.push({
                 id: checkId,
@@ -200,7 +208,8 @@ export const generateEnhancedData = () => {
                 officerName: officer,
                 officerNote,
                 supervisorNote,
-                reviewStatus: isMissed ? 'pending' : 'verified',
+                reviewStatus: isMissed ? (supervisorNote ? 'verified' : 'pending') : 'verified',
+                hasHighRisk: roomIdx % 7 === 0, // Same logic as live view - resident property
             });
 
             slotTime = new Date(slotTime.getTime() + CHECK_INTERVAL_MINS * MS_PER_MINUTE);
@@ -265,8 +274,14 @@ export const loadEnhancedHistoricalPage = (
                 }
                 if (filter.group && filter.group !== 'all') filtered = filtered.filter(r => r.group === filter.group);
                 if (filter.unit && filter.unit !== 'all') filtered = filtered.filter(r => r.unit === filter.unit);
-                if (filter.statusFilter && filter.statusFilter !== 'all') {
-                    filtered = filtered.filter(r => r.status === filter.statusFilter);
+                if (filter.historicalStatusFilter && filter.historicalStatusFilter !== 'all') {
+                    if (filter.historicalStatusFilter === 'missed-uncommented') {
+                        filtered = filtered.filter(r => r.status === 'missed' && !r.supervisorNote);
+                    } else if (filter.historicalStatusFilter === 'missed-commented') {
+                        filtered = filtered.filter(r => r.status === 'missed' && !!r.supervisorNote);
+                    } else if (filter.historicalStatusFilter === 'completed') {
+                        filtered = filtered.filter(r => r.status === 'completed');
+                    }
                 }
                 if (filter.dateStart || filter.dateEnd) {
                     const checkDate = (iso: string) => iso.split('T')[0];
@@ -276,11 +291,6 @@ export const loadEnhancedHistoricalPage = (
                         if (filter.dateEnd && date > filter.dateEnd) return false;
                         return true;
                     });
-                }
-                if (filter.commentFilter === 'comment') {
-                    filtered = filtered.filter(r => !!r.supervisorNote);
-                } else if (filter.commentFilter === 'no-comment') {
-                    filtered = filtered.filter(r => !r.supervisorNote);
                 }
             }
             const data = filtered.slice(cursor, cursor + pageSize);

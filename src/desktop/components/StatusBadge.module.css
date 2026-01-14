@@ -21,12 +21,20 @@
 
 /* Label has no specific styles - inherits from badge */
 
-/* Missed */
+/* Missed - Uncommented (semantic red) */
 .badge[data-status='missed'],
+.badge[data-status='missed-uncommented'],
 .badge[data-status='overdue'] {
     background: var(--surface-bg-error-primary);
     color: var(--surface-fg-alert-primary);
     border-color: var(--surface-border-alert);
+}
+
+/* Missed - Commented (semantic grey) */
+.badge[data-status='missed-commented'] {
+    background: var(--surface-bg-secondary);
+    color: var(--surface-fg-secondary);
+    border-color: var(--surface-border-secondary);
 }
 
 /* Due */
@@ -52,11 +60,11 @@
     border-color: var(--surface-border-success);
 }
 
-/* Completed (neutral semantic) */
+/* Completed (semantic green) */
 .badge[data-status='completed'] {
-    background: var(--surface-bg-secondary);
-    color: var(--surface-fg-secondary);
-    border-color: var(--surface-border-secondary);
+    background: var(--surface-bg-success);
+    color: var(--surface-fg-success-primary);
+    border-color: var(--surface-border-success);
 }
 
 /* Late */

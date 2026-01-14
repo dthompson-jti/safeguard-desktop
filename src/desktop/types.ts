@@ -20,7 +20,14 @@ export interface HistoricalCheck {
     officerNote?: string;
     supervisorNote?: string;
     reviewStatus: 'pending' | 'verified';
+    hasHighRisk?: boolean;      // Resident has special risk classification
 }
+
+/** Combined status filter for historical view */
+export type HistoricalStatusFilter = 'all' | 'missed-uncommented' | 'missed-commented' | 'completed';
+
+/** Status filter for live view */
+export type LiveStatusFilter = 'all' | 'upcoming' | 'due' | 'overdue';
 
 /** Filter state for toolbar */
 export interface DesktopFilter {
@@ -29,8 +36,8 @@ export interface DesktopFilter {
     unit: string;      // 'all' or unit ID
     search: string;    // Resident name search
     showMissedOnly: boolean;
-    statusFilter: 'all' | 'missed' | 'upcoming' | 'due' | 'overdue' | 'completed' | 'unreviewed';  // Status filter for both views
-    commentFilter: 'any' | 'comment' | 'no-comment';
+    statusFilter: LiveStatusFilter;  // Live view status filter
+    historicalStatusFilter: HistoricalStatusFilter;  // Historical view combined status filter
     dateStart: string | null; // ISO Date string (YYYY-MM-DD)
     dateEnd: string | null;   // ISO Date string (YYYY-MM-DD)
 }

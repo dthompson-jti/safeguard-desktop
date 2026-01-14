@@ -21,7 +21,7 @@ export const desktopFilterAtom = atom<DesktopFilter>({
     search: '',
     showMissedOnly: false,
     statusFilter: 'all',
-    commentFilter: 'any',
+    historicalStatusFilter: 'missed-uncommented',
     dateStart: null,
     dateEnd: null,
 });
@@ -60,12 +60,15 @@ export const filteredHistoricalChecksAtom = atom((get) => {
             if (unitFromLocation !== filter.unit) return false;
         }
 
-        // Status filter
-        if (filter.statusFilter === 'missed' && check.status !== 'missed') {
-            return false;
-        }
-        if (filter.statusFilter === 'completed' && check.status !== 'completed') {
-            return false;
+        // Combined Historical Status Filter
+        if (filter.historicalStatusFilter !== 'all') {
+            if (filter.historicalStatusFilter === 'missed-uncommented') {
+                if (check.status !== 'missed' || check.supervisorNote) return false;
+            } else if (filter.historicalStatusFilter === 'missed-commented') {
+                if (check.status !== 'missed' || !check.supervisorNote) return false;
+            } else if (filter.historicalStatusFilter === 'completed') {
+                if (check.status !== 'completed') return false;
+            }
         }
 
         // Date Range Filter
@@ -73,14 +76,6 @@ export const filteredHistoricalChecksAtom = atom((get) => {
             const checkDate = check.scheduledTime.split('T')[0]; // Extract YYYY-MM-DD
             if (filter.dateStart && checkDate < filter.dateStart) return false;
             if (filter.dateEnd && checkDate > filter.dateEnd) return false;
-        }
-
-        // Comment Filter (Supervisor Note)
-        if (filter.commentFilter === 'comment' && !check.supervisorNote) {
-            return false;
-        }
-        if (filter.commentFilter === 'no-comment' && check.supervisorNote) {
-            return false;
         }
 
         return true;

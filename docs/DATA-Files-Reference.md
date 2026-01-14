@@ -24,6 +24,32 @@
 
 ---
 
+## Mock Data Behavior
+
+### Live Data Generation
+
+| Room Index | Scheduled Offset | Status |
+|------------|------------------|--------|
+| 0-9 | -20 to -29 mins | `overdue` |
+| 10-19 | -5 to +4 mins | `due` |
+| 20-59 | +5 to +44 mins | `upcoming` |
+
+### Historical Data Generation
+
+| Check Age | Status | Supervisor Note |
+|-----------|--------|-----------------|
+| > 8 hours | `missed` | Auto: "Reviewed and documented." |
+| ≤ 8 hours | `missed` | None (requires manual review) |
+| Any | `completed` | None |
+
+### High-Risk Residents
+
+| Calculation | Result |
+|-------------|--------|
+| `roomIdx % 7 === 0` | `hasHighRisk: true` (SR badge) |
+
+---
+
 ## Legacy Mock Data (Desktop Standard)
 
 ### [mockLiveData.ts](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/mockLiveData.ts)
@@ -52,19 +78,6 @@
 
 ---
 
-## Shared Data (Mobile/Desktop)
-
-### [src/data/mock/](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/data/mock)
-
-| File | Purpose |
-|------|---------|
-| [checkData.ts](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/data/mock/checkData.ts) | Core check generation for mobile |
-| [facilityData.ts](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/data/mock/facilityData.ts) | Facility definitions |
-| [facilityUtils.ts](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/data/mock/facilityUtils.ts) | Facility helper functions |
-| [residentData.ts](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/data/mock/residentData.ts) | Resident mock data |
-
----
-
 ## Type Definitions
 
 ### [src/desktop/types.ts](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/types.ts)
@@ -72,9 +85,11 @@
 | Type | Usage |
 |------|-------|
 | `DesktopView` | `'live'` \| `'historical'` |
-| `HistoricalCheck` | Historical table row data |
+| `HistoricalCheck` | Historical table row (includes `hasHighRisk`) |
+| `LiveCheckRow` | Live table row (includes `hasHighRisk`) |
 | `DesktopFilter` | Toolbar filter state |
-| `LiveCheckRow` | Live table row data |
+| `LiveStatusFilter` | `'all'` \| `'upcoming'` \| `'due'` \| `'overdue'` |
+| `HistoricalStatusFilter` | `'all'` \| `'missed-uncommented'` \| `'missed-commented'` \| `'completed'` |
 | `SupervisorNoteReason` | Predefined note reasons |
 
 ---
@@ -119,19 +134,6 @@
 
 ---
 
-### [src/data/atoms.ts](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/data/atoms.ts)
-
-| Atom | Purpose |
-|------|---------|
-| `fastTickerAtom` | 60fps heartbeat |
-| `throttledTickerAtom` | 10fps for text timers |
-| `slowTickerAtom` | 1fps for slow updates |
-| `sessionAtom` | User authentication state |
-| `connectionStatusAtom` | Online/offline status |
-| `appConfigAtom` | Global app config |
-
----
-
 ## Data Flow Diagram
 
 ```mermaid
@@ -169,4 +171,8 @@ flowchart TD
 > The **enhanced** mock data (`mockData.ts`) is the primary data source used by the current desktop-enhanced views. The legacy files (`mockLiveData.ts`, `mockHistoricalData.ts`) are retained for the standard desktop view but may be deprecated.
 
 > [!TIP]
-> When modifying mock data distribution (e.g., changing status percentages), update `mockData.ts` line 171-173 for completion rates or lines 95-104 for status timing offsets.
+> When modifying mock data distribution:
+> - **Completion rates**: Lines 179-182 in mockData.ts
+> - **Status timing offsets**: Lines 95-104 in mockData.ts
+> - **Auto-comment threshold**: Line 193 (currently 8 hours)
+> - **SR badge logic**: `roomIdx % 7 === 0`

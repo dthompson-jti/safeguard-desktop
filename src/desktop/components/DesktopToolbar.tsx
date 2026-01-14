@@ -3,12 +3,11 @@
 import { useMemo } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import { desktopViewAtom, desktopFilterAtom } from '../atoms';
+import { LiveStatusFilter, HistoricalStatusFilter } from '../types';
 import { SearchInput } from '../../components/SearchInput';
 import { Select, SelectItem } from '../../components/Select';
 import { Button } from '../../components/Button';
 import styles from './DesktopToolbar.module.css';
-
-type StatusFilterValue = 'all' | 'missed' | 'upcoming' | 'due' | 'overdue' | 'completed';
 
 const LIVE_STATUS_OPTIONS = [
     { value: 'all', label: 'All Status' },
@@ -19,14 +18,9 @@ const LIVE_STATUS_OPTIONS = [
 
 const HISTORICAL_STATUS_OPTIONS = [
     { value: 'all', label: 'All Status' },
+    { value: 'missed-uncommented', label: 'Missed – No Comment' },
+    { value: 'missed-commented', label: 'Missed – Commented' },
     { value: 'completed', label: 'Completed' },
-    { value: 'missed', label: 'Missed' },
-];
-
-const COMMENT_OPTIONS = [
-    { value: 'any', label: 'Any Comment' },
-    { value: 'comment', label: 'Commented' },
-    { value: 'no-comment', label: 'No Comment' },
 ];
 
 const TIME_RANGE_OPTIONS = [
@@ -52,20 +46,17 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
     const view = useAtomValue(desktopViewAtom);
     const [filter, setFilter] = useAtom(desktopFilterAtom);
 
-    // Default filters for Historical view when it first loads (conceptually)
-    // In a real app, this might be handled by an effect or initial atom state.
-
-    const handleStatusFilterChange = (val: string) => {
+    const handleLiveStatusFilterChange = (val: string) => {
         setFilter((prev) => ({
             ...prev,
-            statusFilter: val as StatusFilterValue
+            statusFilter: val as LiveStatusFilter
         }));
     };
 
-    const handleCommentFilterChange = (val: string) => {
+    const handleHistoricalStatusFilterChange = (val: string) => {
         setFilter((prev) => ({
             ...prev,
-            commentFilter: val as 'any' | 'comment' | 'no-comment'
+            historicalStatusFilter: val as HistoricalStatusFilter
         }));
     };
 
@@ -83,20 +74,19 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
 
     const hasChanges = useMemo(() => {
         const isLive = view === 'live';
-        const defaultStatus = isLive ? 'all' : 'missed';
-        const defaultComment = isLive ? 'any' : 'no-comment';
 
-        return filter.statusFilter !== defaultStatus ||
-            filter.commentFilter !== defaultComment ||
-            filter.search !== '';
-    }, [view, filter.statusFilter, filter.commentFilter, filter.search]);
+        if (isLive) {
+            return filter.statusFilter !== 'all' || filter.search !== '';
+        } else {
+            return filter.historicalStatusFilter !== 'missed-uncommented' || filter.search !== '';
+        }
+    }, [view, filter.statusFilter, filter.historicalStatusFilter, filter.search]);
 
     const handleReset = () => {
         if (view === 'live') {
             setFilter((prev) => ({
                 ...prev,
                 statusFilter: 'all',
-                commentFilter: 'any',
                 search: '',
                 dateStart: null,
                 dateEnd: null,
@@ -104,8 +94,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
         } else {
             setFilter((prev) => ({
                 ...prev,
-                statusFilter: 'missed',
-                commentFilter: 'no-comment',
+                historicalStatusFilter: 'missed-uncommented',
                 search: '',
                 dateStart: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                 dateEnd: new Date().toISOString().split('T')[0],
@@ -148,37 +137,34 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                     </Button>
                 )}
 
-                {/* Status Filter (Both views now, per request) */}
-                <div style={{ width: 180 }}>
-                    <Select
-                        value={filter.statusFilter}
-                        onValueChange={handleStatusFilterChange}
-                        placeholder="Status"
-                    >
-                        {(view === 'live' ? LIVE_STATUS_OPTIONS : HISTORICAL_STATUS_OPTIONS).map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
-                                {opt.label}
-                            </SelectItem>
-                        ))}
-                    </Select>
-                </div>
-
-                {/* Comment Filter (Historical only) */}
-                {view === 'historical' && (
-                    <div style={{ width: 180 }}>
+                {/* Status Filter - Different options for Live vs Historical */}
+                <div style={{ width: 240 }}>
+                    {view === 'live' ? (
                         <Select
-                            value={filter.commentFilter}
-                            onValueChange={handleCommentFilterChange}
-                            placeholder="Comments"
+                            value={filter.statusFilter}
+                            onValueChange={handleLiveStatusFilterChange}
+                            placeholder="Status"
                         >
-                            {COMMENT_OPTIONS.map((opt) => (
+                            {LIVE_STATUS_OPTIONS.map((opt) => (
                                 <SelectItem key={opt.value} value={opt.value}>
                                     {opt.label}
                                 </SelectItem>
                             ))}
                         </Select>
-                    </div>
-                )}
+                    ) : (
+                        <Select
+                            value={filter.historicalStatusFilter}
+                            onValueChange={handleHistoricalStatusFilterChange}
+                            placeholder="Status"
+                        >
+                            {HISTORICAL_STATUS_OPTIONS.map((opt) => (
+                                <SelectItem key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                    )}
+                </div>
 
                 {/* Time Range Filter (Historical only) */}
                 {view === 'historical' && (

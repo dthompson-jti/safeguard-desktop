@@ -11,7 +11,7 @@ Allows supervisors to:
 - Review **missed checks** requiring explanation
 - Add **supervisor notes** to justify missed checks
 - Export historical data for compliance reporting
-- Filter by date range, status, and comment presence
+- Filter by date range and combined status
 
 ---
 
@@ -21,19 +21,18 @@ Allows supervisors to:
 ┌─────────────────────────────────────────────────────────────────┐
 │ Breadcrumbs: Facility ABCD > [Group] > [Unit]                   │
 ├─────────────────────────────────────────────────────────────────┤
-│ DesktopToolbar: [Search] [Status▾] [Comments▾] [Date Range]     │
-│                 [Export] [More▾]                                │
+│ DesktopToolbar: [Search] [Status▾] [Time Range▾] [Export]       │
 ├─────────────────────────────────────────────────────────────────┤
 │ DataTable                                                       │
-│ ┌─────┬────────────┬──────────┬─────────┬────────────┬────────┐ │
-│ │ ☐   │ Status     │ Scheduled│ Room    │ Resident   │ Actions│ │
-│ ├─────┼────────────┼──────────┼─────────┼────────────┼────────┤ │
-│ │ ☐   │ 🔴 Missed  │ 8:30 AM  │ C-302   │ C. Mendez  │ ⋮      │ │
-│ │ ☐   │ ✓ Completed│ 7:15 AM  │ B-201   │ L. Park    │ ⋮      │ │
-│ │ ☐   │ 🔴 Missed  │ 8:45 AM  │ C-303   │ A. Lopez   │ ⋮      │ │
-│ └─────┴────────────┴──────────┴─────────┴────────────┴────────┘ │
+│ ┌─────┬──────────────────┬──────────┬─────────┬────────────────┐│
+│ │ ☐   │ Resident         │ Scheduled│ Actual  │ Status         ││
+│ ├─────┼──────────────────┼──────────┼─────────┼────────────────┤│
+│ │ ☐   │ C. Mendez        │ 8:30 AM  │ —       │ 🔴 Missed–NoC  ││
+│ │ ☐   │ L. Park          │ 7:15 AM  │ 7:14 AM │ ✓ Completed    ││
+│ │ ☐   │ A. Lopez [SR]    │ 8:45 AM  │ —       │ ⚫ Missed–Com  ││
+│ └─────┴──────────────────┴──────────┴─────────┴────────────────┘│
 ├─────────────────────────────────────────────────────────────────┤
-│ Footer: Showing 57 of 5,760 records                             │
+│ Footer: Showing 69 of 5,760 records                             │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -41,7 +40,7 @@ Allows supervisors to:
 
 ## Data Source
 
-**Primary**: [enhancedMockData.historicalData](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop-enhanced/data/mockData.ts#L206-L209)
+**Primary**: [enhancedMockData.historicalData](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop-enhanced/data/mockData.ts)
 
 | Field | Source |
 |-------|--------|
@@ -55,41 +54,53 @@ Allows supervisors to:
 | Column | Field | Sortable | Notes |
 |--------|-------|----------|-------|
 | Checkbox | — | No | Row selection for bulk actions |
-| Status | `status` | Yes | `completed` or `missed` |
-| Scheduled | `scheduledTime` | Yes | ISO timestamp formatted for display |
-| Actual | `actualTime` | Yes | Time of completion or `—` if missed |
-| Variance | `varianceMinutes` | Yes | Minutes early/late |
+| Resident | `residents[0].name` | Yes | Primary resident + SR badge if `hasHighRisk` |
+| Group | `group` | Yes | Alpha, Beta, Gamma, Delta |
+| Unit | `unit` | Yes | A1-D3 |
 | Room | `location` | Yes | Room identifier |
-| Resident | `residents[0].name` | Yes | Primary resident |
-| Officer | `officerName` | Yes | Assigned officer |
-| Notes | `officerNote` | No | Officer's comment |
-| Review | `reviewStatus` | Yes | `pending` or `verified` |
-| Actions | — | No | Context menu |
+| Scheduled | `scheduledTime` | Yes | ISO timestamp formatted (default: desc) |
+| Actual | `actualTime` | Yes | Time of completion or `—` if missed |
+| Status | `status` + `supervisorNote` | Yes | Display status badge (see below) |
+| Actions | — | No | Context menu trigger |
+
+---
+
+## Status Badge Logic
+
+| Data State | Display | Color |
+|------------|---------|-------|
+| `status='missed'` AND no `supervisorNote` | Missed – No Comment | 🔴 Red |
+| `status='missed'` AND has `supervisorNote` | Missed – Commented | ⚫ Grey |
+| `status='completed'` | Completed | 🟢 Green |
 
 ---
 
 ## Filtering
 
+Filters are managed via [desktopFilterAtom](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/atoms.ts):
+
 | Filter | Options | Default (Historical) |
 |--------|---------|----------------------|
-| `statusFilter` | `all`, `missed`, `completed` | `missed` |
-| `commentFilter` | `any`, `comment`, `no-comment` | `no-comment` |
+| `historicalStatusFilter` | `all`, `missed-uncommented`, `missed-commented`, `completed` | `missed-uncommented` |
 | `dateStart` | ISO date | Last 24 hours |
 | `dateEnd` | ISO date | Today |
 | `group` | `all`, Alpha-Delta | `all` |
 | `unit` | `all`, A1-D3 | `all` |
 | `search` | Free text | `""` |
 
-### Default Filter Preset
+> [!IMPORTANT]
+> The separate `statusFilter` and `commentFilter` have been **merged** into a single `historicalStatusFilter` for streamlined UX.
 
-When switching to Historical view, filters auto-apply from [DesktopEnhancedApp.tsx](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop-enhanced/DesktopEnhancedApp.tsx#L41-L48):
+---
 
-```typescript
-statusFilter: 'missed',
-commentFilter: 'no-comment',
-dateStart: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-dateEnd: new Date().toISOString().split('T')[0],
-```
+## Auto-Comment Logic
+
+From [mockData.ts](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop-enhanced/data/mockData.ts):
+
+| Check Age | Supervisor Note |
+|-----------|-----------------|
+| > 8 hours old | Auto-generated: "Reviewed and documented." |
+| ≤ 8 hours old | None (requires manual review) |
 
 ---
 
@@ -101,16 +112,19 @@ dateEnd: new Date().toISOString().split('T')[0],
 
 ---
 
-## Tree Navigation Integration
+## Default Sorting
 
-Tree counts are filtered to match table filters:
+Table is sorted by `scheduled` column **descending** (most recent first) by default.
 
-From [useTreeData.ts](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop-enhanced/hooks/useTreeData.ts#L63-L87):
+---
 
-- Date range filtering applied
-- Status filtering applied
-- Comment filtering applied
-- Only `missed` checks counted toward `missed` in tree
+## High-Risk Residents (SR Badge)
+
+| Field | Value |
+|-------|-------|
+| `hasHighRisk` | `true` if room index % 7 === 0 |
+
+SR badge displayed in Resident column for high-risk residents, consistent with Live view.
 
 ---
 
@@ -118,16 +132,16 @@ From [useTreeData.ts](file:///c:/Users/dthompson/Documents/CODE/safeguard-deskto
 
 1. Select rows with pending review
 2. Click "Add Note" action
-3. Modal opens ([supervisorNoteModalAtom](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/atoms.ts#L79-L86))
-4. Choose reason from predefined list:
+3. Modal opens with reason dropdown:
    - Unit Lockdown
    - Medical Emergency
    - Court Appearance
    - Transport
    - Staff Shortage
    - Other
-5. Add optional custom text
-6. `reviewStatus` changes to `verified`
+4. Add optional custom text
+5. `reviewStatus` changes to `verified`
+6. Status badge changes from "Missed – No Comment" to "Missed – Commented"
 
 ---
 
@@ -136,18 +150,16 @@ From [useTreeData.ts](file:///c:/Users/dthompson/Documents/CODE/safeguard-deskto
 | Component | Path |
 |-----------|------|
 | Enhanced View | [EnhancedHistoricalReviewView.tsx](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop-enhanced/components/EnhancedHistoricalReviewView.tsx) |
-| Data Loader | [loadEnhancedHistoricalPage](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop-enhanced/data/mockData.ts#L241-L282) |
-| Filtered Atom | [filteredHistoricalChecksAtom](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/atoms.ts#L38-L77) |
+| Data Loader | [loadEnhancedHistoricalPage](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop-enhanced/data/mockData.ts) |
+| Types | [HistoricalCheck](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/types.ts) |
 
 ---
 
 ## Mock Data Distribution
-
-From [mockData.ts](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop-enhanced/data/mockData.ts#L171-L173):
 
 | Room Type | Completion Rate |
 |-----------|-----------------|
 | "Perfect" (Delta group or 30% random) | 98% completed |
 | Standard | 85% completed |
 
-Officer notes added every 4th check. Supervisor notes added on 10% of missed checks.
+Officer notes added every 4th check. Auto-comments on missed checks older than 8 hours.

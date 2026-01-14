@@ -186,8 +186,7 @@ export const EnhancedHistoricalReviewView = () => {
                         <a href="#" className={styles.linkText} onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleRowClick(row.original, e); }}>
                             {row.original.residents.map((r) => r.name).join(', ')}
                         </a>
-                        {/* Assuming special status if variance is high or other condition */}
-                        {row.original.status === 'missed' && (
+                        {row.original.hasHighRisk && (
                             <StatusBadge status="special" label="SR" fill />
                         )}
                     </div>
@@ -224,21 +223,22 @@ export const EnhancedHistoricalReviewView = () => {
             {
                 id: 'status',
                 header: 'Status',
-                size: 154,
-                minSize: 154,
+                size: 200,
+                minSize: 180,
                 accessorKey: 'status',
-                cell: ({ row }) => (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)' }}>
-                        {row.original.reviewStatus === 'verified' ? (
-                            <StatusBadge status="verified" label="Verified" />
-                        ) : (
-                            <StatusBadge status={row.original.status as StatusBadgeType} />
-                        )}
-                        {row.original.status === 'completed' && row.original.reviewStatus !== 'verified' && (
-                            <span style={{ color: 'var(--surface-fg-tertiary)', fontWeight: 600, fontSize: '18px', lineHeight: 1 }}>...</span>
-                        )}
-                    </div>
-                ),
+                cell: ({ row }) => {
+                    // Determine the display status based on status and supervisorNote
+                    let displayStatus: StatusBadgeType;
+                    if (row.original.status === 'completed') {
+                        displayStatus = 'completed';
+                    } else if (row.original.status === 'missed') {
+                        displayStatus = row.original.supervisorNote ? 'missed-commented' : 'missed-uncommented';
+                    } else {
+                        displayStatus = row.original.status as StatusBadgeType;
+                    }
+
+                    return <StatusBadge status={displayStatus} />;
+                },
             },
             {
                 id: 'spacer',
@@ -302,6 +302,7 @@ export const EnhancedHistoricalReviewView = () => {
                 hasMore={hasMore}
                 onLoadMore={handleLoadMore}
                 onRowClick={handleRowClick}
+                initialSorting={[{ id: 'scheduled', desc: true }]}
             />
             {selectedRows.size > 0 && (
                 <BulkActionFooter

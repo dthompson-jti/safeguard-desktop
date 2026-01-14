@@ -27,6 +27,7 @@ interface DataTableProps<T> {
     hasMore?: boolean;
     onLoadMore?: () => void;
     onRowClick?: (row: T, event: React.MouseEvent) => void;
+    initialSorting?: SortingState;
 }
 
 export function DataTable<T>({
@@ -41,8 +42,9 @@ export function DataTable<T>({
     hasMore = false,
     onLoadMore,
     onRowClick,
+    initialSorting = [],
 }: DataTableProps<T>) {
-    const [sorting, setSorting] = useState<SortingState>([]);
+    const [sorting, setSorting] = useState<SortingState>(initialSorting);
     const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({});
     const [columnPinning] = useState<ColumnPinningState>({
         left: ['select'],

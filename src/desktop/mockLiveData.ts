@@ -14,7 +14,7 @@ const createLiveCheck = (
     id: string,
     residentName: string,
     location: string,
-    status: 'missed' | 'due' | 'pending',
+    status: 'overdue' | 'due' | 'upcoming',
     timerText: string,
     options: {
         hasHighRisk?: boolean;
@@ -25,7 +25,7 @@ const createLiveCheck = (
         unit?: string;
     } = {}
 ): LiveCheckRow => {
-    const timerSeverity = status === 'missed' ? 'alert' : status === 'due' ? 'warning' : 'neutral';
+    const timerSeverity = status === 'overdue' ? 'alert' : status === 'due' ? 'warning' : 'neutral';
 
     // Derive group and unit uniquely
     const getRoomNum = (loc: string) => {
@@ -67,13 +67,13 @@ const minutesAgo = (mins: number) => new Date(now.getTime() - mins * 60000).toIS
 const generateData = (): LiveCheckRow[] => {
     const data: LiveCheckRow[] = [];
 
-    // 1. Critical Missed Checks (no supervisor log rows - those go to Historical)
-    data.push(createLiveCheck('live-1', 'Jeff Siemens', '102', 'missed', 'Overdue 5m', {
+    // 1. Critical Overdue Checks
+    data.push(createLiveCheck('live-1', 'Jeff Siemens', '102', 'overdue', 'Overdue 5m', {
         lastCheckTime: minutesAgo(35),
         group: 'Alpha',
         unit: 'A',
     }));
-    data.push(createLiveCheck('live-2', 'Brett Corbin', '102', 'missed', 'Overdue 3m', {
+    data.push(createLiveCheck('live-2', 'Brett Corbin', '102', 'overdue', 'Overdue 3m', {
         hasHighRisk: true,
         riskType: 'Suicide Watch',
         lastCheckTime: minutesAgo(33),
@@ -88,7 +88,7 @@ const generateData = (): LiveCheckRow[] => {
         }));
     }
 
-    // 3. Pending Checks (Large dataset for loading simulation)
+    // 3. Upcoming Checks (Large dataset for loading simulation)
     const names = ['Jalpa Mazmudar', 'Aggressive Andy', 'Michael Scott', 'Jim Halpert', 'Pam Beesly', 'Dwight Schrute', 'Angela Martin', 'Kevin Malone', 'Oscar Martinez', 'Stanley Hudson'];
     const rooms = ['101', '102', '201', '202', '301', '302', '401', '402'];
 
@@ -101,7 +101,7 @@ const generateData = (): LiveCheckRow[] => {
             `live-${i}`,
             `${name} ${Math.floor(i / 10)}`,
             `${room}`,
-            'pending',
+            'upcoming',
             `Due in ${10 + (i % 50)}m`,
             {
                 lastCheckTime: minutesAgo(16),
@@ -168,7 +168,7 @@ export function loadLiveChecksPage(
 
                 const generated = Array.from({ length: generateCount }, (_, i) => {
                     const idx = startIndex + i;
-                    const status = 'pending' as LiveCheckRow['status'];
+                    const status = 'upcoming' as LiveCheckRow['status'];
                     const timerSeverity = 'neutral' as LiveCheckRow['timerSeverity'];
 
                     return {
@@ -222,7 +222,7 @@ export function getLiveCounts(filter: { search: string; group?: string; unit?: s
         if (filter.group !== 'all' && check.group !== filter.group) return;
         if (filter.unit !== 'all' && check.unit !== filter.unit) return;
 
-        if (check.status === 'missed') missed++;
+        if (check.status === 'overdue') missed++;
         else if (check.status === 'due') due++;
     });
 
