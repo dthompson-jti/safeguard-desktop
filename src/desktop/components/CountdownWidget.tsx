@@ -39,7 +39,6 @@ export const CountdownWidget = () => {
         }));
         setIsPopoverOpen(false);
         // Actual data refresh would be triggered here in a real scenario
-        console.log('Manual refresh triggered');
     }, [setAutoRefresh]);
 
     // Trigger widget button

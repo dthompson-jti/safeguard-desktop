@@ -65,7 +65,7 @@ export const Breadcrumbs = () => {
                 {view === 'historical' && (
                     <Button
                         variant="secondary"
-                        size="s"
+                        size="m"
                         iconOnly
                         onClick={() => setIsPanelOpen(!isPanelOpen)}
                         aria-label="Toggle side panel"

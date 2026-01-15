@@ -211,7 +211,7 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                     <>
                                         <p className={styles.quoteContent}>“{record.officerNote}”</p>
                                         <div className={styles.quoteSignature}>
-                                            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>description</span>
+                                            <span className="material-symbols-rounded">description</span>
                                             {record.officerName}
                                         </div>
                                     </>
@@ -226,12 +226,12 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                             <span className={styles.sectionTitle}>Supervisor Review</span>
                             <div className={styles.supervisorBlock}>
                                 {record.supervisorNote ? (
-                                    <div className={styles.quoteBlock} style={{ background: 'transparent', padding: 0, border: 'none' }}>
+                                    <div className={styles.reviewContent}>
                                         <p className={styles.quoteContent}>{record.supervisorNote}</p>
-                                        <div className={styles.tags} style={{ marginTop: 8 }}>
+                                        <div className={styles.reviewTags}>
                                             {record.reviewStatus === 'verified' && (
                                                 <span className={`${styles.tag} ${styles.verified}`}>
-                                                    <span className="material-symbols-rounded" style={{ fontSize: 12, marginRight: 4 }}>check_circle</span>
+                                                    <span className="material-symbols-rounded">check_circle</span>
                                                     Verified
                                                 </span>
                                             )}
@@ -241,22 +241,25 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                     <span className={styles.emptyNote}>No supervisor comments.</span>
                                 )}
 
-                                <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
-                                    <button className={styles.actionButton} onClick={handleOpenNoteModal}>
-                                        <span className="material-symbols-rounded" style={{ fontSize: 18 }}>
-                                            add_comment
-                                        </span>
+                                <div className={styles.actionGroup}>
+                                    <Button
+                                        variant="secondary"
+                                        size="s"
+                                        onClick={handleOpenNoteModal}
+                                    >
+                                        <span className="material-symbols-rounded">add_comment</span>
                                         {record.supervisorNote ? 'Edit Comment' : 'Add Comment'}
-                                    </button>
+                                    </Button>
                                     {record.supervisorNote && (
-                                        <button
-                                            className={styles.actionButton}
+                                        <Button
+                                            variant="secondary"
+                                            size="s"
                                             onClick={() => { /* Delete note functionality */ }}
-                                            style={{ color: 'var(--surface-fg-alert-primary)' }}
+                                            className={styles.destructiveButton}
                                         >
-                                            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>delete</span>
+                                            <span className="material-symbols-rounded">delete</span>
                                             Delete
-                                        </button>
+                                        </Button>
                                     )}
                                 </div>
                             </div>

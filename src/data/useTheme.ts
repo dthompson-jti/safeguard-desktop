@@ -21,14 +21,12 @@ export const useTheme = () => {
     const [theme, _setTheme] = useAtom(themeAtom);
 
     const setTheme = (newTheme: Theme) => {
-        console.log(`[useTheme] setTheme called: ${theme} -> ${newTheme}`);
         _setTheme(newTheme);
     };
 
     useEffect(() => {
         const root = document.documentElement;
 
-        console.log(`[useTheme] Applying theme: ${theme}`);
         // Apply the theme
         if (theme === 'light') {
             root.removeAttribute('data-theme');
@@ -39,7 +37,6 @@ export const useTheme = () => {
         // Persist choice
         try {
             localStorage.setItem(`${STORAGE_PREFIX}theme`, theme);
-            console.log(`[useTheme] Persisted theme to localStorage: ${theme}`);
         } catch {
             // Ignore storage errors
         }

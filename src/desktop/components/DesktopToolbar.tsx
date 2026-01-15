@@ -60,9 +60,8 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
         }));
     };
 
-    const handleTimeRangeChange = (val: string) => {
+    const handleTimeRangeChange = () => {
         // Mocking time range logic
-        console.log('Time range changed:', val);
     };
 
     const handleAreaFilterChange = (val: string) => {

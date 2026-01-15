@@ -36,9 +36,9 @@
 
 /* Missed - Commented (semantic grey) */
 .badge[data-status='missed-commented'] {
-    background: var(--surface-bg-secondary);
-    color: var(--surface-fg-secondary);
-    border-color: var(--surface-border-secondary);
+    background: var(--surface-bg-tertiary);
+    color: var(--surface-fg-tertiary);
+    border-color: var(--surface-border-tertiary);
 }
 
 /* Due */
@@ -80,18 +80,18 @@
 
 /* Done (neutral grey - visible badge) */
 .badge[data-status='done'] {
-    background: var(--surface-bg-secondary);
-    color: var(--surface-fg-secondary);
-    border-color: var(--surface-border-secondary);
+    background: var(--surface-bg-tertiary);
+    color: var(--surface-fg-tertiary);
+    border-color: var(--surface-border-tertiary);
 }
 
 /* Special Status */
 .badge[data-status='special'] {
-    background: var(--surface-bg-secondary);
-    color: var(--surface-fg-secondary);
-    border-color: var(--surface-border-secondary);
+    background: var(--surface-bg-tertiary);
+    color: var(--surface-fg-tertiary);
+    border-color: var(--surface-border-tertiary);
 }
 
 .badge[data-status='special'] .icon {
-    color: var(--surface-fg-primary);
+    color: var(--surface-fg-tertiary);
 }

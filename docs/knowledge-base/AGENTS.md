@@ -17,17 +17,10 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 1.  **Ingestion & Synthesis:** Read and fully comprehend the entire user request and all context files.
 2.  **Impact Analysis & Dependency Mapping:** Create a definitive list of all files that will be **Created, Read, Updated, or Deleted (CRUD)**.
 3.  **Virtual Refactoring (The Mental Walkthrough):**
-    *   **Example Simulation (The Render Cycle):** *"I need to implement a countdown timer. A naive approach is to use `setInterval` inside the component. Hypothesis: With 50 items, this creates 50 active intervals, causing React thrashing. The correct architecture is to subscribe to the global `fastTickerAtom`."*
-    *   **Example Simulation (The Notification Storm):** *"I need to alert on missed checks. A naive approach is to toast every time a check expires. Hypothesis: If the device wakes after 30 minutes, 50 checks expire at once, flooding the UI. The correct architecture is Tick-Based Aggregation: collect all expiries in a single tick and dispatch one summary toast."*
     *   **Example Simulation (Persistence Strategy):** *"I am adding a new user preference. Should this reset on reload? If no, I must use `atomWithStorage`. If yes, a standard `atom` is sufficient. I must clarify this distinction in the implementation."*
-    *   **Example Simulation (The Environment-Agnostic Timer):** *"I need to store a timer ID. A naive approach is `NodeJS.Timeout`. Hypothesis: This will throw TS2503 in browser environments. The correct architecture is to use `ReturnType<typeof setTimeout>`."*
-    *   **Example Simulation (The Developer Override):** *"I am building a simulation flow (e.g., NFC). It has an auto-advance timer. I also need manual buttons for error testing. The correct architecture is to ensure manual interaction cancels the auto-timer immediately to prevent race conditions."*
-    *   **Example Simulation (Sensory Cohesion):** *"I am adding a 'Save' action. A visual change is not enough. The correct architecture is to trigger a haptic pulse (`useHaptics`) to provide tangible confirmation, respecting the user's global configuration."*
-    *   **Example Simulation (The Mobile Keyboard):** *"I am building a full-screen form. A naive approach is `height: 100vh`. Hypothesis: On mobile, the keyboard will slide up and cover the bottom 40% of the view, hiding the submit buttons. The correct architecture is to use the Visual Viewport API to determine the true visible height and set a CSS variable (`--visual-viewport-height`), ensuring the footer docks perfectly above the keyboard."*
-    *   **Example Simulation (Frame Painting / The "Barn Door" Effect):** *"I need to change an animation direction state right before closing a modal. A naive approach is `setDirection('left'); setIsOpen(false);`. Hypothesis: React batching will unmount the component before the direction update paints, causing the wrong exit animation. The correct architecture is to use a nested `requestAnimationFrame` to force a paint frame before triggering the unmount."*
+    *   **Example Simulation (Sensory Cohesion):** *"I am adding a 'Save' action. A visual change is not enough. The correct architecture is to trigger a visual success state to provide tangible confirmation."*
     *   **Example Simulation (List Stability / The "Ghost Item"):** *"I need to animate a list item freely leaving the screen. A naive approach is to filter it out of the data immediately. Hypothesis: This causes the item to vanish instantly or the list to jump. The correct architecture is to KEEP the item in the list (`AnimatePresence` requirement) but use a **Computed Display Group** (based on its original timestamp) to anchor it in place visually until the exit animation completes."*
-    *   **Example Simulation (Sequenced Exit Animation / The "Nested Motion Divs"):** *"I need a card to slide out THEN collapse height. A naive approach is to put both `x: '100%'` and `height: 0` in the same `exit` prop with delays. Hypothesis: Framer Motion applies the initial frame immediately, causing an instant height jump even with delay. The correct architecture is to use **two nested motion.divs**: outer for height collapse (delayed), inner for slide/fade (immediate). See `Animation-spec.md`."*
-    *   **Example Simulation (Overflow Clipping Box-Shadow):** *"I have a success pulse animation using `box-shadow`. A naive approach is to use `overflow: hidden` on the parent for layout control. Hypothesis: `overflow: hidden` clips content extending beyond the box, including box-shadow. The correct architecture is to avoid permanent `overflow: hidden` on animated elements, or apply it only during specific animation phases (e.g., in the `exit` transition)."*
+
 
 ## UI & Component Standards
 
@@ -95,12 +88,7 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 *   **Why:** Unused imports cause lint errors (`'IconToggleGroup' is defined but never used`) and create confusion for future maintainers.
 *   **Pattern:** After making component substitutions, verify all imports at the top of the file are actively used.
 
-### 6. Sheets & Drawers (Vaul)
-*   **Directive:** Use the standard overlay structure:
-    *   **Handle:** If using `Drawer.Root` directly (bypassing `BottomSheet` wrapper), you **must** manually implement the handle bar (`.handleContainer` + `.handle`) to ensure visual consistency.
-    *   Header: Fixed height (60px), `sticky` or fixed positioning.
-    *   Content: Scrollable area with `padding: 0` if containing a list (to allow edge-to-edge separators).
-    *   Footer: Fixed/Sticky at bottom if containing actions.
+
 
 ### 7. Layout Density Hygiene
 *   **The Rule:** Choose padding based on the "Split Density" contract:
@@ -127,14 +115,10 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 *   **Critical Rule:** Always define explicit `color` on `.itemLabel` classes. Inherited colors can cause faded text.
 *   **Anti-Pattern:** Do not use `--surface-fg-tertiary` for field labels—it's too faint.
 
-### 26. Desktop-Mobile Style Separation (Platform Scoping)
-*   **The Problem:** Desktop UI updates causing regressions in mobile due to shared CSS and tokens.
-*   **The Strategy:** Use `[data-platform="desktop|mobile"]` on app roots and coordinate with portaled components.
-*   **Implementation:**
-    1.  **Apps Roots:** Add `data-platform="desktop"` to `src/desktop/App.tsx` and `data-platform="mobile"` to `src/App.tsx`.
-    2.  **Overrides:** Create `desktop-overrides.css` to redefine `--control-height-*` tokens for desktop (e.g., `md` = 36px vs mobile 44px).
-    3.  **Portal Portability:** Portaled components (Toasts, Menus) must accept or derive a `platform` attribute to apply to their detached DOM nodes.
-*   **Key Files:** `src/desktop/desktop-overrides.css`, `ToastContainer.tsx`, `App.tsx`.
+### 26. Desktop-First Architecture
+*   **The Problem:** Desktop requires different patterns than mobile (Tree Views vs Stacked Lists).(
+*   **The Strategy:** Use `PRD-desktop-enhanced.md` as the source of truth for the Desktop V2 experience.
+*   **Key Files:** `src/desktop-enhanced/Layout.tsx`, `src/desktop-enhanced/components/*`.
 
 ## CSS Architecture
 *   **Directive:** Prefer CSS Modules (`*.module.css`) for feature-specific styles. Use Global CSS (`src/styles/*.css`) only for reusable design patterns (buttons, lists, inputs).
@@ -409,18 +393,7 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 *   **The Fix:** For pre-seeded looping animations, use CSS `@keyframes` with negative `animation-delay` instead (see Section 12).
 *   **When This Works:** Framer Motion keyframes are fine for one-shot entrance/exit animations where starting from the first value is expected.
 
-### 15. NFC Ring Animation Architecture (WAAPI Conveyor Belt)
-*   **Pattern:** High-frequency looping animations (NFC scan rings) should use WAAPI directly, not Framer Motion or CSS keyframes.
-*   **Architecture:**
-    1.  **Hook (`useRingAnimation`):** Orchestrates all ring animations, generates keyframes, manages lifecycle.
-    2.  **Visualizer (`WaapiRingVisualizer`):** Pure rendering component, binds WAAPI animations to SVG circles.
-    3.  **Feature Flag (`feat_ring_animation`):** Controls visibility, default OFF.
-*   **Key Techniques:**
-    *   **Phase Offset via `iterationStart`:** Each ring starts at `(index / ringCount)` to create equidistant spacing.
-    *   **Radial Attenuation:** Outer rings fade to 30% opacity for visual softness.
-    *   **Semantic Color:** Use `--surface-border-info` for scanning state (semantic blue).
-*   **Anti-Pattern:** Using Framer Motion for 12+ concurrent looping animations—causes thrashing.
-*   **Reference:** See `docs/SPEC-NFC-Scan-Animation.md`, `src/features/Shell/useRingAnimation.ts`.
+
 
 ### 16. Future Ideas Feature Flag Pattern
 *   **The Structure:** Experimental features are gated behind `featureFlagsAtom` with `atomWithStorage` for persistence.
@@ -441,27 +414,7 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 *   **Anti-Pattern:** Putting experimental playground features in Developer Tools—separate concerns.
 *   **Reference:** See `src/data/featureFlags.ts`, `src/features/Overlays/FutureIdeasModal.tsx`.
 
-### 17. Hardware Simulation State Pattern
-*   **The Atom:** `hardwareSimulationAtom` in `src/data/atoms.ts` controls simulated hardware failures.
-*   **Properties:**
-    ```typescript
-    interface HardwareSimulation {
-      nfcFails: boolean;      // Tag reads fail
-      nfcBlocked: boolean;    // NFC permission denied
-      nfcTurnedOff: boolean;  // Device NFC is disabled
-      cameraFails: boolean;   // Camera startup fails
-    }
-    ```
-*   **Usage Pattern:**
-    1.  Toggle simulation state in Developer Tools modal.
-    2.  Hardware hooks (`useNfcScan`, `useCamera`) check simulation state before operations.
-    3.  If simulated failure, show appropriate toast and abort operation.
-*   **Toast Messages:**
-    *   `nfcBlocked`: "NFC Blocked / Allow NFC in app settings"
-    *   `nfcTurnedOff`: "NFC is turned off / Open NFC Settings to turn on"
-    *   `nfcFails`: "Tag not read. Hold phone steady against the tag."
-*   **Anti-Pattern:** Handling simulation state in UI components—keep it in hooks.
-*   **Reference:** See `docs/SPEC-NFC-Interaction.md`, `src/features/Shell/useNfcScan.ts`.
+
 
 ### 18. AnimatePresence Coordination & CSS Animation Interference
 *   **The Problem:** Multiple uncoordinated `AnimatePresence` blocks can cause elements to appear during transitions. Continuous CSS animations (e.g., `animation: pulse 2s infinite`) create compositing layers that remain visible during Framer Motion's exit animations.

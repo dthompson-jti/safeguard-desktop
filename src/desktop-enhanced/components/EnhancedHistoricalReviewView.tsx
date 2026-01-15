@@ -302,12 +302,12 @@ export const EnhancedHistoricalReviewView = () => {
                             {
                                 label: 'View Resident',
                                 icon: 'person',
-                                onClick: () => console.log('Navigate to resident:', row.original.residents[0]?.id),
+                                onClick: () => { /* Navigate to resident */ },
                             },
                             {
                                 label: 'Facility management',
                                 icon: 'door_front',
-                                onClick: () => console.log('Open room management:', row.original.location),
+                                onClick: () => { /* Open room management */ },
                             },
                             {
                                 label: row.original.supervisorNote ? 'Edit Comment' : 'Add Comment',
@@ -317,7 +317,7 @@ export const EnhancedHistoricalReviewView = () => {
                             ...(row.original.supervisorNote ? [{
                                 label: 'Delete Comment',
                                 icon: 'delete',
-                                onClick: () => console.log('Delete note for:', row.original.id),
+                                onClick: () => { /* Delete note */ },
                                 destructive: true,
                             }] : []),
                         ]}

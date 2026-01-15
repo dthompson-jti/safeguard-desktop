@@ -63,7 +63,7 @@
 /* --- HEADER --- */
 .header {
     flex-shrink: 0;
-    height: 44px;
+    height: var(--control-height-md);
     padding: 0 var(--spacing-4);
     display: flex;
     align-items: center;
@@ -79,8 +79,8 @@
 
 .residentName {
     font-family: var(--font-family-sans);
-    font-size: 14px;
-    font-weight: 600;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
     color: var(--surface-fg-primary);
     line-height: 1.2;
 }
@@ -101,9 +101,9 @@
 .locationPill {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    font-weight: 500;
+    gap: var(--spacing-1p5);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
     color: var(--surface-fg-secondary);
 }
 
@@ -131,8 +131,8 @@
 }
 
 .sectionTitle {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
     color: var(--surface-fg-tertiary);
 }
 
@@ -151,7 +151,7 @@
 .metricCard {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--spacing-1);
 }
 
 .metricLabel {
@@ -160,8 +160,8 @@
 }
 
 .metricValue {
-    font-size: 15px;
-    font-weight: 500;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
     color: var(--surface-fg-primary);
     font-variant-numeric: tabular-nums;
 }
@@ -186,7 +186,7 @@
 }
 
 .quoteContent {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     line-height: 1.6;
     color: var(--surface-fg-primary);
     font-style: italic;
@@ -202,8 +202,12 @@
     font-weight: 500;
 }
 
+.quoteSignature .material-symbols-rounded {
+    font-size: var(--icon-size-sm);
+}
+
 .emptyNote {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     color: var(--surface-fg-tertiary);
     font-style: italic;
 }
@@ -219,25 +223,24 @@
     gap: var(--spacing-2);
 }
 
-.actionButton {
-    align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
-    background: var(--surface-bg-secondary);
-    border: 1px solid var(--surface-border-primary);
-    border-radius: var(--radius-sm);
-    color: var(--surface-fg-primary);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
+.reviewContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
 }
 
-.actionButton:hover {
-    background: var(--surface-bg-tertiary);
-    border-color: var(--surface-border-secondary);
+.reviewTags {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.actionGroup {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.destructiveButton {
+    color: var(--surface-fg-alert-primary) !important;
 }
 
 /* Empty State */
@@ -262,8 +265,8 @@
 
 .emptyTitle {
     margin: 0;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
     color: var(--surface-fg-quaternary);
 }
 
@@ -278,13 +281,13 @@
 /* Tags */
 .tags {
     display: flex;
-    gap: 8px;
+    gap: var(--spacing-2);
     flex-wrap: wrap;
 }
 
 .tag {
-    font-size: 14px;
-    font-weight: 500;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
     padding: 2px 8px;
     border-radius: var(--radius-full);
     text-transform: capitalize;

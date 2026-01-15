@@ -170,18 +170,18 @@ export const LiveMonitorView = () => {
                 ),
                 ...COLUMN_WIDTHS.ACTIONS,
                 enableSorting: false,
-                cell: ({ row }) => (
+                cell: () => (
                     <RowContextMenu
                         actions={[
                             {
                                 label: 'View resident',
                                 icon: 'person',
-                                onClick: () => console.log('View resident', row.original.id),
+                                onClick: () => { /* View resident */ },
                             },
                             {
                                 label: 'Facility management',
                                 icon: 'door_front',
-                                onClick: () => console.log('Manage room', row.original.location),
+                                onClick: () => { /* Manage room */ },
                             }
                         ]}
                     />
