@@ -6,8 +6,8 @@
     - `src/data/atoms.ts`: Core state
     - `src/desktop-enhanced/atoms.ts`: Desktop V2 specific state
 - **Routing**: `react-router-dom`
-    - `/`: Mobile Root
-    - `/desktop-enhanced`: Desktop V2 Root
+    - `/`: Desktop Enhanced (Home)
+    - `/alternate`: Standard View
 
 ## 2. Desktop V2 (`src/desktop-enhanced/`)
 The primary focus of current development.

@@ -4,19 +4,13 @@ This document defines the critical animation behaviors and constraints for the S
 
 ---
 
-## 1. Check Completion Animation
+## 1. DataTable & Row Transitions
 
-### Final Timing Values
-
-| Phase | Parameter | Value | Notes |
-|-------|-----------|-------|-------|
-| **Phase 1** | Delay before pulse | 200ms | CSS animation-delay |
-| **Phase 1** | Pulse duration | 2s | `card-flash-complete` keyframe |
-| **Phase 1** | Background fade | 0.8s | Green → Grey |
-| **Phase 1** | Delay after pulse | 1s | Before status → `complete` |
-| **Phase 2** | Slide-out duration | 0.5s | Card slides right |
-| **Phase 2** | Collapse delay | 0.1s | After slide starts |
-| **Phase 2** | Collapse duration | 0.2s | Height → 0 |
+| Parameter | Value | Notes |
+|-----------|-------|-------|
+| **Row Add/Update** | 300ms | Fade in / Scale subtle |
+| **Row Exit** | 200ms | Slide out right + Collapse |
+| **Status Change** | 500ms | Color cross-fade |
 
 ### The Interaction Flow
 
@@ -135,9 +129,9 @@ Uses "Push/Pop" navigation metaphor:
 
 ---
 
-## 7. Splash Screen Transition
+## 7. View Transitions
 
-The splash → login transition uses a multi-layered approach to achieve a native-quality cinematic handoff.
+The dashboard transitions between **Live** and **Historical** modes using a coordinated cross-fade and tree-state persistence.
 
 ### Architecture
 
@@ -207,7 +201,7 @@ const LoginView = lazy(() => withMinDelay(
   MIN_SPLASH_MS
 ));
 
-## 8. Pulse Effect Timing Contract ("The Zero-Time Protocol")
+## 8. General Animation Principles
  
  All continuous pulse animations (Header, Footer, Badges, Overlays) MUST synchronize using the Web Animations API (WAAPI) to prevent drift.
  
@@ -234,13 +228,6 @@ const LoginView = lazy(() => withMinDelay(
  2.  **Tab Sleep:** CSS `animation-delay` pauses in background tabs, while `Date.now()` continues, causing immediate desync on resume.
  3.  **WAAPI Fix:** `currentTime` is relative to the document timeline, which accounts for all of this automatically.
 
-## 9. CSS Animation Negative Delay (Pre-Seeded Loops)
-
-For looping animations that should appear "already running" at steady-state on mount (e.g., NFC radar pulses):
-
--   **The Pattern:** Use CSS `@keyframes` with **negative `animation-delay`** to start each element mid-cycle.
--   **Why Not Framer Motion:** Framer Motion keyframe arrays always start from the first value, ignoring `initial`, causing all elements to "bunch up" at the center.
--   **Reference:** See `STRATEGY-CSS-Principles.md` Section 17 and `SPEC-NFC-Scan-Animation.md` for detailed implementation.
 
 ## 10. AnimatePresence Coordination & Interference Prevention
 

@@ -1,6 +1,0 @@
-
-> safeguard-desktop@0.0.0 build
-> tsc -b && vite build
-
-src/desktop/components/HistoricalReviewView.tsx(33,11): error TS6133: 'setIsPanelOpen' is declared but its value is never read.
-src/layouts/MainLayout.tsx(2,30): error TS2307: Cannot find module '../features/Schedule/ScheduleView' or its corresponding type declarations.
