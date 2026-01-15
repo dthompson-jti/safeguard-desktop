@@ -29,14 +29,13 @@ try {
 const getApp = () => {
   const pathname = window.location.pathname;
 
-  // 1. Explicit Route for Desktop Enhanced
-  // We check if the pathname (normalized) includes desktop-enhanced
-  if (pathname.includes('desktop-enhanced')) {
-    return <DesktopEnhancedApp />;
+  // 1. Alternate Option (Standard View)
+  if (pathname.includes('alternate')) {
+    return <DesktopApp />;
   }
 
-  // Default Desktop
-  return <DesktopApp />;
+  // Default: Desktop Enhanced
+  return <DesktopEnhancedApp />;
 };
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

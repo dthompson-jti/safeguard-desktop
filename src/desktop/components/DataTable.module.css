@@ -230,6 +230,11 @@
     color: var(--surface-fg-quaternary);
 }
 
+.actionHeaderIcon {
+    font-size: var(--icon-size-md) !important;
+    color: var(--surface-fg-tertiary);
+}
+
 .timerCell.alert {
     color: var(--surface-fg-alert-primary);
 }

@@ -1,8 +1,7 @@
 /* src/desktop/components/DesktopToolbar.module.css */
 
 .toolbar {
-    /* Standardized height to match headers */
-    height: var(--control-height-md);
+    /* Reverted: allow content + padding to dictate size as before */
     position: sticky;
     top: 0;
     /* Below the header */
@@ -10,8 +9,8 @@
     background: var(--surface-bg-primary);
     border-top: 1px solid var(--surface-border-secondary);
     border-bottom: 1px solid var(--surface-border-secondary);
-    padding: 0 var(--spacing-4);
-    /* Aligned with headers */
+    padding: var(--spacing-2) var(--spacing-3);
+    /* 12px padding left/right, 8px top/bottom */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -64,6 +63,18 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-2);
+}
+
+.statusSelectWrapper {
+    width: 240px;
+}
+
+.timeRangeSelectWrapper {
+    width: 200px;
+}
+
+.facilitySelectWrapper {
+    width: 220px;
 }
 
 .filterChip {

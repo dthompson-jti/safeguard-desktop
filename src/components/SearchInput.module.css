@@ -49,8 +49,8 @@
 /* The Search Icon */
 .searchIcon {
   color: var(--surface-fg-quinary);
-  order: 3;
-  /* Visual safety: ensure it stays on the right */
+  order: 1;
+  /* Icon on the left */
 }
 
 .wrapper input {
@@ -62,7 +62,7 @@
   width: 100%;
   /* Ensure it takes available space */
   box-sizing: border-box;
-  order: 1;
+  order: 2;
 }
 
 .wrapper input::placeholder {
@@ -72,7 +72,7 @@
 /* Ensure the clear button doesn't shrink */
 .clearButton {
   flex-shrink: 0;
-  order: 2;
+  order: 3;
 }
 
 .visuallyHidden {

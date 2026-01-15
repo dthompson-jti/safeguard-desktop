@@ -1,6 +1,7 @@
 .topNav {
     width: 100%;
-    height: var(--control-height-md);
+    height: 44px;
+    /* Standardized height */
     background-color: var(--surface-bg-brand-section);
     border-bottom: none;
     display: flex;

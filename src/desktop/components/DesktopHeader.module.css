@@ -4,7 +4,8 @@
     position: sticky;
     top: 0;
     z-index: 50;
-    height: var(--control-height-md);
+    height: 44px !important;
+    /* Standardized height */
     background: var(--surface-bg-primary);
     border-bottom: 1px solid var(--surface-border-secondary);
     padding: 0 var(--spacing-4);
@@ -81,7 +82,7 @@
 .backdrop {
     position: fixed;
     inset: 0;
-    z-index: 1100;
+    z-index: 105;
 }
 
 .menu {
@@ -89,7 +90,7 @@
     top: 100%;
     right: 0;
     margin-top: var(--spacing-1);
-    z-index: 1101;
+    z-index: 106;
     min-width: 200px;
     background-color: var(--surface-bg-primary);
     border: 1px solid var(--surface-border-primary);

@@ -30,12 +30,12 @@
 .backdrop {
     position: fixed;
     inset: 0;
-    z-index: 1100;
+    z-index: 105;
 }
 
 .menu {
     /* Position set via inline styles from portal */
-    z-index: 1101;
+    z-index: 106;
     min-width: 220px;
     background-color: var(--surface-bg-primary);
     border: 1px solid var(--surface-border-primary);

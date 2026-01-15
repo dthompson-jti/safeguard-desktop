@@ -63,7 +63,8 @@
 /* --- HEADER --- */
 .header {
     flex-shrink: 0;
-    height: var(--control-height-md);
+    height: 44px !important;
+    /* Standardized height */
     padding: 0 var(--spacing-4);
     display: flex;
     align-items: center;

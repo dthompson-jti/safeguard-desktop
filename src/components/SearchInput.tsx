@@ -35,7 +35,9 @@ export const SearchInput = ({
       <label htmlFor={inputId} className={styles.visuallyHidden}>
         {placeholder}
       </label>
-      
+
+      <span className={`material-symbols-rounded ${styles.searchIcon}`}>search</span>
+
       <input
         ref={inputRef}
         id={inputId}
@@ -59,8 +61,6 @@ export const SearchInput = ({
           <span className="material-symbols-rounded">close</span>
         </Button>
       )}
-
-      <span className={`material-symbols-rounded ${styles.searchIcon}`}>search</span>
     </div>
   );
 };

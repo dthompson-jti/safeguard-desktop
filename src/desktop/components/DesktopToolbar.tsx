@@ -108,7 +108,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                 <SearchInput
                     value={filter.search}
                     onChange={(val) => setFilter((prev) => ({ ...prev, search: val }))}
-                    placeholder="Search..."
+                    placeholder="Find..."
                     variant="standalone"
                 />
 
@@ -137,7 +137,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                 )}
 
                 {/* Status Filter - Different options for Live vs Historical */}
-                <div style={{ width: 240 }}>
+                <div className={styles.statusSelectWrapper}>
                     {view === 'live' ? (
                         <Select
                             value={filter.statusFilter}
@@ -167,7 +167,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
 
                 {/* Time Range Filter (Historical only) */}
                 {view === 'historical' && (
-                    <div style={{ width: 200 }}>
+                    <div className={styles.timeRangeSelectWrapper}>
                         <Select
                             value="last-24h" // Default for now
                             onValueChange={handleTimeRangeChange}
@@ -184,7 +184,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
 
                 {/* Facility Area Filter (Not in enhanced mode) */}
                 {!isEnhanced && (
-                    <div style={{ width: 220 }}>
+                    <div className={styles.facilitySelectWrapper}>
                         <Select
                             value={filter.facility}
                             onValueChange={handleAreaFilterChange}

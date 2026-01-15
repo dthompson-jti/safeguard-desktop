@@ -208,11 +208,11 @@ export const HistoricalReviewView = () => {
                 ...COLUMN_WIDTHS.MERGED_LOCATION,
                 accessorFn: (row) => `${row.group} ${row.unit} ${row.location}`,
                 cell: ({ row }) => (
-                    <div className={styles.locationCell} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <div className={styles.locationCell}>
                         <span>{row.original.group}</span>
-                        <span className="material-symbols-rounded" style={{ fontSize: '16px', color: 'var(--surface-fg-quaternary)' }}>navigate_next</span>
+                        <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
                         <span>{row.original.unit}</span>
-                        <span className="material-symbols-rounded" style={{ fontSize: '16px', color: 'var(--surface-fg-quaternary)' }}>navigate_next</span>
+                        <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
                         <span>{row.original.location}</span>
                     </div>
                 ),

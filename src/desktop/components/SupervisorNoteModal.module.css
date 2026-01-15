@@ -3,8 +3,8 @@
 .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(var(--primitives-base-black-rgb, 0, 0, 0), 0.4);
-    z-index: 100;
+    background: var(--surface-bg-overlay);
+    z-index: 105;
     animation: overlayShow 250ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -28,7 +28,7 @@
     background: var(--surface-bg-primary);
     border-radius: var(--radius-2xl);
     box-shadow: var(--surface-shadow-2xl);
-    z-index: 101;
+    z-index: 106;
     outline: none;
     animation: contentShow 300ms cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
@@ -125,6 +125,10 @@
     gap: var(--spacing-2);
 }
 
+.hintIcon {
+    font-size: var(--icon-size-sm) !important;
+}
+
 .footer {
     display: flex;
     justify-content: flex-end;
@@ -134,6 +138,10 @@
     border-top: 1px solid var(--surface-border-secondary);
 }
 
-.footerButton {
-    /* Spacing between buttons handled by gap in .footer */
+.saveButton {
+    min-width: 120px;
+}
+
+.cancelButton {
+    min-width: 100px;
 }

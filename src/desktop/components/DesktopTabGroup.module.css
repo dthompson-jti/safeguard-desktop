@@ -81,7 +81,7 @@
     left: 0;
     right: 0;
     height: var(--spacing-0p5);
-    background-color: var(--primitives-theme-600);
+    background-color: var(--surface-bg-brand-solid);
     /* #276FE3 blue */
 }
 

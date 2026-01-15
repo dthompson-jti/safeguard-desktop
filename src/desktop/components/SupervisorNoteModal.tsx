@@ -132,7 +132,7 @@ export const SupervisorNoteModal = () => {
                         </div>
 
                         <div className={styles.hint}>
-                            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>info</span>
+                            <span className={`material-symbols-rounded ${styles.hintIcon}`}>info</span>
                             <span>
                                 Applying to {modalState.selectedIds.length} selected check
                                 {modalState.selectedIds.length !== 1 ? 's' : ''}.
@@ -143,8 +143,7 @@ export const SupervisorNoteModal = () => {
                     <div className={styles.footer}>
                         <Button
                             variant="primary"
-                            className={styles.footerButton}
-                            style={{ minWidth: 120 }}
+                            className={`${styles.footerButton} ${styles.saveButton}`}
                             onClick={() => { void handleSave(); }}
                             loading={isSaving}
                             disabled={reason === 'Other' && !additionalNotes.trim()}
@@ -153,8 +152,7 @@ export const SupervisorNoteModal = () => {
                         </Button>
                         <Button
                             variant="secondary"
-                            className={styles.footerButton}
-                            style={{ minWidth: 100 }}
+                            className={`${styles.footerButton} ${styles.cancelButton}`}
                             onClick={handleClose}
                             disabled={isSaving}
                         >
