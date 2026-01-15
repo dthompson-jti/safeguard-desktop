@@ -1,0 +1,32 @@
+.mainContainer {
+    height: 100%;
+    display: grid;
+    flex: 1;
+    background-color: var(--surface-bg-primary);
+    overflow: hidden;
+    transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.toolbarWrapper {
+    flex-shrink: 0;
+}
+
+.viewWrapper {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.detailPanelWrapper {
+    border-left: 1px solid var(--surface-border-secondary);
+    height: 100%;
+    position: relative;
+}

@@ -95,8 +95,10 @@
     cursor: pointer;
 }
 
-.th[data-sortable="true"]:hover {
-    color: var(--surface-fg-primary);
+@media (hover: hover) {
+    .th[data-sortable="true"]:hover {
+        color: var(--surface-fg-primary);
+    }
 }
 
 .th[data-sortable="true"]:focus-visible {
@@ -120,16 +122,19 @@
     opacity: 0;
 }
 
-/* Hover preview state: show faintly if not sorted */
-.th[data-sortable="true"]:hover:not([data-sorted="true"]) .sortIndicator {
-    opacity: 0.2;
-}
-
 /* Active sort state - more prominent */
 .th[data-sort-direction="asc"] .sortIndicator,
 .th[data-sort-direction="desc"] .sortIndicator {
     opacity: 1;
     color: var(--surface-fg-primary);
+}
+
+@media (hover: hover) {
+
+    /* Hover preview state: show faintly if not sorted */
+    .th[data-sortable="true"]:hover:not([data-sorted="true"]) .sortIndicator {
+        opacity: 0.2;
+    }
 }
 
 .th[data-sort-direction="asc"] .sortIndicator {
@@ -146,8 +151,10 @@
     transition: background-color 0.1s ease;
 }
 
-.tr:hover:not([data-state="checked"]) {
-    background: var(--surface-bg-secondary);
+@media (hover: hover) {
+    .tr:hover:not([data-state="checked"]) {
+        background: var(--surface-bg-secondary);
+    }
 }
 
 .tr[data-state="checked"] {
@@ -165,8 +172,10 @@
     }
 }
 
-.tr[data-state="checked"]:hover {
-    background: var(--control-bg-selected-hover);
+@media (hover: hover) {
+    .tr[data-state="checked"]:hover {
+        background: var(--control-bg-selected-hover);
+    }
 }
 
 .td {
@@ -322,9 +331,11 @@
     transition: all 0.15s ease;
 }
 
-.actionButton:hover {
-    background: var(--surface-bg-secondary);
-    border-color: var(--surface-border-primary);
+@media (hover: hover) {
+    .actionButton:hover {
+        background: var(--surface-bg-secondary);
+        border-color: var(--surface-border-primary);
+    }
 }
 
 /* Link action */
@@ -338,8 +349,10 @@
     font-size: var(--font-size-sm);
 }
 
-.linkAction:hover {
-    text-decoration: underline;
+@media (hover: hover) {
+    .linkAction:hover {
+        text-decoration: underline;
+    }
 }
 
 /* Hyperlink text styling for names and room numbers */
@@ -355,10 +368,12 @@
     font-weight: var(--font-weight-bold);
 }
 
-.linkText:hover {
-    color: var(--control-fg-theme-hover);
-    text-decoration: underline;
-    text-decoration-thickness: 20%;
+@media (hover: hover) {
+    .linkText:hover {
+        color: var(--control-fg-theme-hover);
+        text-decoration: underline;
+        text-decoration-thickness: 20%;
+    }
 }
 
 /* Alert icon at far right of row - legacy */
@@ -442,9 +457,11 @@
     margin: 0;
 }
 
-.checkbox:hover {
-    border: 1.5px solid var(--control-border-secondary-hover);
-    background: var(--control-bg-secondary-hover);
+@media (hover: hover) {
+    .checkbox:hover {
+        border: 1.5px solid var(--control-border-secondary-hover);
+        background: var(--control-bg-secondary-hover);
+    }
 }
 
 /* Checked state for native checkbox */
@@ -453,8 +470,10 @@
     border: 1.5px solid transparent;
 }
 
-.checkbox:checked:hover {
-    background: var(--control-bg-theme-pressed);
+@media (hover: hover) {
+    .checkbox:checked:hover {
+        background: var(--control-bg-theme-pressed);
+    }
 }
 
 /* SVG Checkmark for checked state */
@@ -504,9 +523,11 @@
     transition: all 0.15s ease;
 }
 
-.iconButtonSmall:hover {
-    background-color: var(--control-bg-secondary-hover);
-    border-color: var(--control-border-tertiary-hover);
+@media (hover: hover) {
+    .iconButtonSmall:hover {
+        background-color: var(--control-bg-secondary-hover);
+        border-color: var(--control-border-tertiary-hover);
+    }
 }
 
 .iconButtonSmall .material-symbols-rounded {

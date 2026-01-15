@@ -6,23 +6,23 @@
   border-radius: var(--radius-2xl);
   border: 1px solid var(--surface-border-secondary);
   box-shadow: var(--surface-shadow-xl);
-  z-index: 1100;
+  z-index: 106;
   /* Above most UI, below modals */
 }
 
 /* Tooltip variant - black background, high contrast */
 .popover-content-tooltip {
-  background-color: var(--primitives-grey-900);
-  color: var(--surface-fg-white);
+  background-color: var(--surface-bg-primary-solid);
+  color: var(--surface-fg-on-solid);
   border-radius: var(--spacing-2);
   padding: var(--spacing-2) var(--spacing-3);
   font-size: 0.85em;
   font-weight: 500;
   line-height: 1.4;
   box-shadow: var(--surface-shadow-md);
-  border: 1px solid var(--primitives-grey-800);
+  border: 1px solid var(--surface-bg-primary-solid);
   user-select: none;
-  z-index: 1100;
+  z-index: 106;
 }
 
 .popover-arrow {

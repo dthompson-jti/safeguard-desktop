@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import * as ToastPrimitive from '@radix-ui/react-toast';
 import { AnimatePresence } from 'framer-motion';
 import { Layout } from './Layout';
 import { NavigationPanel } from './components/NavigationPanel';
 import { Breadcrumbs } from './components/Breadcrumbs';
-import { desktopEnhancedViewAtom, desktopEnhancedSelectionAtom } from './atoms';
+import { desktopEnhancedViewAtom } from './atoms';
 import {
     desktopFilterAtom,
     desktopViewAtom,
@@ -23,10 +23,10 @@ import { SupervisorNoteModal } from '../desktop/components/SupervisorNoteModal';
 import { ToastContainer } from '../components/ToastContainer';
 import { ToastMessage } from '../components/Toast';
 import { toastsAtom } from '../data/toastAtoms';
+import styles from './DesktopEnhancedApp.module.css';
 
 export default function DesktopEnhancedApp() {
     const view = useAtomValue(desktopEnhancedViewAtom);
-    const selection = useAtomValue(desktopEnhancedSelectionAtom);
     const setFilter = useSetAtom(desktopFilterAtom);
     const setDesktopView = useSetAtom(desktopViewAtom);
     const activeRecord = useAtomValue(activeDetailRecordAtom);
@@ -68,26 +68,14 @@ export default function DesktopEnhancedApp() {
         }
     }, [view, setDesktopView, setFilter, setActiveRecord, setSelectedLive, setSelectedHistory]);
 
-    // Sync Selection to Desktop Filter
-    useEffect(() => {
-        setFilter(prev => {
-            const next = { ...prev };
-
-            if (selection.type === 'root') {
-                next.group = 'all';
-                next.unit = 'all';
-            } else if (selection.type === 'group') {
-                next.group = selection.id;
-                next.unit = 'all';
-            } else if (selection.type === 'unit') {
-                next.group = 'all';
-                next.unit = selection.id;
-            }
-            return next;
-        });
-    }, [selection, setFilter]);
+    // Note: Selection syncing to desktop filter is now handled exclusively in Layout.tsx
+    // to avoid duplication and potential race conditions.
 
     const showPanel = view === 'historical' && isPanelOpen;
+
+    const mainContainerStyle = useMemo(() => ({
+        gridTemplateColumns: showPanel ? `1fr ${panelWidth}px` : '1fr',
+    }), [showPanel, panelWidth]);
 
     return (
         <Layout leftPanel={<NavigationPanel />}>
@@ -95,32 +83,24 @@ export default function DesktopEnhancedApp() {
                 <div
                     data-platform="desktop"
                     data-view-mode={view}
-                    className="desktop-enhanced-main-container"
+                    className={styles.mainContainer}
                     data-panel-open={showPanel}
-                    style={{
-                        height: '100%',
-                        display: 'grid',
-                        gridTemplateColumns: showPanel ? `1fr ${panelWidth}px` : '1fr',
-                        flex: 1,
-                        backgroundColor: 'var(--surface-bg-primary)',
-                        overflow: 'hidden',
-                        transition: 'grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    } as React.CSSProperties}
+                    style={mainContainerStyle}
                 >
-                    <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+                    <div className={styles.contentWrapper}>
                         <Breadcrumbs />
-                        <div style={{ flexShrink: 0 }}>
+                        <div className={styles.toolbarWrapper}>
                             <DesktopToolbar isEnhanced={true} />
                         </div>
 
-                        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                        <div className={styles.viewWrapper}>
                             {view === 'live' ? <LiveMonitorView /> : <HistoricalReviewView />}
                         </div>
                     </div>
 
                     <AnimatePresence>
                         {showPanel && (
-                            <div style={{ borderLeft: '1px solid var(--surface-border-secondary)', height: '100%', position: 'relative' }}>
+                            <div className={styles.detailPanelWrapper}>
                                 <DetailPanel record={activeRecord} selectedCount={totalSelected} />
                             </div>
                         )}
@@ -140,3 +120,4 @@ export default function DesktopEnhancedApp() {
         </Layout>
     );
 }
+

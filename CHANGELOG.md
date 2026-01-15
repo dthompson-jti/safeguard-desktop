@@ -9,7 +9,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
-- Initial project setup
+---
+
+## [Unreleased]
+
+### Added
+- `--spacing-2p5` (10px) token to spacing specification.
+- `DesktopEnhancedApp.module.css` to replace inline styles.
+- `@media (hover: hover)` wrappers to prevent sticky hover states on touch devices.
+
+### Changed
+- Normalized Z-index values across all components to strictly adhere to the layering contract (Overlays: 106).
+- Replaced primitive grey tokens with semantic surface tokens in global CSS files.
+- Refactored `DesktopEnhancedApp`, `Breadcrumbs`, and `EnhancedLiveMonitorView` to remove inline styles.
+- Consolidated selection synchronization logic into `Layout.tsx`.
+
+### Removed
+- Obsolete `NfcScanState` type from `types.ts`.
+- Redundant `walkingOrderIndex` and `completionStatus` fields from `SafetyCheck` interface.
+- Inline styles from major desktop components.
 
 ---
 

@@ -25,11 +25,11 @@
 .resizer {
     position: absolute;
     top: 0;
-    right: -4px;
-    width: 9px;
+    right: calc(-1 * var(--spacing-1));
+    width: var(--spacing-2);
     height: 100%;
     cursor: col-resize;
-    z-index: 100;
+    z-index: 101;
     display: flex;
     justify-content: center;
     align-items: center;

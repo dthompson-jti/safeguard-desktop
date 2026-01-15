@@ -159,7 +159,6 @@ export const generateEnhancedData = () => {
                 status: liveStatus === 'upcoming' ? 'pending' : (liveStatus === 'due' ? 'due' : 'missed'),
                 residents: [{ id: `res-${room.id}`, name: room.resident, location: room.location }],
                 dueDate: scheduledTime.toISOString(),
-                walkingOrderIndex: roomIdx,
                 generationId: 1,
                 baseInterval: 15
             },

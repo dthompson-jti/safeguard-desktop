@@ -29,35 +29,13 @@ export interface SafetyCheck {
   residents: Resident[];
   status: SafetyCheckStatus;
   dueDate: string; // ISO Date String
-  walkingOrderIndex: number;
   specialClassifications?: SpecialClassification[];
 
   // Optional fields for completed/historical checks
   lastChecked?: string; // ISO Date String
-  completionStatus?: string;
   notes?: string;
-  incidentType?: string; // For supplemental checks
 
   // Lifecycle Fields
   generationId: number; // 1, 2, 3... The iteration count for this room
   baseInterval: number; // Minutes between checks (e.g., 15)
 }
-
-export type ScheduleFilter = 'all' | 'due' | 'missed' | 'queued';
-
-export type HistoryFilter = 'all' | 'missed' | 'supplemental';
-
-// =================================================================
-//                     NFC Scan Activation Types
-// =================================================================
-
-/** State machine states for NFC scanning and feedback */
-export type NfcScanState =
-  | 'idle'
-  | 'scanning'
-  | 'success'
-  | 'formComplete'
-  | 'readError'
-  | 'timeout'
-  | 'blocked'
-  | 'hardwareOff';

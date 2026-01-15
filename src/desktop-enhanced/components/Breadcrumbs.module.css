@@ -36,9 +36,11 @@
     white-space: nowrap;
 }
 
-.text:hover {
-    color: var(--surface-fg-primary);
-    text-decoration: underline;
+@media (hover: hover) {
+    .text:hover {
+        color: var(--surface-fg-primary);
+        text-decoration: underline;
+    }
 }
 
 .part:last-child .text {
@@ -48,9 +50,9 @@
     font-weight: var(--font-weight-bold);
 }
 
-.part:not(:last-child) .text:hover {
-    color: var(--surface-fg-primary);
-    cursor: pointer;
+.chevron {
+    font-size: var(--icon-size-sm);
+    color: var(--surface-fg-quaternary);
 }
 
 .actions {

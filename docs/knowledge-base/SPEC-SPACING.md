@@ -18,6 +18,7 @@ This document defines the spacing system used throughout the application to ensu
 | `--spacing-1` | 4px | 0.25rem | Tight spacing, item internal gaps |
 | `--spacing-1p5` | 6px | 0.375rem | Small buttons, chip gaps |
 | `--spacing-2` | 8px | 0.5rem | Standard internal padding (Compact) |
+| `--spacing-2p5` | 10px | 0.625rem | Consistent header/nav spacing |
 | `--spacing-3` | 12px | 0.75rem | Desktop internal padding, list gaps |
 | `--spacing-4` | 16px | 1rem | Standard page padding (Comfortable) |
 | `--spacing-5` | 20px | 1.25rem | Section spacing |

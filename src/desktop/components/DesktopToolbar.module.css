@@ -101,10 +101,12 @@
     color: var(--control-fg-tertiary);
 }
 
-.filterChip:hover {
-    background: var(--control-bg-secondary-hover);
-    border-color: var(--control-border-secondary-hover);
-    color: var(--control-fg-secondary_hover);
+@media (hover: hover) {
+    .filterChip:hover {
+        background: var(--control-bg-secondary-hover);
+        border-color: var(--control-border-secondary-hover);
+        color: var(--control-fg-secondary_hover);
+    }
 }
 
 .filterChip.active {
@@ -141,8 +143,10 @@
     transition: all 0.15s ease;
 }
 
-.viewButton:hover {
-    color: var(--surface-fg-primary);
+@media (hover: hover) {
+    .viewButton:hover {
+        color: var(--surface-fg-primary);
+    }
 }
 
 .viewButton.active {

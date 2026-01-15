@@ -16,7 +16,6 @@ export const generateInitialChecks = (): SafetyCheck[] => {
   const now = new Date();
   const inNMinutes = (n: number) => new Date(now.getTime() + n * 60 * 1000).toISOString();
 
-  let walkingIndex = 1;
   const DEFAULT_INTERVAL = 15; // Minutes
 
   // Helper to create checks from the table data for consistency.
@@ -27,7 +26,6 @@ export const generateInitialChecks = (): SafetyCheck[] => {
       residents: residentsByLocation[location] || [],
       status: 'pending', // Will be recalculated by atoms based on dueDate
       dueDate: inNMinutes(offsetMinutes),
-      walkingOrderIndex: walkingIndex++,
       specialClassifications,
       generationId: 1,
       baseInterval: DEFAULT_INTERVAL,
@@ -171,7 +169,6 @@ export const generateInitialChecks = (): SafetyCheck[] => {
       residents: finalResidents,
       status: 'pending', // Will be recalculated by atoms based on dueDate
       dueDate: new Date(dueTimeMs).toISOString(),
-      walkingOrderIndex: 50 + i,
       specialClassifications: [],
       generationId: 1,
       baseInterval: DEFAULT_INTERVAL,
@@ -186,9 +183,7 @@ export const generateInitialChecks = (): SafetyCheck[] => {
       residents: [mockResidents[0]],
       status: 'complete',
       dueDate: inNMinutes(-30),
-      walkingOrderIndex: 900,
       lastChecked: inNMinutes(-32),
-      completionStatus: 'All good',
       generationId: 1,
       baseInterval: DEFAULT_INTERVAL
     } as SafetyCheck,
@@ -198,9 +193,7 @@ export const generateInitialChecks = (): SafetyCheck[] => {
       residents: [mockResidents[1]],
       status: 'complete',
       dueDate: inNMinutes(-60),
-      walkingOrderIndex: 901,
       lastChecked: inNMinutes(-61),
-      completionStatus: 'Assisted',
       generationId: 1,
       baseInterval: DEFAULT_INTERVAL
     } as SafetyCheck,

@@ -53,7 +53,7 @@ export const Breadcrumbs = () => {
                             {part.name}
                         </button>
                         {index < parts.length - 1 && (
-                            <span className="material-symbols-rounded" style={{ fontSize: 16, color: 'var(--surface-fg-quaternary)' }}>
+                            <span className={`material-symbols-rounded ${styles.chevron}`}>
                                 chevron_right
                             </span>
                         )}
