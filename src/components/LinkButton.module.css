@@ -1,0 +1,29 @@
+/* src/components/LinkButton.module.css */
+
+.link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1, 4px);
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: var(--surface-fg-theme-primary, #276fe3);
+    font-family: var(--font-family-body, Inter), sans-serif;
+    font-size: var(--font-size-sm, 14px);
+    font-weight: var(--font-weight-bold, 700);
+    line-height: var(--line-height-text-sm, 20px);
+    letter-spacing: -0.015em;
+    cursor: pointer;
+    text-align: left;
+    transition: color 0.15s ease;
+}
+
+.link:hover {
+    color: var(--surface-fg-theme-secondary, #1e5ab8);
+    text-decoration: underline;
+}
+
+.link .material-symbols-rounded {
+    font-size: var(--icon-size-sm, 16px);
+}

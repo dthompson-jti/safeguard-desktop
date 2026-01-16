@@ -1,0 +1,50 @@
+/* src/components/AttributeChip.module.css */
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1, 4px);
+    padding: var(--spacing-0p5, 2px) var(--spacing-2, 8px);
+    border-radius: var(--radius-sm, 6px);
+    font-family: var(--font-family-body, Inter), sans-serif;
+    font-size: var(--font-size-2xs, 12px);
+    font-weight: var(--font-weight-medium, 500);
+    line-height: var(--line-height-text-xs, 18px);
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+.icon {
+    font-size: 14px;
+}
+
+/* Variants */
+.brand {
+    background-color: var(--surface-bg-brand-primary, #f2f7fe);
+    color: var(--surface-fg-theme-primary, #276fe3);
+    border-color: var(--utility-brand-200, #cfe1fe);
+}
+
+.error {
+    background-color: var(--surface-bg-error-primary, #fef3f2);
+    color: var(--surface-fg-alert-primary, #d92d20);
+    border-color: var(--utility-error-200, #fecdca);
+}
+
+.warning {
+    background-color: var(--surface-bg-warning-primary, #fff9f2);
+    color: var(--surface-fg-warning-primary, #b54708);
+    border-color: var(--primitives-yellow-200, #fedf89);
+}
+
+.success {
+    background-color: var(--surface-bg-success, #f6fef9);
+    color: var(--surface-fg-success-primary, #067647);
+    border-color: var(--primitives-green-200, #abefc6);
+}
+
+.info {
+    background-color: var(--surface-bg-info, #f5faff);
+    color: var(--surface-fg-info-primary, #1570ef);
+    border-color: var(--primitives-blue-200, #b2ddff);
+}

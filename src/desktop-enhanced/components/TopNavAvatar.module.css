@@ -76,7 +76,5 @@
     color: var(--surface-fg-secondary);
     font-size: 0.75rem;
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
     margin-bottom: var(--spacing-1p5);
 }

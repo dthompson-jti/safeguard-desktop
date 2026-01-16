@@ -9,7 +9,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
----
+- Smooth auto-width transitions for filter controls using mechanical (linear) motion.
+- "Save Filters as Default" feature with `localStorage` persistence and dynamic time presets.
+- Sticky customization state: filters track explicit user modifications and remain "active" (blue) until cleared.
+- High-fidelity split-button UI for active filters with 2px borders and rock-solid segment joining.
+- "Today" and "Last 24 Hours" presets to the historical time range filter.
+- "Expand All" and "Collapse All" actions to the Tree View navigation menu.
+- Accurate "Last 8 Hours" and ISO timestamp filtering in mock data.
+- Added `group` and `unit` fields to `PanelData` for enhanced monitoring metrics.
+
+### Changed
+- Custom Time Range filter from a Popover to a refined Centered Modal.
+- Refined Custom Range UI with date-only inputs, internal button alignment, and tertiary Cancel variant.
+
+### Fixed
+- Bulk Action Footer layering issue by increasing z-index to 102.
+- Layout instability by enforcing max-width on the navigation panel.
+
 
 ## [Unreleased]
 
@@ -17,6 +33,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `--spacing-2p5` (10px) token to spacing specification.
 - `DesktopEnhancedApp.module.css` to replace inline styles.
 - `@media (hover: hover)` wrappers to prevent sticky hover states on touch devices.
+
+### Changed
+- Updated `BulkActionFooter` to use correct design tokens for radius, border, and background.
+- Fixed `BulkActionFooter` hardcoded shadow values to ensure visibility as per user request.
 
 ### Changed
 - Normalized Z-index values across all components to strictly adhere to the layering contract (Overlays: 106).

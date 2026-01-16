@@ -417,10 +417,28 @@
     height: 100%;
 }
 
+.commentCell {
+    display: flex;
+    align-items: center;
+    min-height: 32px;
+    width: 100%;
+}
+
+.truncatedNote {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--surface-fg-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+    max-width: 100%;
+}
+
 .supervisorComment {
-    font-style: italic;
     color: var(--surface-fg-secondary);
     font-size: var(--font-size-2xs);
+    font-weight: var(--font-weight-regular);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

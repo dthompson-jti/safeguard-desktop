@@ -37,6 +37,7 @@
   --surface-bg-info-secondary: var(--primitives-blue-100);
   --surface-bg-info-solid: var(--primitives-blue-600);
   --surface-bg-overlay: var(--primitives-grey-950);
+  --surface-bg-backdrop: rgba(10, 12, 18, 0.7);
   --surface-bg-brand-section_subtle: var(--primitives-theme-700);
   --surface-bg-brand-section: var(--primitives-theme-800);
   --surface-bg-active: var(--primitives-grey-50);
@@ -61,14 +62,15 @@
   --surface-fg-theme-strong: var(--primitives-theme-700);
   --surface-fg-theme-primary: var(--primitives-theme-600);
   --surface-fg-theme-secondary: var(--primitives-theme-500);
-  --surface-fg-alert-primary: var(--primitives-red-600);
-  --surface-fg-alert-secondary: var(--primitives-red-500);
-  --surface-fg-warning-primary: var(--primitives-yellow-600);
-  --surface-fg-warning-secondary: var(--primitives-yellow-500);
-  --surface-fg-success-primary: var(--primitives-green-600);
-  --surface-fg-success-secondary: var(--primitives-green-500);
-  --surface-fg-info-primary: var(--primitives-blue-600);
-  --surface-fg-info-secondary: var(--primitives-blue-500);
+  /* Improved Contrast - 700 series for Light Mode */
+  --surface-fg-alert-primary: var(--primitives-red-700);
+  --surface-fg-alert-secondary: var(--primitives-red-600);
+  --surface-fg-warning-primary: var(--primitives-yellow-700);
+  --surface-fg-warning-secondary: var(--primitives-yellow-600);
+  --surface-fg-success-primary: var(--primitives-green-700);
+  --surface-fg-success-secondary: var(--primitives-green-600);
+  --surface-fg-info-primary: var(--primitives-blue-700);
+  --surface-fg-info-secondary: var(--primitives-blue-600);
 
   /* Brand Logo */
   --brand-logo-text: #2C2829;
@@ -651,9 +653,15 @@
   --control-fg-theme: var(--primitives-theme-300);
   --control-fg-theme-hover: var(--primitives-theme-200);
 
-  /* Status Text - Lightened for Dark Mode */
-  --surface-fg-success-primary: var(--primitives-green-400);
-  --surface-fg-success-secondary: var(--primitives-green-300);
+  /* Improved Contrast - 300 series for Dark Mode (Dark C) */
+  --surface-fg-alert-primary: var(--primitives-red-300);
+  --surface-fg-alert-secondary: var(--primitives-red-200);
+  --surface-fg-warning-primary: var(--primitives-yellow-300);
+  --surface-fg-warning-secondary: var(--primitives-yellow-200);
+  --surface-fg-success-primary: var(--primitives-green-300);
+  --surface-fg-success-secondary: var(--primitives-green-200);
+  --surface-fg-info-primary: var(--primitives-blue-300);
+  --surface-fg-info-secondary: var(--primitives-blue-200);
 
   /* Hover Text Fixes */
   --surface-fg-secondary_hover: var(--primitives-grey-200);
@@ -700,6 +708,7 @@
 
   /* Overlay */
   --surface-bg-overlay: #000000;
+  --surface-bg-backdrop: rgba(0, 0, 0, 0.7);
 
   /* ================== CONTROL ================== */
 

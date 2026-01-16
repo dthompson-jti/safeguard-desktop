@@ -6,13 +6,16 @@
   justify-content: space-between;
   gap: var(--spacing-1);
   font-family: var(--font-family-sans);
-  width: 100%;
+  width: auto;
+  min-width: 0;
   height: 36px;
   padding: 0 var(--spacing-3);
   border: 1px solid var(--surface-border-primary);
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   font-weight: 600;
+  letter-spacing: -0.21px;
+  white-space: nowrap;
   background-color: var(--control-bg-secondary);
   color: var(--control-fg-secondary);
   outline: none;
@@ -61,8 +64,8 @@
 }
 
 .selectContent {
-  width: var(--radix-select-trigger-width);
   min-width: var(--radix-select-trigger-width);
+  width: max-content;
 }
 
 .selectItemIcon {

@@ -108,9 +108,18 @@
     color: var(--surface-fg-secondary);
 }
 
-.locationPill .material-symbols-rounded {
-    font-size: 16px;
-    color: var(--surface-fg-quinary);
+.residentLink {
+    margin: 0;
+    color: var(--surface-fg-primary) !important;
+}
+
+.residentLink:hover {
+    color: var(--surface-fg-primary) !important;
+    text-decoration: none;
+}
+
+.locationLink {
+    margin-right: var(--spacing-4);
 }
 
 
@@ -134,53 +143,19 @@
 .sectionTitle {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
-    color: var(--surface-fg-tertiary);
+    color: var(--surface-fg-primary);
 }
 
-/* Metrics Grid */
-.metricsGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-4);
-    background: var(--surface-bg-secondary);
-    /* Slight card bg */
-    padding: var(--spacing-4);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--surface-border-secondary);
-}
-
-.metricCard {
+/* Meta Stack (Vertical Layout from Figma) */
+.metaStack {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-1);
-}
-
-.metricLabel {
-    font-size: 14px;
-    color: var(--surface-fg-secondary);
-}
-
-.metricValue {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    color: var(--surface-fg-primary);
-    font-variant-numeric: tabular-nums;
-}
-
-.metricValue.late {
-    color: var(--status-late-fg);
-}
-
-.metricValue.missed {
-    color: var(--status-missed-fg);
+    gap: var(--spacing-4);
+    padding: var(--spacing-2) 0;
 }
 
 /* Quote/Log Block */
 .quoteBlock {
-    background: var(--surface-bg-secondary);
-    border-left: 4px solid var(--surface-border-primary);
-    padding: var(--spacing-4);
-    border-radius: var(--radius-sm);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-2);
@@ -189,18 +164,18 @@
 .quoteContent {
     font-size: var(--font-size-sm);
     line-height: 1.6;
-    color: var(--surface-fg-primary);
-    font-style: italic;
+    color: var(--surface-fg-secondary);
+    font-weight: var(--font-weight-regular);
     margin: 0;
 }
 
 .quoteSignature {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 14px;
+    gap: var(--spacing-1p5);
+    font-size: var(--font-size-sm);
     color: var(--surface-fg-tertiary);
-    font-weight: 500;
+    font-weight: var(--font-weight-regular);
 }
 
 .quoteSignature .material-symbols-rounded {
@@ -210,29 +185,14 @@
 .emptyNote {
     font-size: var(--font-size-sm);
     color: var(--surface-fg-tertiary);
-    font-style: italic;
 }
 
 
-/* Supervisor Review */
-.supervisorBlock {
-    border: 1px dashed var(--surface-border-secondary);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-4);
+
+.reviewSection {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-2);
-}
-
-.reviewContent {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-2);
-}
-
-.reviewTags {
-    display: flex;
-    gap: var(--spacing-2);
+    gap: var(--spacing-3);
 }
 
 .actionGroup {
@@ -257,10 +217,10 @@
 }
 
 .placeholderIcon {
-    font-size: 64px !important;
+    font-size: var(--icon-size-2xl) !important;
     color: var(--surface-fg-quinary);
     opacity: 0.5;
-    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 64;
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48;
     margin-bottom: var(--spacing-2);
 }
 
@@ -277,29 +237,4 @@
     line-height: 1.5;
     color: var(--surface-fg-tertiary);
     max-width: 280px;
-}
-
-/* Tags */
-.tags {
-    display: flex;
-    gap: var(--spacing-2);
-    flex-wrap: wrap;
-}
-
-.tag {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    padding: 2px 8px;
-    border-radius: var(--radius-full);
-    text-transform: capitalize;
-}
-
-.tag.pending {
-    background: var(--surface-bg-secondary);
-    color: var(--surface-fg-secondary);
-}
-
-.tag.verified {
-    background: var(--status-complete-bg);
-    color: var(--status-complete-fg);
 }

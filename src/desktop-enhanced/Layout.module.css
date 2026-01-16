@@ -20,6 +20,7 @@
     border-right: 1px solid var(--surface-border-secondary);
     background-color: var(--surface-bg-secondary);
     position: relative;
+    max-width: 600px;
 }
 
 .resizer {

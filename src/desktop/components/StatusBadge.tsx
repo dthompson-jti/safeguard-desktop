@@ -8,6 +8,7 @@ interface StatusBadgeProps {
     status: StatusBadgeType;
     label?: string;
     fill?: boolean;
+    iconOnly?: boolean;
 }
 
 const getStatusConfig = (status: StatusBadgeType): { label: string; icon: string | null } => {
@@ -34,12 +35,16 @@ const getStatusConfig = (status: StatusBadgeType): { label: string; icon: string
     }
 };
 
-export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label: customLabel, fill = false }) => {
+export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label: customLabel, fill = false, iconOnly = false }) => {
     const config = getStatusConfig(status);
     const label = customLabel || config.label;
 
     return (
-        <div className={styles.badge} data-status={status}>
+        <div
+            className={`${styles.badge} ${iconOnly ? styles.iconOnly : ''}`}
+            data-status={status}
+            title={iconOnly ? label : undefined}
+        >
             {config.icon && (
                 <span
                     className={`material-symbols-rounded ${styles.icon} ${fill ? styles.iconFilled : ''}`}
@@ -47,7 +52,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label: customL
                     {config.icon}
                 </span>
             )}
-            <span className={styles.label}>{label}</span>
+            {!iconOnly && <span className={styles.label}>{label}</span>}
         </div>
     );
 };

@@ -285,9 +285,25 @@ export const loadEnhancedHistoricalPage = (
                 if (filter.dateStart || filter.dateEnd) {
                     const checkDate = (iso: string) => iso.split('T')[0];
                     filtered = filtered.filter(r => {
-                        const date = checkDate(r.scheduledTime);
-                        if (filter.dateStart && date < filter.dateStart) return false;
-                        if (filter.dateEnd && date > filter.dateEnd) return false;
+                        // Support full ISO timestamp filtering if provided (contains 'T')
+                        // otherwise fall back to simple YYYY-MM-DD date comparison
+                        if (filter.dateStart && filter.dateStart.includes('T')) {
+                            const rTime = new Date(r.scheduledTime).getTime();
+                            const startTime = new Date(filter.dateStart).getTime();
+                            if (rTime < startTime) return false;
+                        } else if (filter.dateStart) {
+                            const date = checkDate(r.scheduledTime);
+                            if (date < filter.dateStart) return false;
+                        }
+
+                        if (filter.dateEnd && filter.dateEnd.includes('T')) {
+                            const rTime = new Date(r.scheduledTime).getTime();
+                            const endTime = new Date(filter.dateEnd).getTime();
+                            if (rTime > endTime) return false;
+                        } else if (filter.dateEnd) {
+                            const date = checkDate(r.scheduledTime);
+                            if (date > filter.dateEnd) return false;
+                        }
                         return true;
                     });
                 }

@@ -1,0 +1,98 @@
+/* src/desktop/components/FilterSelect.module.css */
+
+.container {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    border-radius: var(--radius-md);
+    transition: none;
+    /* Let Framer Motion handle it */
+}
+
+.selectWrapper {
+    display: flex;
+    align-items: center;
+}
+
+
+.activeContainer {
+    gap: 1px;
+}
+
+/* Default state: reserve 37px (32px 'x' + 1px split + 4px base gap) INSIDE trigger */
+.defaultSelectTrigger {
+    gap: 37px !important;
+    padding-right: var(--spacing-3) !important;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s !important;
+}
+
+
+/* Base trigger styles for the select part */
+.selectTrigger {
+    border-radius: var(--radius-md);
+    flex: 1;
+}
+
+/* Active (customized) styles */
+.activeSelectTrigger {
+    background-color: var(--control-bg-selected);
+    border: 2px solid var(--control-border-selected) !important;
+    color: var(--control-fg-selected);
+    border-radius: var(--radius-md) 0 0 var(--radius-md) !important;
+    gap: var(--spacing-1) !important;
+    /* Standard gap when active */
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s !important;
+}
+
+.activeSelectTrigger:hover:not(:disabled) {
+    background-color: var(--control-bg-selected-hover);
+    border-color: var(--control-border-selected-hover) !important;
+    color: var(--control-fg-selected-hover);
+}
+
+/* Chevron icon color in active state */
+.activeSelectTrigger [class*="selectIcon"] {
+    color: var(--control-fg-selected);
+}
+
+.clearButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 0;
+    /* Hidden by default */
+    opacity: 0;
+    overflow: hidden;
+    height: 36px;
+    background-color: var(--control-bg-selected);
+    border: 2px solid var(--control-border-selected);
+    color: var(--control-fg-selected);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+    padding: 0;
+    outline: none;
+    flex-shrink: 0;
+}
+
+.activeContainer .clearButton {
+    width: 32px;
+    opacity: 1;
+}
+
+.clearButton:hover:not(:disabled) {
+    background-color: var(--control-bg-selected-hover);
+    border-color: var(--control-border-selected-hover);
+    color: var(--control-fg-selected-hover);
+}
+
+.clearIcon {
+    font-size: 20px;
+}
+
+/* Label for custom dates */
+.customLabel {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

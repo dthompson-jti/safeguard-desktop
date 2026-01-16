@@ -14,6 +14,15 @@
     text-transform: capitalize;
 }
 
+.iconOnly {
+    padding: var(--spacing-0p5);
+    width: 24px;
+    height: 24px;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
 .icon {
     font-size: var(--icon-size-sm) !important;
     font-variation-settings: 'opsz' 14, 'wght' 600;

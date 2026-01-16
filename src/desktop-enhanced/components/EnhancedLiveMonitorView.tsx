@@ -94,6 +94,8 @@ export const EnhancedLiveMonitorView = () => {
                     timeScheduled: row.originalCheck?.dueDate || new Date().toISOString(),
                     timeActual: row.lastCheckTime,
                     officerName: row.lastCheckOfficer || 'Pending',
+                    group: row.group,
+                    unit: row.unit,
                     hasHighRisk: row.hasHighRisk,
                     riskType: row.riskType,
                 };
@@ -136,6 +138,29 @@ export const EnhancedLiveMonitorView = () => {
     const columns: ColumnDef<LiveCheckRow>[] = useMemo(
         () => [
             {
+                id: 'statusIcon',
+                header: 'Status',
+                accessorFn: (row) => row.status,
+                size: 100,
+                minSize: 100,
+                maxSize: 100,
+                enableResizing: false,
+                enableSorting: true,
+                sortingFn: (rowA, rowB) => {
+                    const priority: Record<string, number> = { overdue: 0, due: 1, upcoming: 2 };
+                    const a = priority[rowA.original.status] ?? 3;
+                    const b = priority[rowB.original.status] ?? 3;
+                    return a - b;
+                },
+                cell: ({ row }) => {
+                    return (
+                        <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                            <StatusBadge status={row.original.status as StatusBadgeType} iconOnly />
+                        </div>
+                    );
+                },
+            },
+            {
                 id: 'resident',
                 header: 'Resident',
                 size: 300,
@@ -164,9 +189,9 @@ export const EnhancedLiveMonitorView = () => {
                 },
                 cell: ({ row }) => (
                     <div className={styles.locationCell}>
-                        <span>{row.original.group}</span>
+                        <span className={styles.locationSecondary}>{row.original.group}</span>
                         <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
-                        <span>{row.original.unit}</span>
+                        <span className={styles.locationSecondary}>{row.original.unit}</span>
                         <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
                         <span>{row.original.location}</span>
                     </div>
@@ -187,8 +212,8 @@ export const EnhancedLiveMonitorView = () => {
             {
                 id: 'status',
                 header: 'Status',
-                size: 154,
-                minSize: 154,
+                size: 140,
+                minSize: 120,
                 accessorKey: 'status',
                 // Custom sort: overdue (2) > due (1) > upcoming (0)
                 sortingFn: (rowA, rowB) => {
@@ -199,7 +224,7 @@ export const EnhancedLiveMonitorView = () => {
                 },
                 cell: ({ row }) => {
                     const status = row.original.status;
-                    return <StatusBadge status={status as StatusBadgeType} />;
+                    return <span style={{ textTransform: 'capitalize', fontWeight: 600 }}>{status}</span>;
                 },
             },
             {

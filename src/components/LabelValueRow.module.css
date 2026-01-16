@@ -1,0 +1,62 @@
+/* src/components/LabelValueRow.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-0p5, 2px);
+    width: 100%;
+}
+
+.labelGroup {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1, 4px);
+}
+
+.label {
+    font-family: var(--font-family-body, Inter), sans-serif;
+    font-size: var(--font-size-sm, 14px);
+    font-weight: var(--font-weight-semibold, 600);
+    color: var(--surface-fg-secondary, #414651);
+    line-height: var(--line-height-text-sm, 20px);
+    letter-spacing: -0.015em;
+    /* Matching Figma -1.5 */
+}
+
+.helpIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--surface-fg-quaternary, #717680);
+    cursor: help;
+    transition: color 0.15s ease;
+}
+
+.helpIcon:hover {
+    color: var(--surface-fg-secondary, #414651);
+}
+
+.helpIcon .material-symbols-rounded {
+    font-size: var(--icon-size-sm, 16px);
+}
+
+.value {
+    font-family: var(--font-family-body, Inter), sans-serif;
+    font-size: var(--font-size-sm, 14px);
+    font-weight: var(--font-weight-medium, 500);
+    color: var(--surface-fg-primary, #181d27);
+    line-height: var(--line-height-text-sm, 20px);
+}
+
+.value.secondary {
+    color: var(--surface-fg-secondary, #414651);
+}
+
+/* Variance color coding */
+.value.late {
+    color: var(--surface-fg-alert-primary, #d92d20);
+}
+
+.value.onTime {
+    color: var(--surface-fg-success-primary, #067647);
+}

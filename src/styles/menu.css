@@ -62,7 +62,7 @@
   white-space: nowrap;
   background: none;
   cursor: pointer;
-  padding: var(--spacing-2) var(--spacing-1p5);
+  padding: var(--spacing-2) var(--spacing-4);
   border-radius: var(--spacing-2);
   /* 8px */
   border: 1px solid transparent;

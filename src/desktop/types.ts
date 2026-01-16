@@ -29,6 +29,9 @@ export type HistoricalStatusFilter = 'all' | 'missed-uncommented' | 'missed-comm
 /** Status filter for live view */
 export type LiveStatusFilter = 'all' | 'upcoming' | 'due' | 'overdue';
 
+/** Time range presets for historical view */
+export type TimeRangePreset = 'today' | 'last-24h' | 'last-8h' | 'last-7d' | 'custom';
+
 /** Filter state for toolbar */
 export interface DesktopFilter {
     facility: string;  // 'all' or facility ID
@@ -38,6 +41,7 @@ export interface DesktopFilter {
     showMissedOnly: boolean;
     statusFilter: LiveStatusFilter;  // Live view status filter
     historicalStatusFilter: HistoricalStatusFilter;  // Historical view combined status filter
+    timeRangePreset: TimeRangePreset;
     dateStart: string | null; // ISO Date string (YYYY-MM-DD)
     dateEnd: string | null;   // ISO Date string (YYYY-MM-DD)
 }

@@ -9,6 +9,8 @@ interface SelectProps {
   onValueChange: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
+  triggerClassName?: string;
+  valueLabel?: React.ReactNode;
 }
 
 interface SelectItemProps {
@@ -44,7 +46,7 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 
 SelectItem.displayName = 'SelectItem';
 
-export const Select = ({ children, value, onValueChange, placeholder, disabled }: SelectProps) => {
+export const Select = ({ children, value, onValueChange, placeholder, disabled, triggerClassName, valueLabel }: SelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -56,13 +58,15 @@ export const Select = ({ children, value, onValueChange, placeholder, disabled }
       disabled={disabled}
     >
       <RadixSelect.Trigger
-        className={styles.selectTrigger}
+        className={`${styles.selectTrigger} ${triggerClassName || ''}`}
         aria-label={placeholder}
         data-focused={isOpen}
       >
-        <RadixSelect.Value placeholder={placeholder} />
+        <RadixSelect.Value placeholder={placeholder}>
+          {valueLabel}
+        </RadixSelect.Value>
         <RadixSelect.Icon className={styles.selectIcon}>
-          <span className="material-symbols-rounded">expand_more</span>
+          <span className="material-symbols-rounded">keyboard_arrow_down</span>
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
       <RadixSelect.Portal>
@@ -70,7 +74,7 @@ export const Select = ({ children, value, onValueChange, placeholder, disabled }
           className={`menuPopover ${styles.selectContent}`}
           position="popper"
           sideOffset={5}
-          align="start"
+          align="end"
         >
           <RadixSelect.ScrollUpButton className={styles.scrollButton}>
             <span className="material-symbols-rounded">expand_less</span>

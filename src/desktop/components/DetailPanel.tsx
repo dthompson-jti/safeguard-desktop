@@ -5,6 +5,8 @@ import { supervisorNoteModalAtom, isDetailPanelOpenAtom, PanelData, panelWidthAt
 import { StatusBadge, StatusBadgeType } from './StatusBadge';
 import { Button } from '../../components/Button';
 import { Tooltip } from '../../components/Tooltip';
+import { LabelValueRow } from '../../components/LabelValueRow';
+import { LinkButton } from '../../components/LinkButton';
 import styles from './DetailPanel.module.css';
 
 interface DetailPanelProps {
@@ -128,9 +130,17 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
             {/* Header: Identity Only */}
             <div className={styles.header}>
                 <div className={styles.titleGroup}>
-                    <h3 className={styles.residentName}>
-                        {record ? record.residentName : (selectedCount > 1 ? `${selectedCount} Selected` : 'No selection')}
-                    </h3>
+                    {record ? (
+                        <LinkButton
+                            label={record.residentName}
+                            onClick={() => { /* Navigate to resident */ }}
+                            className={styles.residentLink}
+                        />
+                    ) : (
+                        <h3 className={styles.residentName}>
+                            {selectedCount > 1 ? `${selectedCount} Selected` : 'No selection'}
+                        </h3>
+                    )}
                 </div>
                 <div className={styles.headerActions}>
                     <Tooltip content="Close Panel">
@@ -148,22 +158,7 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
             </div>
 
             <div className={styles.content}>
-                {record && (
-                    <div className={styles.identityBar}>
-                        <div className={styles.locationPill}>
-                            <span className="material-symbols-rounded">door_front</span>
-                            {record.location}
-                        </div>
-                        <div className={styles.tags}>
-                            <StatusBadge status={record.status as StatusBadgeType} />
-                            {record.reviewStatus === 'verified' && (
-                                <span className={`${styles.tag} ${styles.verified}`}>
-                                    Verified
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                )}
+                {/* Content removed: Room and Status moved to metaStack */}
 
                 {!record ? (
                     <div className={styles.emptyState}>
@@ -176,69 +171,72 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                     </div>
                 ) : (
                     <>
-                        {/* SECTION 1: METRICS GRID ("The Dashboard") */}
+                        {/* SECTION 1: METRICS ("The Dashboard") - Vertical Stack Layout */}
                         <div className={styles.section}>
-                            <span className={styles.sectionTitle}>Details</span>
-                            <div className={styles.metricsGrid}>
-                                <div className={styles.metricCard}>
-                                    <span className={styles.metricLabel}>Scheduled</span>
-                                    <span className={styles.metricValue}>{formatTime(record.timeScheduled)}</span>
-                                </div>
-                                <div className={styles.metricCard}>
-                                    <span className={styles.metricLabel}>Actual</span>
-                                    <span className={styles.metricValue}>{formatTime(record.timeActual)}</span>
-                                </div>
-                                <div className={styles.metricCard}>
-                                    <span className={styles.metricLabel}>Variance</span>
-                                    <span className={`${styles.metricValue} ${record.varianceMinutes && record.varianceMinutes > 2 ? styles.late : ''}`}>
-                                        {record.varianceMinutes !== undefined ? (
-                                            isFinite(record.varianceMinutes) ? `${record.varianceMinutes > 0 ? '+' : ''}${record.varianceMinutes}m` : 'Missed'
-                                        ) : 'N/A'}
-                                    </span>
-                                </div>
-                                <div className={styles.metricCard}>
-                                    <span className={styles.metricLabel}>Officer</span>
-                                    <span className={styles.metricValue}>{record.officerName}</span>
-                                </div>
+                            <div className={styles.metaStack}>
+                                <LabelValueRow
+                                    label="Room"
+                                    value={record.location}
+                                />
+                                <LabelValueRow
+                                    label="Status"
+                                    value={<StatusBadge status={record.status as StatusBadgeType} />}
+                                />
+                                <LabelValueRow
+                                    label="Scheduled"
+                                    value={formatTime(record.timeScheduled)}
+                                />
+                                <LabelValueRow
+                                    label="Actual"
+                                    value={record.timeActual ? formatTime(record.timeActual) : 'Pending'}
+                                />
+                                <LabelValueRow
+                                    label="Variance"
+                                    value={record.varianceMinutes !== undefined ? (
+                                        isFinite(record.varianceMinutes) ? `${record.varianceMinutes > 0 ? '+' : ''}${record.varianceMinutes}m` : 'Missed'
+                                    ) : 'N/A'}
+                                    variant={record.varianceMinutes && record.varianceMinutes > 2 ? 'late' : (record.varianceMinutes !== undefined ? 'onTime' : 'primary')}
+                                />
+                                <LabelValueRow
+                                    label="Group"
+                                    value={record.group || '—'}
+                                />
+                                <LabelValueRow
+                                    label="Unit"
+                                    value={record.unit || '—'}
+                                />
+                                <LabelValueRow
+                                    label="Officer"
+                                    value={record.officerName}
+                                />
                             </div>
                         </div>
 
                         {/* SECTION 2: OFFICER NOTES ("The Log") */}
                         <div className={styles.section}>
-                            <span className={styles.sectionTitle}>Field Notes</span>
+                            <span className={styles.sectionTitle}>Officer Notes</span>
                             <div className={styles.quoteBlock}>
                                 {record.officerNote ? (
                                     <>
-                                        <p className={styles.quoteContent}>“{record.officerNote}”</p>
+                                        <p className={styles.quoteContent}>{record.officerNote}</p>
                                         <div className={styles.quoteSignature}>
-                                            <span className="material-symbols-rounded">description</span>
                                             {record.officerName}
                                         </div>
                                     </>
                                 ) : (
-                                    <span className={styles.emptyNote}>No field notes recorded.</span>
+                                    <span className={styles.emptyNote}>No officer notes recorded.</span>
                                 )}
                             </div>
                         </div>
 
-                        {/* SECTION 3: SUPERVISOR REVIEW */}
+                        {/* SECTION 3: SUPERVISOR COMMENTS */}
                         <div className={styles.section}>
-                            <span className={styles.sectionTitle}>Supervisor Review</span>
-                            <div className={styles.supervisorBlock}>
-                                {record.supervisorNote ? (
+                            <span className={styles.sectionTitle}>Supervisor Comments</span>
+                            <div className={styles.reviewSection}>
+                                {record.supervisorNote && (
                                     <div className={styles.reviewContent}>
                                         <p className={styles.quoteContent}>{record.supervisorNote}</p>
-                                        <div className={styles.reviewTags}>
-                                            {record.reviewStatus === 'verified' && (
-                                                <span className={`${styles.tag} ${styles.verified}`}>
-                                                    <span className="material-symbols-rounded">check_circle</span>
-                                                    Verified
-                                                </span>
-                                            )}
-                                        </div>
                                     </div>
-                                ) : (
-                                    <span className={styles.emptyNote}>No supervisor comments.</span>
                                 )}
 
                                 <div className={styles.actionGroup}>
@@ -248,19 +246,8 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                         onClick={handleOpenNoteModal}
                                     >
                                         <span className="material-symbols-rounded">add_comment</span>
-                                        {record.supervisorNote ? 'Edit Comment' : 'Add Comment'}
+                                        {record.supervisorNote ? 'Edit' : 'Add Comment'}
                                     </Button>
-                                    {record.supervisorNote && (
-                                        <Button
-                                            variant="secondary"
-                                            size="s"
-                                            onClick={() => { /* Delete note functionality */ }}
-                                            className={styles.destructiveButton}
-                                        >
-                                            <span className="material-symbols-rounded">delete</span>
-                                            Delete
-                                        </Button>
-                                    )}
                                 </div>
                             </div>
                         </div>

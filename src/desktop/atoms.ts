@@ -13,8 +13,8 @@ import { enhancedMockData } from '../desktop-enhanced/data/mockData';
 /** Current desktop view: 'live' or 'historical' */
 export const desktopViewAtom = atomWithStorage<DesktopView>(`${STORAGE_PREFIX}view`, 'live');
 
-/** Desktop filter state */
-export const desktopFilterAtom = atom<DesktopFilter>({
+/** Factory default filters (Immutable) */
+export const FACTORY_FILTER_DEFAULTS: DesktopFilter = {
     facility: 'all',
     group: 'all',
     unit: 'all',
@@ -22,8 +22,94 @@ export const desktopFilterAtom = atom<DesktopFilter>({
     showMissedOnly: false,
     statusFilter: 'all',
     historicalStatusFilter: 'missed-uncommented',
+    timeRangePreset: 'last-24h',
     dateStart: null,
     dateEnd: null,
+};
+
+/** User's saved filter defaults (Persisted) */
+export const savedFilterDefaultsAtom = atomWithStorage<DesktopFilter>(
+    `${STORAGE_PREFIX}filter_defaults`,
+    FACTORY_FILTER_DEFAULTS
+);
+
+/** Desktop filter state (Session) */
+export const desktopFilterAtom = atom<DesktopFilter>(FACTORY_FILTER_DEFAULTS);
+
+/** Keys of filters that have been explicitly modified by the user */
+export const modifiedFiltersAtom = atomWithStorage<string[]>(
+    `${STORAGE_PREFIX}modified_filters`,
+    []
+);
+
+/** 
+ * Derived: returns true if current filters differ from saved defaults 
+ * OR if the filter has been explicitly modified (stickiness)
+ */
+export const isFilterCustomizedAtom = atom((get) => {
+    const current = get(desktopFilterAtom);
+    const saved = get(savedFilterDefaultsAtom);
+    const modified = get(modifiedFiltersAtom);
+
+    // If any filter is in the modified set, the global "Reset" should be visible
+    if (modified.length > 0) return true;
+
+    // Fallback deep equality check for the filter object (initial load/legacy)
+    return (
+        current.facility !== saved.facility ||
+        current.group !== saved.group ||
+        current.unit !== saved.unit ||
+        current.search !== saved.search ||
+        current.showMissedOnly !== saved.showMissedOnly ||
+        current.statusFilter !== saved.statusFilter ||
+        current.historicalStatusFilter !== saved.historicalStatusFilter ||
+        current.timeRangePreset !== saved.timeRangePreset ||
+        (current.timeRangePreset === 'custom' && (current.dateStart !== saved.dateStart || current.dateEnd !== saved.dateEnd))
+    );
+});
+
+/** Write-only: Update a filter and mark it as modified */
+export const updateFilterAtom = atom(null, (get, set, update: Partial<DesktopFilter>) => {
+    const current = get(desktopFilterAtom);
+    const modified = new Set(get(modifiedFiltersAtom));
+
+    // Mark keys as modified
+    Object.keys(update).forEach(key => modified.add(key));
+
+    set(desktopFilterAtom, { ...current, ...update });
+    set(modifiedFiltersAtom, Array.from(modified));
+});
+
+/** Write-only: Clear a specific filter's modification state and revert to default */
+export const clearFilterForKeyAtom = atom(null, (get, set, key: keyof DesktopFilter) => {
+    const current = get(desktopFilterAtom);
+    const saved = get(savedFilterDefaultsAtom);
+    const modified = new Set(get(modifiedFiltersAtom));
+
+    modified.delete(key);
+
+    // If it's a date range, clear both dates
+    if (key === 'timeRangePreset') {
+        modified.delete('dateStart');
+        modified.delete('dateEnd');
+    }
+
+    set(desktopFilterAtom, { ...current, [key]: saved[key] });
+    set(modifiedFiltersAtom, Array.from(modified));
+});
+
+/** Write-only: Save current filters as user defaults */
+export const saveFiltersAsDefaultAtom = atom(null, (get, set) => {
+    const current = get(desktopFilterAtom);
+    set(savedFilterDefaultsAtom, current);
+    set(modifiedFiltersAtom, []); // Reset modification state as this is now the baseline
+});
+
+/** Write-only: Reset current filters to saved defaults */
+export const resetFiltersAtom = atom(null, (get, set) => {
+    const saved = get(savedFilterDefaultsAtom);
+    set(desktopFilterAtom, { ...saved });
+    set(modifiedFiltersAtom, []); // Clear all modification markers
 });
 
 /** Selected row IDs for bulk actions (Historical view) */
@@ -112,6 +198,8 @@ export interface PanelData {
     officerNote?: string;
     supervisorNote?: string;
     reviewStatus?: 'pending' | 'verified';
+    group?: string;
+    unit?: string;
     // Potential future fields
     riskType?: string;
     hasHighRisk?: boolean;

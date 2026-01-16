@@ -20,8 +20,6 @@
     font-size: var(--font-size-2xs);
     font-weight: 600;
     color: var(--surface-fg-secondary_on_brand);
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
 }
 
 .value {

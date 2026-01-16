@@ -38,15 +38,19 @@
 /*                              SIZE VARIANTS                               */
 /* ======================================================================== */
 
-/* --- Medium (m) --- */
+/* --- Medium (m) - Desktop Standard --- */
 .btn[data-size="m"] {
-  height: var(--control-height-md);
+  height: 36px;
+  /* Desktop Medium */
   padding: 0 var(--spacing-3);
+  /* 12px */
   border-radius: var(--radius-md);
+  gap: var(--spacing-1);
+  /* 4px */
 }
 
 .btn[data-size="m"][data-icon-only="true"] {
-  width: var(--control-height-md);
+  width: 36px;
   padding: 0;
   border-radius: var(--radius-md);
   gap: 0;
@@ -54,6 +58,7 @@
 
 .btn[data-size="m"] .material-symbols-rounded {
   font-size: var(--icon-size-md);
+  font-variation-settings: 'opsz' 20;
 }
 
 /* --- Large (lg) --- */
@@ -61,6 +66,7 @@
   height: var(--control-height-lg);
   padding: var(--spacing-3) var(--spacing-5);
   border-radius: var(--spacing-3);
+  gap: var(--spacing-2);
 }
 
 .btn[data-size="lg"][data-icon-only="true"] {
@@ -76,13 +82,16 @@
 
 /* --- Small (s) --- */
 .btn[data-size="s"] {
-  height: var(--control-height-sm);
+  height: 32px;
   padding: 0 var(--spacing-2p5);
+  /* 10px */
   border-radius: var(--radius-md);
+  gap: var(--spacing-1);
+  /* 4px */
 }
 
 .btn[data-size="s"][data-icon-only="true"] {
-  width: var(--control-height-sm);
+  width: 32px;
   padding: 0;
   border-radius: var(--radius-md);
   gap: 0;
@@ -90,6 +99,7 @@
 
 .btn[data-size="s"] .material-symbols-rounded {
   font-size: var(--icon-size-md);
+  font-variation-settings: 'opsz' 20;
 }
 
 /* --- Extra Small (xs) --- */

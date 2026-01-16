@@ -1,13 +1,33 @@
-// src/desktop/components/DesktopToolbar.tsx
-
-import { useMemo } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
-import { desktopViewAtom, desktopFilterAtom } from '../atoms';
-import { LiveStatusFilter, HistoricalStatusFilter } from '../types';
+import { useMemo, useState } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { LayoutGroup, motion, AnimatePresence } from 'framer-motion';
+import {
+    desktopViewAtom,
+    desktopFilterAtom,
+    modifiedFiltersAtom,
+    isFilterCustomizedAtom,
+    updateFilterAtom,
+    clearFilterForKeyAtom,
+    resetFiltersAtom
+} from '../atoms';
+import { LiveStatusFilter, HistoricalStatusFilter, TimeRangePreset } from '../types';
 import { SearchInput } from '../../components/SearchInput';
-import { Select, SelectItem } from '../../components/Select';
 import { Button } from '../../components/Button';
+import { Modal } from '../../components/Modal';
+import { FilterSelect } from './FilterSelect';
 import styles from './DesktopToolbar.module.css';
+
+const formatDateRange = (start: string | null, end: string | null) => {
+    if (!start || !end) return '';
+    const s = new Date(start);
+    const e = new Date(end);
+
+    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
+    const sStr = s.toLocaleDateString('en-US', options);
+    const eStr = e.toLocaleDateString('en-US', options);
+
+    return `${sStr} – ${eStr}`;
+};
 
 const LIVE_STATUS_OPTIONS = [
     { value: 'all', label: 'All Status' },
@@ -24,8 +44,9 @@ const HISTORICAL_STATUS_OPTIONS = [
 ];
 
 const TIME_RANGE_OPTIONS = [
-    { value: 'last-8h', label: 'Last 8 Hours' },
+    { value: 'today', label: 'Today' },
     { value: 'last-24h', label: 'Last 24 Hours' },
+    { value: 'last-8h', label: 'Last 8 Hours' },
     { value: 'last-7d', label: 'Last 7 Days' },
     { value: 'custom', label: 'Custom Range...' },
 ];
@@ -44,62 +65,96 @@ interface DesktopToolbarProps {
 
 export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
     const view = useAtomValue(desktopViewAtom);
-    const [filter, setFilter] = useAtom(desktopFilterAtom);
+    const filter = useAtomValue(desktopFilterAtom);
+    const modifiedKeys = useAtomValue(modifiedFiltersAtom);
+    const isCustomized = useAtomValue(isFilterCustomizedAtom);
+    const updateFilter = useSetAtom(updateFilterAtom);
+    const clearFilter = useSetAtom(clearFilterForKeyAtom);
+    const resetFilters = useSetAtom(resetFiltersAtom);
+
+    const [isCustomRangeOpen, setIsCustomRangeOpen] = useState(false);
+    const [customStart, setCustomStart] = useState('');
+    const [customEnd, setCustomEnd] = useState('');
+
+    const handleSearchChange = (val: string) => {
+        updateFilter({ search: val });
+    };
 
     const handleLiveStatusFilterChange = (val: string) => {
-        setFilter((prev) => ({
-            ...prev,
-            statusFilter: val as LiveStatusFilter
-        }));
+        updateFilter({ statusFilter: val as LiveStatusFilter });
     };
 
     const handleHistoricalStatusFilterChange = (val: string) => {
-        setFilter((prev) => ({
-            ...prev,
-            historicalStatusFilter: val as HistoricalStatusFilter
-        }));
+        updateFilter({ historicalStatusFilter: val as HistoricalStatusFilter });
     };
 
-    const handleTimeRangeChange = () => {
-        // Mocking time range logic
+    const handleTimeRangeChange = (val: string) => {
+        if (val === 'custom') {
+            setCustomStart(filter.dateStart || '');
+            setCustomEnd(filter.dateEnd || '');
+            setIsCustomRangeOpen(true);
+            return;
+        }
+
+        const now = new Date();
+        const nowStr = now.toISOString().split('T')[0];
+        let startStr: string;
+
+        switch (val) {
+            case 'today':
+                startStr = nowStr;
+                break;
+            case 'last-8h': {
+                const start = new Date(now.getTime() - 8 * 60 * 60 * 1000);
+                startStr = start.toISOString().split('T')[0];
+                break;
+            }
+            case 'last-24h': {
+                const start = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+                startStr = start.toISOString().split('T')[0];
+                break;
+            }
+            case 'last-7d': {
+                const start = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                startStr = start.toISOString().split('T')[0];
+                break;
+            }
+            default:
+                startStr = nowStr;
+        }
+
+        updateFilter({
+            timeRangePreset: val as TimeRangePreset,
+            dateStart: startStr,
+            dateEnd: nowStr,
+        });
+    };
+
+    const applyCustomRange = () => {
+        if (customStart && customEnd) {
+            updateFilter({
+                timeRangePreset: 'custom',
+                dateStart: customStart,
+                dateEnd: customEnd,
+            });
+        }
+        setIsCustomRangeOpen(false);
     };
 
     const handleAreaFilterChange = (val: string) => {
-        setFilter((prev) => ({
-            ...prev,
-            facility: val
-        }));
+        updateFilter({ facility: val });
     };
-
-    const hasChanges = useMemo(() => {
-        const isLive = view === 'live';
-
-        if (isLive) {
-            return filter.statusFilter !== 'all' || filter.search !== '';
-        } else {
-            return filter.historicalStatusFilter !== 'missed-uncommented' || filter.search !== '';
-        }
-    }, [view, filter.statusFilter, filter.historicalStatusFilter, filter.search]);
 
     const handleReset = () => {
-        if (view === 'live') {
-            setFilter((prev) => ({
-                ...prev,
-                statusFilter: 'all',
-                search: '',
-                dateStart: null,
-                dateEnd: null,
-            }));
-        } else {
-            setFilter((prev) => ({
-                ...prev,
-                historicalStatusFilter: 'missed-uncommented',
-                search: '',
-                dateStart: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                dateEnd: new Date().toISOString().split('T')[0],
-            }));
-        }
+        resetFilters();
     };
+
+    const dateRangeLabel = useMemo(() => {
+        if (filter.timeRangePreset === 'custom') {
+            return formatDateRange(filter.dateStart, filter.dateEnd);
+        }
+        return undefined;
+    }, [filter.timeRangePreset, filter.dateStart, filter.dateEnd]);
 
     return (
         <div className={styles.toolbar}>
@@ -107,12 +162,11 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
             <div className={styles.leftSection}>
                 <SearchInput
                     value={filter.search}
-                    onChange={(val) => setFilter((prev) => ({ ...prev, search: val }))}
+                    onChange={handleSearchChange}
                     placeholder="Find..."
                     variant="standalone"
                 />
 
-                {/* Advanced search (placeholder) */}
                 <button
                     className="btn"
                     data-variant="secondary"
@@ -126,78 +180,144 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
 
             {/* Right Side: Quick Filters */}
             <div className={styles.filterChips}>
-                {hasChanges && (
-                    <Button
-                        variant="tertiary"
-                        size="s"
-                        onClick={handleReset}
-                    >
-                        Reset Filters
-                    </Button>
-                )}
+                <LayoutGroup>
+                    <AnimatePresence>
+                        {isCustomized && (
+                            <motion.div
+                                key="reset-button"
+                                initial={{ opacity: 0, x: -8 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -8 }}
+                                transition={{ type: 'tween', ease: 'linear', duration: 0.15 }}
+                            >
+                                <Button
+                                    variant="tertiary"
+                                    size="s"
+                                    onClick={handleReset}
+                                >
+                                    Reset Filters
+                                </Button>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
-                {/* Status Filter - Different options for Live vs Historical */}
-                <div className={styles.statusSelectWrapper}>
-                    {view === 'live' ? (
-                        <Select
-                            value={filter.statusFilter}
-                            onValueChange={handleLiveStatusFilterChange}
-                            placeholder="Status"
-                        >
-                            {LIVE_STATUS_OPTIONS.map((opt) => (
-                                <SelectItem key={opt.value} value={opt.value}>
-                                    {opt.label}
-                                </SelectItem>
-                            ))}
-                        </Select>
-                    ) : (
-                        <Select
-                            value={filter.historicalStatusFilter}
-                            onValueChange={handleHistoricalStatusFilterChange}
-                            placeholder="Status"
-                        >
-                            {HISTORICAL_STATUS_OPTIONS.map((opt) => (
-                                <SelectItem key={opt.value} value={opt.value}>
-                                    {opt.label}
-                                </SelectItem>
-                            ))}
-                        </Select>
+                    <div className={styles.statusSelectWrapper}>
+                        {view === 'live' ? (
+                            <FilterSelect
+                                value={filter.statusFilter}
+                                isCustomized={modifiedKeys.includes('statusFilter')}
+                                onValueChange={handleLiveStatusFilterChange}
+                                onClear={() => clearFilter('statusFilter')}
+                                placeholder="Status"
+                                options={LIVE_STATUS_OPTIONS}
+                            />
+                        ) : (
+                            <FilterSelect
+                                value={filter.historicalStatusFilter}
+                                isCustomized={modifiedKeys.includes('historicalStatusFilter')}
+                                onValueChange={handleHistoricalStatusFilterChange}
+                                onClear={() => clearFilter('historicalStatusFilter')}
+                                placeholder="Status"
+                                options={HISTORICAL_STATUS_OPTIONS}
+                            />
+                        )}
+                    </div>
+
+                    {view === 'historical' && (
+                        <div className={styles.timeRangeSelectWrapper}>
+                            <FilterSelect
+                                value={filter.timeRangePreset}
+                                isCustomized={modifiedKeys.includes('timeRangePreset')}
+                                onValueChange={handleTimeRangeChange}
+                                onClear={() => clearFilter('timeRangePreset')}
+                                placeholder="Time Range"
+                                options={TIME_RANGE_OPTIONS}
+                                displayLabel={dateRangeLabel}
+                            />
+
+                            <Modal
+                                isOpen={isCustomRangeOpen}
+                                onClose={() => setIsCustomRangeOpen(false)}
+                                title="Custom date range"
+                                width="375px"
+                            >
+                                <Modal.Header>
+                                    <span className={styles.modalTitle}>Custom date range</span>
+                                    <Button
+                                        iconOnly
+                                        size="s"
+                                        variant="tertiary"
+                                        onClick={() => setIsCustomRangeOpen(false)}
+                                        aria-label="Close"
+                                    >
+                                        <span className="material-symbols-rounded">close</span>
+                                    </Button>
+                                </Modal.Header>
+
+                                <Modal.Content>
+                                    <div className={styles.dateInputsRow}>
+                                        <div className={styles.inputGroup}>
+                                            <label className={styles.inputLabel}>
+                                                Start date <em>*</em>
+                                            </label>
+                                            <input
+                                                type="date"
+                                                className={styles.dateInput}
+                                                value={customStart}
+                                                onChange={(e) => setCustomStart(e.target.value)}
+                                            />
+                                        </div>
+                                        <span className={styles.dashSpacer}>–</span>
+                                        <div className={styles.inputGroup}>
+                                            <label className={styles.inputLabel}>
+                                                End date <em>*</em>
+                                            </label>
+                                            <input
+                                                type="date"
+                                                className={styles.dateInput}
+                                                value={customEnd}
+                                                onChange={(e) => setCustomEnd(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                </Modal.Content>
+
+                                <Modal.Footer>
+                                    <div className={styles.modalFooterActions}>
+                                        <Button
+                                            size="m"
+                                            variant="primary"
+                                            disabled={!customStart || !customEnd}
+                                            onClick={applyCustomRange}
+                                        >
+                                            Apply
+                                        </Button>
+                                        <Button
+                                            size="m"
+                                            variant="tertiary"
+                                            onClick={() => setIsCustomRangeOpen(false)}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                </Modal.Footer>
+                            </Modal>
+                        </div>
                     )}
-                </div>
 
-                {/* Time Range Filter (Historical only) */}
-                {view === 'historical' && (
-                    <div className={styles.timeRangeSelectWrapper}>
-                        <Select
-                            value="last-24h" // Default for now
-                            onValueChange={handleTimeRangeChange}
-                            placeholder="Time Range"
-                        >
-                            {TIME_RANGE_OPTIONS.map((opt) => (
-                                <SelectItem key={opt.value} value={opt.value}>
-                                    {opt.label}
-                                </SelectItem>
-                            ))}
-                        </Select>
-                    </div>
-                )}
-
-                {/* Facility Area Filter (Not in enhanced mode) */}
-                {!isEnhanced && (
-                    <div className={styles.facilitySelectWrapper}>
-                        <Select
-                            value={filter.facility}
-                            onValueChange={handleAreaFilterChange}
-                            placeholder="Facility Area"
-                        >
-                            {AREA_OPTIONS.map((opt) => (
-                                <SelectItem key={opt.value} value={opt.value}>
-                                    {opt.label}
-                                </SelectItem>
-                            ))}
-                        </Select>
-                    </div>
-                )}
+                    {!isEnhanced && (
+                        <div className={styles.facilitySelectWrapper}>
+                            <FilterSelect
+                                value={filter.facility}
+                                isCustomized={modifiedKeys.includes('facility')}
+                                onValueChange={handleAreaFilterChange}
+                                onClear={() => clearFilter('facility')}
+                                placeholder="Facility Area"
+                                options={AREA_OPTIONS}
+                            />
+                        </div>
+                    )}
+                </LayoutGroup>
             </div>
         </div>
     );
