@@ -131,9 +131,9 @@
 
 @media (hover: hover) {
 
-    /* Hover preview state: show faintly if not sorted */
+    /* Hover preview state: show more clearly if not sorted */
     .th[data-sortable="true"]:hover:not([data-sorted="true"]) .sortIndicator {
-        opacity: 0.2;
+        opacity: 0.6;
     }
 }
 

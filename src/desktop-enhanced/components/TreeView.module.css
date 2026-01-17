@@ -100,6 +100,11 @@
     background-color: var(--surface-bg-secondary_hover);
 }
 
+.row.selected .chevron,
+.row.selected .rootIcon {
+    color: var(--control-fg-selected);
+}
+
 .chevron span {
     transition: transform 0.2s ease;
 }

@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { LayoutGroup, motion, AnimatePresence } from 'framer-motion';
 import {
     desktopViewAtom,
     desktopFilterAtom,
@@ -170,7 +169,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                 <button
                     className="btn"
                     data-variant="secondary"
-                    data-size="s"
+                    data-size="m"
                     data-icon-only="true"
                     aria-label="Advanced search"
                 >
@@ -180,144 +179,132 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
 
             {/* Right Side: Quick Filters */}
             <div className={styles.filterChips}>
-                <LayoutGroup>
-                    <AnimatePresence>
-                        {isCustomized && (
-                            <motion.div
-                                key="reset-button"
-                                initial={{ opacity: 0, x: -8 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -8 }}
-                                transition={{ type: 'tween', ease: 'linear', duration: 0.15 }}
-                            >
+                {isCustomized && (
+                    <Button
+                        variant="tertiary"
+                        size="m"
+                        onClick={handleReset}
+                    >
+                        Reset Filters
+                    </Button>
+                )}
+
+                <div className={styles.statusSelectWrapper}>
+                    {view === 'live' ? (
+                        <FilterSelect
+                            value={filter.statusFilter}
+                            isCustomized={modifiedKeys.includes('statusFilter')}
+                            onValueChange={handleLiveStatusFilterChange}
+                            onClear={() => clearFilter('statusFilter')}
+                            placeholder="Status"
+                            options={LIVE_STATUS_OPTIONS}
+                        />
+                    ) : (
+                        <FilterSelect
+                            value={filter.historicalStatusFilter}
+                            isCustomized={modifiedKeys.includes('historicalStatusFilter')}
+                            onValueChange={handleHistoricalStatusFilterChange}
+                            onClear={() => clearFilter('historicalStatusFilter')}
+                            placeholder="Status"
+                            options={HISTORICAL_STATUS_OPTIONS}
+                        />
+                    )}
+                </div>
+
+                {view === 'historical' && (
+                    <div className={styles.timeRangeSelectWrapper}>
+                        <FilterSelect
+                            value={filter.timeRangePreset}
+                            isCustomized={modifiedKeys.includes('timeRangePreset')}
+                            onValueChange={handleTimeRangeChange}
+                            onClear={() => clearFilter('timeRangePreset')}
+                            placeholder="Time Range"
+                            options={TIME_RANGE_OPTIONS}
+                            displayLabel={dateRangeLabel}
+                        />
+
+                        <Modal
+                            isOpen={isCustomRangeOpen}
+                            onClose={() => setIsCustomRangeOpen(false)}
+                            title="Custom date range"
+                            width="375px"
+                        >
+                            <Modal.Header>
+                                <span className={styles.modalTitle}>Custom date range</span>
                                 <Button
-                                    variant="tertiary"
+                                    iconOnly
                                     size="s"
-                                    onClick={handleReset}
+                                    variant="tertiary"
+                                    onClick={() => setIsCustomRangeOpen(false)}
+                                    aria-label="Close"
                                 >
-                                    Reset Filters
+                                    <span className="material-symbols-rounded">close</span>
                                 </Button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                            </Modal.Header>
 
-                    <div className={styles.statusSelectWrapper}>
-                        {view === 'live' ? (
-                            <FilterSelect
-                                value={filter.statusFilter}
-                                isCustomized={modifiedKeys.includes('statusFilter')}
-                                onValueChange={handleLiveStatusFilterChange}
-                                onClear={() => clearFilter('statusFilter')}
-                                placeholder="Status"
-                                options={LIVE_STATUS_OPTIONS}
-                            />
-                        ) : (
-                            <FilterSelect
-                                value={filter.historicalStatusFilter}
-                                isCustomized={modifiedKeys.includes('historicalStatusFilter')}
-                                onValueChange={handleHistoricalStatusFilterChange}
-                                onClear={() => clearFilter('historicalStatusFilter')}
-                                placeholder="Status"
-                                options={HISTORICAL_STATUS_OPTIONS}
-                            />
-                        )}
-                    </div>
+                            <Modal.Content>
+                                <div className={styles.dateInputsRow}>
+                                    <div className={styles.inputGroup}>
+                                        <label className={styles.inputLabel}>
+                                            Start date <em>*</em>
+                                        </label>
+                                        <input
+                                            type="date"
+                                            className={styles.dateInput}
+                                            value={customStart}
+                                            onChange={(e) => setCustomStart(e.target.value)}
+                                        />
+                                    </div>
+                                    <span className={styles.dashSpacer}>–</span>
+                                    <div className={styles.inputGroup}>
+                                        <label className={styles.inputLabel}>
+                                            End date <em>*</em>
+                                        </label>
+                                        <input
+                                            type="date"
+                                            className={styles.dateInput}
+                                            value={customEnd}
+                                            onChange={(e) => setCustomEnd(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                            </Modal.Content>
 
-                    {view === 'historical' && (
-                        <div className={styles.timeRangeSelectWrapper}>
-                            <FilterSelect
-                                value={filter.timeRangePreset}
-                                isCustomized={modifiedKeys.includes('timeRangePreset')}
-                                onValueChange={handleTimeRangeChange}
-                                onClear={() => clearFilter('timeRangePreset')}
-                                placeholder="Time Range"
-                                options={TIME_RANGE_OPTIONS}
-                                displayLabel={dateRangeLabel}
-                            />
-
-                            <Modal
-                                isOpen={isCustomRangeOpen}
-                                onClose={() => setIsCustomRangeOpen(false)}
-                                title="Custom date range"
-                                width="375px"
-                            >
-                                <Modal.Header>
-                                    <span className={styles.modalTitle}>Custom date range</span>
+                            <Modal.Footer>
+                                <div className={styles.modalFooterActions}>
                                     <Button
-                                        iconOnly
-                                        size="s"
-                                        variant="tertiary"
-                                        onClick={() => setIsCustomRangeOpen(false)}
-                                        aria-label="Close"
+                                        size="m"
+                                        variant="primary"
+                                        disabled={!customStart || !customEnd}
+                                        onClick={applyCustomRange}
                                     >
-                                        <span className="material-symbols-rounded">close</span>
+                                        Apply
                                     </Button>
-                                </Modal.Header>
+                                    <Button
+                                        size="m"
+                                        variant="secondary"
+                                        onClick={() => setIsCustomRangeOpen(false)}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </div>
+                            </Modal.Footer>
+                        </Modal>
+                    </div>
+                )}
 
-                                <Modal.Content>
-                                    <div className={styles.dateInputsRow}>
-                                        <div className={styles.inputGroup}>
-                                            <label className={styles.inputLabel}>
-                                                Start date <em>*</em>
-                                            </label>
-                                            <input
-                                                type="date"
-                                                className={styles.dateInput}
-                                                value={customStart}
-                                                onChange={(e) => setCustomStart(e.target.value)}
-                                            />
-                                        </div>
-                                        <span className={styles.dashSpacer}>–</span>
-                                        <div className={styles.inputGroup}>
-                                            <label className={styles.inputLabel}>
-                                                End date <em>*</em>
-                                            </label>
-                                            <input
-                                                type="date"
-                                                className={styles.dateInput}
-                                                value={customEnd}
-                                                onChange={(e) => setCustomEnd(e.target.value)}
-                                            />
-                                        </div>
-                                    </div>
-                                </Modal.Content>
-
-                                <Modal.Footer>
-                                    <div className={styles.modalFooterActions}>
-                                        <Button
-                                            size="m"
-                                            variant="primary"
-                                            disabled={!customStart || !customEnd}
-                                            onClick={applyCustomRange}
-                                        >
-                                            Apply
-                                        </Button>
-                                        <Button
-                                            size="m"
-                                            variant="tertiary"
-                                            onClick={() => setIsCustomRangeOpen(false)}
-                                        >
-                                            Cancel
-                                        </Button>
-                                    </div>
-                                </Modal.Footer>
-                            </Modal>
-                        </div>
-                    )}
-
-                    {!isEnhanced && (
-                        <div className={styles.facilitySelectWrapper}>
-                            <FilterSelect
-                                value={filter.facility}
-                                isCustomized={modifiedKeys.includes('facility')}
-                                onValueChange={handleAreaFilterChange}
-                                onClear={() => clearFilter('facility')}
-                                placeholder="Facility Area"
-                                options={AREA_OPTIONS}
-                            />
-                        </div>
-                    )}
-                </LayoutGroup>
+                {!isEnhanced && (
+                    <div className={styles.facilitySelectWrapper}>
+                        <FilterSelect
+                            value={filter.facility}
+                            isCustomized={modifiedKeys.includes('facility')}
+                            onValueChange={handleAreaFilterChange}
+                            onClear={() => clearFilter('facility')}
+                            placeholder="Facility Area"
+                            options={AREA_OPTIONS}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

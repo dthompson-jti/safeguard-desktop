@@ -3,6 +3,7 @@
 import { useAtomValue } from 'jotai';
 import { desktopViewAtom } from '../atoms';
 import { DesktopTabGroup } from './DesktopTabGroup';
+import { Button } from '../../components/Button';
 import styles from './DesktopHeader.module.css';
 
 interface DesktopHeaderProps {
@@ -40,20 +41,19 @@ export const DesktopHeader = ({ onTogglePanel, isPanelOpen }: DesktopHeaderProps
                             Export
                         </button>
 
-                        <button
-                            className={`btn ${isPanelOpen ? 'active' : ''}`}
-                            data-variant="secondary"
-                            data-size="s"
-                            data-icon-only="true"
+                        <Button
+                            variant="secondary"
+                            size="s"
+                            iconOnly
+                            active={isPanelOpen}
                             onClick={onTogglePanel}
                             aria-label="Toggle side panel"
                             aria-pressed={isPanelOpen}
-                            style={isPanelOpen ? { borderColor: 'var(--control-border-primary)' } : undefined}
                         >
                             <span className="material-symbols-rounded">
                                 {isPanelOpen ? 'right_panel_close' : 'right_panel_open'}
                             </span>
-                        </button>
+                        </Button>
                     </>
                 )}
             </div>

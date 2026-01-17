@@ -121,6 +121,7 @@ export function DataTable<T>({
         getFilteredRowModel: getFilteredRowModel(),
         enableRowSelection,
         enableColumnResizing: true,
+        enableSortingRemoval: false,
         getRowId,
     });
 
@@ -260,6 +261,7 @@ export function DataTable<T>({
                                             }}
                                             data-pinned={isPinned || undefined}
                                             data-sortable={header.column.getCanSort()}
+                                            data-sorted={!!header.column.getIsSorted()}
                                             data-sort-direction={header.column.getIsSorted() as string}
                                         >
                                             <div

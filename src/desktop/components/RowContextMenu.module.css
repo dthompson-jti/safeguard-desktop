@@ -22,9 +22,15 @@
     /* Always visible - no opacity gate */
 }
 
+
 .trigger:hover {
-    background-color: var(--control-bg-tertiary-hover);
-    color: var(--surface-fg-secondary);
+    background-color: var(--control-bg-quaternary-hover);
+    color: var(--control-fg-quaternary-hover);
+}
+
+.trigger:active {
+    background-color: var(--control-bg-quaternary-pressed);
+    color: var(--control-fg-quaternary-hover);
 }
 
 .backdrop {
@@ -50,9 +56,10 @@
 .menuItem {
     display: flex;
     align-items: center;
-    gap: var(--spacing-3);
+    gap: var(--spacing-2);
     width: 100%;
     padding: var(--spacing-2) var(--spacing-3);
+    padding-left: var(--spacing-2);
     border: 1px solid transparent;
     border-radius: var(--spacing-2);
     background: transparent;

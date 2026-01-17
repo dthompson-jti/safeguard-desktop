@@ -51,8 +51,6 @@
   box-shadow: var(--surface-shadow-md);
 
   /* Interaction */
-  /* CRITICAL: touch-action: none is required for Radix Swipe to work on mobile */
-  touch-action: none;
   user-select: none;
 }
 

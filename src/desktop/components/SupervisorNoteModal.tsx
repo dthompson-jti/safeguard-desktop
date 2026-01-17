@@ -187,7 +187,7 @@ export const SupervisorNoteModal = () => {
                     </div>
 
                     <div className={styles.field}>
-                        <label className={styles.label}>Additional notes {reason !== 'Other' && '(optional)'}</label>
+                        <label className={styles.label}>Additional notes</label>
                         <textarea
                             className={styles.textarea}
                             value={additionalNotes}
@@ -198,10 +198,7 @@ export const SupervisorNoteModal = () => {
                         />
                     </div>
 
-                    <div className={styles.hint}>
-                        <span className={`material-symbols-rounded ${styles.hintIcon}`}>info</span>
-                        <span>Applying to {modalState.selectedIds.length} selected check{modalState.selectedIds.length !== 1 ? 's' : ''}.</span>
-                    </div>
+
                 </div>
             </Modal.Content>
 
@@ -230,7 +227,7 @@ export const SupervisorNoteModal = () => {
                         Save
                     </Button>
                     <Button
-                        variant="tertiary"
+                        variant="secondary"
                         className={styles.cancelButton}
                         size="m"
                         onClick={handleClose}

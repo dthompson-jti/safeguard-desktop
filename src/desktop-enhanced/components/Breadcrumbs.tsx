@@ -67,9 +67,9 @@ export const Breadcrumbs = () => {
                         variant="secondary"
                         size="m"
                         iconOnly
+                        active={isPanelOpen}
                         onClick={() => setIsPanelOpen(!isPanelOpen)}
                         aria-label="Toggle side panel"
-                        className={isPanelOpen ? styles.activeAction : ''}
                     >
                         <span className="material-symbols-rounded">
                             {isPanelOpen ? 'right_panel_close' : 'right_panel_open'}

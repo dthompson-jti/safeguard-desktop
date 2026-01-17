@@ -154,7 +154,7 @@ export const EnhancedLiveMonitorView = () => {
                 },
                 cell: ({ row }) => {
                     return (
-                        <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                        <div style={{ marginLeft: 'calc(var(--spacing-0p5) * -1)' }}>
                             <StatusBadge status={row.original.status as StatusBadgeType} iconOnly />
                         </div>
                     );

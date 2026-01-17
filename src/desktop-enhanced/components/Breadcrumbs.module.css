@@ -60,13 +60,3 @@
     align-items: center;
     gap: var(--spacing-2);
 }
-
-.activeAction {
-    background-color: var(--control-bg-selected) !important;
-    color: var(--control-fg-selected) !important;
-    border: 2px solid var(--control-border-selected) !important;
-}
-
-.activeAction:hover {
-    border-color: var(--control-border-selected) !important;
-}

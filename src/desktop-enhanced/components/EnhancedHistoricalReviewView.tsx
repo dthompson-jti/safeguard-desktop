@@ -229,7 +229,7 @@ export const EnhancedHistoricalReviewView = () => {
                         displayStatus = row.original.status as StatusBadgeType;
                     }
                     return (
-                        <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                        <div style={{ marginLeft: 'calc(var(--spacing-0p5) * -1)' }}>
                             <StatusBadge status={displayStatus} iconOnly />
                         </div>
                     );

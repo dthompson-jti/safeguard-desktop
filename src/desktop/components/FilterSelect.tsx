@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+
 import { Select, SelectItem } from '../../components/Select';
 import styles from './FilterSelect.module.css';
 
@@ -15,11 +15,7 @@ interface FilterSelectProps {
     disabled?: boolean;
 }
 
-const transition = {
-    type: 'tween' as const,
-    duration: 0.1,
-    ease: 'linear' as const
-};
+
 
 export const FilterSelect: React.FC<FilterSelectProps> = ({
     value,
@@ -36,11 +32,9 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
     const triggerLabel = displayLabel || (currentOption ? currentOption.label : placeholder);
 
     return (
-        <motion.div
-            layout
+        <div
             className={`${styles.container} ${isCustomized ? styles.activeContainer : ''}`}
-            transition={transition}
-            style={{ height: 36, originX: 0 }} /* Lock height and pin grow to left */
+            style={{ height: 36 }}
         >
             <div className={styles.selectWrapper}>
                 <Select
@@ -77,7 +71,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
                     close
                 </span>
             </button>
-        </motion.div>
+        </div>
     );
 };
 

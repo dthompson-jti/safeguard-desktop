@@ -32,17 +32,13 @@
 }
 
 /* Force pixel-perfect dimensions and centering for buttons inside the bar */
+/* Force pixel-perfect dimensions and centering for buttons inside the bar */
 .footer :global(.btn) {
-    height: 32px !important;
-    min-height: 32px !important;
-    max-height: 32px !important;
-    border-radius: 10px !important;
-    border: 1px solid transparent !important;
-    /* Force symmetric 1px border */
-    box-shadow: none !important;
-    margin: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    border-radius: 10px;
+    margin: 0;
 }
 
 @keyframes fadeIn {

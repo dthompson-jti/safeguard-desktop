@@ -21,8 +21,8 @@
   display: flex;
   align-items: center;
   width: 100%;
-  min-height: var(--control-min-touch);
-  /* CRITICAL: Touch target standard (44px+) */
+  min-height: var(--control-height-md);
+  /* CRITICAL: Standard height */
   padding: 0;
   background: transparent;
   border: none;

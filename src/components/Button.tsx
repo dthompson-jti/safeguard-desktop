@@ -10,6 +10,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
   /** Show loading spinner and disable button */
   loading?: boolean;
+  /** Whether the button is in an active/selected state */
+  active?: boolean;
   /** Text to show when loading (default: children) */
   loadingText?: string;
   children: React.ReactNode;
@@ -23,6 +25,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       iconOnly = false,
       asChild = false,
       loading = false,
+      active = false,
       loadingText,
       className,
       children,
@@ -44,6 +47,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         data-size={size}
         data-icon-only={iconOnly}
         data-loading={loading}
+        data-active={active}
         disabled={disabled || loading}
         aria-busy={loading}
         ref={ref}

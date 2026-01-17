@@ -145,7 +145,7 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                 <div className={styles.headerActions}>
                     <Tooltip content="Close Panel">
                         <Button
-                            variant="quaternary"
+                            variant="tertiary"
                             size="s"
                             iconOnly
                             aria-label="Close Panel"

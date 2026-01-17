@@ -12,6 +12,15 @@
     display: flex;
     flex-direction: column;
     z-index: 100;
+    /* Static border-left handled via pseudo or box-shadow if needed, but here we just ensure 
+       the panel itself doesn't have a border that conflicts with the resizer */
+}
+
+/* Ensure no visual jump if there's a global panel border */
+.panel:has(.resizeHandle:hover) .resizeIndicator,
+.panel:has(.active) .resizeIndicator {
+    width: 2px !important;
+    background-color: var(--control-border-selected) !important;
 }
 
 /* Resize Handle */
@@ -39,15 +48,14 @@
 }
 
 .resizeHandle:hover .resizeIndicator,
-.resizeHandle.active .resizeIndicator {
-    width: 3px;
-    background-color: var(--control-border-primary);
+.active .resizeIndicator {
+    width: 2px !important;
+    background-color: var(--control-border-selected) !important;
 }
 
-.resizeHandle:hover .resizeIndicator,
-.resizeHandle.active .resizeIndicator {
-    width: 3px;
-    background-color: var(--control-border-primary);
+.active {
+    z-index: 112;
+    /* Ensure capture layer stays above during active drag */
 }
 
 .backdrop {

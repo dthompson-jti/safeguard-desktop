@@ -13,7 +13,7 @@ import { DetailPanel } from './components/DetailPanel';
 import { ToastContainer } from '../components/ToastContainer';
 import { ToastMessage } from '../components/Toast';
 import styles from './App.module.css';
-import './desktop-overrides.css';
+
 
 /**
  * Desktop Application Root

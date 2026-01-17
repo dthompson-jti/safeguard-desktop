@@ -60,7 +60,7 @@ export const NavigationPanel: React.FC = () => {
                         onOpenChange={setIsActionsOpen}
                         trigger={
                             <Button
-                                variant="quaternary"
+                                variant="tertiary"
                                 size="s"
                                 iconOnly
                                 aria-label="Menu"

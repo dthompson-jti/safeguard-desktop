@@ -23,7 +23,8 @@
 .defaultSelectTrigger {
     gap: 37px !important;
     padding-right: var(--spacing-3) !important;
-    transition: background-color 0.15s, border-color 0.15s, color 0.15s !important;
+    padding-right: var(--spacing-3) !important;
+    transition: background-color 0.2s, border-color 0.2s, color 0.15s, box-shadow 0.2s !important;
 }
 
 
@@ -36,18 +37,31 @@
 /* Active (customized) styles */
 .activeSelectTrigger {
     background-color: var(--control-bg-selected);
-    border: 2px solid var(--control-border-selected) !important;
+    border: 1px solid var(--control-border-selected) !important;
     color: var(--control-fg-selected);
     border-radius: var(--radius-md) 0 0 var(--radius-md) !important;
     gap: var(--spacing-1) !important;
     /* Standard gap when active */
-    transition: background-color 0.15s, border-color 0.15s, color 0.15s !important;
+    gap: var(--spacing-1) !important;
+    /* Standard gap when active */
+    transition: background-color 0.2s, border-color 0.2s, color 0.15s, box-shadow 0.2s !important;
+    /* Revert to standard 1px border interaction per feedback */
+    box-shadow: none;
 }
 
 .activeSelectTrigger:hover:not(:disabled) {
     background-color: var(--control-bg-selected-hover);
     border-color: var(--control-border-selected-hover) !important;
     color: var(--control-fg-selected-hover);
+    /* Asymmetric border simulation for hover */
+    box-shadow: inset 0 -3px 0 0 var(--control-border-selected-hover);
+}
+
+.activeSelectTrigger:active:not(:disabled) {
+    /* Match design system for pressed state */
+    background-color: var(--control-bg-selected-hover);
+    border-color: var(--control-border-selected-hover);
+    box-shadow: inset 0 0 0 1px var(--control-border-selected-hover);
 }
 
 /* Chevron icon color in active state */
@@ -65,7 +79,7 @@
     overflow: hidden;
     height: 36px;
     background-color: var(--control-bg-selected);
-    border: 2px solid var(--control-border-selected);
+    border: 1px solid var(--control-border-selected);
     color: var(--control-fg-selected);
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
     cursor: pointer;
@@ -84,6 +98,15 @@
     background-color: var(--control-bg-selected-hover);
     border-color: var(--control-border-selected-hover);
     color: var(--control-fg-selected-hover);
+    /* Asymmetric border simulation for hover */
+    box-shadow: inset 0 -3px 0 0 var(--control-border-selected-hover);
+}
+
+.clearButton:active:not(:disabled) {
+    background-color: var(--control-bg-selected-hover);
+    border-color: var(--control-border-selected-hover);
+    /* Match pressed state style */
+    box-shadow: inset 0 0 0 1px var(--control-border-selected-hover);
 }
 
 .clearIcon {

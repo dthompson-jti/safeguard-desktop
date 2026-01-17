@@ -21,6 +21,12 @@
     background-color: var(--surface-bg-secondary);
     position: relative;
     max-width: 600px;
+    transition: border-color 0.15s ease;
+}
+
+.leftPanelWrapper:has(.resizer:hover),
+.leftPanelWrapper:has(.resizerActive) {
+    border-right-color: transparent;
 }
 
 .resizer {
@@ -46,14 +52,13 @@
 
 .resizer:hover .resizeIndicator,
 .resizerActive .resizeIndicator {
-    width: 3px;
-    background-color: var(--control-border-primary);
+    width: 2px !important;
+    background-color: var(--control-border-selected) !important;
 }
 
-.resizer:hover .resizeIndicator,
-.resizerActive .resizeIndicator {
-    width: 3px;
-    background-color: var(--control-border-primary);
+.resizerActive {
+    z-index: 102;
+    /* Ensure it stays above during resize */
 }
 
 .mainContent {

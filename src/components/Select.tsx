@@ -60,7 +60,6 @@ export const Select = ({ children, value, onValueChange, placeholder, disabled, 
       <RadixSelect.Trigger
         className={`${styles.selectTrigger} ${triggerClassName || ''}`}
         aria-label={placeholder}
-        data-focused={isOpen}
       >
         <RadixSelect.Value placeholder={placeholder}>
           {valueLabel}
