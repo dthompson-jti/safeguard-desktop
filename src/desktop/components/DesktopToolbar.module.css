@@ -6,11 +6,11 @@
     top: 0;
     /* Below the header */
     z-index: 40;
-    background: var(--surface-bg-primary);
+    background: var(--surface-bg-secondary);
     border-top: 1px solid var(--surface-border-secondary);
     border-bottom: 1px solid var(--surface-border-secondary);
-    padding: var(--spacing-2) var(--spacing-3);
-    /* 12px padding left/right, 8px top/bottom */
+    padding: var(--spacing-3);
+    /* 12px padding on all sides */
     display: flex;
     align-items: center;
     justify-content: space-between;

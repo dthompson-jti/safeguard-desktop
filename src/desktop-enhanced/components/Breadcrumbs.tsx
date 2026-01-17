@@ -1,14 +1,10 @@
-import { useAtom, useAtomValue } from 'jotai';
-import { desktopEnhancedSelectionAtom, SelectionType, desktopEnhancedViewAtom } from '../atoms';
-import { isDetailPanelOpenAtom } from '../../desktop/atoms';
+import { useAtom } from 'jotai';
+import { desktopEnhancedSelectionAtom, SelectionType } from '../atoms';
 import { TreeGroup, TreeUnit, useTreeData } from '../hooks/useTreeData';
-import { Button } from '../../components/Button';
 import styles from './Breadcrumbs.module.css';
 
 export const Breadcrumbs = () => {
     const [selection, setSelection] = useAtom(desktopEnhancedSelectionAtom);
-    const [isPanelOpen, setIsPanelOpen] = useAtom(isDetailPanelOpenAtom);
-    const view = useAtomValue(desktopEnhancedViewAtom);
     const groups = useTreeData();
 
     // Helper to find names and build navigation paths
@@ -27,7 +23,6 @@ export const Breadcrumbs = () => {
             if (group) parts.push({ name: group.name, id: group.id, type: group.type as SelectionType });
             return parts;
         }
-
 
         if (selection.type === 'unit') {
             const group = root.children.find(g => 'children' in g && g.children.some(u => u.id === selection.id)) as TreeGroup | undefined;
@@ -59,23 +54,6 @@ export const Breadcrumbs = () => {
                         )}
                     </div>
                 ))}
-            </div>
-
-            <div className={styles.actions}>
-                {view === 'historical' && (
-                    <Button
-                        variant="secondary"
-                        size="m"
-                        iconOnly
-                        active={isPanelOpen}
-                        onClick={() => setIsPanelOpen(!isPanelOpen)}
-                        aria-label="Toggle side panel"
-                    >
-                        <span className="material-symbols-rounded">
-                            {isPanelOpen ? 'right_panel_close' : 'right_panel_open'}
-                        </span>
-                    </Button>
-                )}
             </div>
         </div>
     );

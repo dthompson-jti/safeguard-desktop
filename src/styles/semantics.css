@@ -124,6 +124,7 @@
   --control-bg-secondary-pressed: var(--primitives-grey-100);
   --control-bg-selected: var(--primitives-theme-50);
   --control-bg-selected-hover: var(--primitives-theme-100);
+  --control-bg-selected-pressed: var(--primitives-theme-200);
   --control-bg-tertiary: var(--utility-alpha-grey-10);
   --control-bg-tertiary-hover: var(--utility-alpha-grey-30);
   --control-bg-tertiary-pressed: var(--utility-alpha-grey-60);
@@ -197,6 +198,7 @@
   --control-border-primary-pressed: var(--primitives-theme-900);
   --control-border-selected: var(--primitives-theme-700);
   --control-border-selected-hover: var(--primitives-theme-700);
+  --control-border-selected-pressed: var(--primitives-theme-800);
   --control-border-secondary: var(--primitives-grey-600);
   --control-border-secondary-hover: var(--primitives-grey-700);
   --control-border-secondary-pressed: var(--primitives-grey-700);
@@ -221,6 +223,8 @@
   --control-border-info-hover: var(--primitives-blue-800);
   --control-border-info-pressed: var(--primitives-blue-800);
   --control-border-destructive: var(--primitives-red-700);
+  --control-border-destructive-hover: var(--primitives-red-800);
+  --control-border-destructive-pressed: var(--primitives-red-900);
 
   /* Focus Rings */
   --control-focus-ring-standard: var(--primitives-blue-500);
@@ -402,6 +406,7 @@
   --control-border-secondary-pressed: var(--primitives-grey-400);
   --control-border-selected: var(--primitives-theme-500);
   --control-border-selected-hover: var(--primitives-theme-400);
+  --control-border-selected-pressed: var(--primitives-theme-300);
   --control-border-disabled: var(--primitives-grey-700);
   --control-border-disabled-faint: var(--primitives-grey-800);
   --control-border-tertiary: var(--primitives-grey-800);
@@ -599,6 +604,7 @@
   --control-border-secondary-pressed: var(--primitives-grey-400);
   --control-border-selected: var(--primitives-theme-500);
   --control-border-selected-hover: var(--primitives-theme-400);
+  --control-border-selected-pressed: var(--primitives-theme-300);
   --control-border-disabled: var(--primitives-grey-700);
   --control-border-disabled-faint: var(--primitives-grey-800);
   --control-border-tertiary: var(--primitives-grey-800);
@@ -800,6 +806,7 @@
   --control-border-secondary-pressed: var(--primitives-grey-400);
   --control-border-selected: var(--primitives-theme-500);
   --control-border-selected-hover: var(--primitives-theme-400);
+  --control-border-selected-pressed: var(--primitives-theme-300);
   --control-border-disabled: var(--primitives-grey-700);
   --control-border-disabled-faint: var(--primitives-grey-860);
   --control-border-tertiary: var(--primitives-grey-860);

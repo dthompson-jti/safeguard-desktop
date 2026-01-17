@@ -8,7 +8,8 @@
     /* Standardized height */
     background: var(--surface-bg-primary);
     border-bottom: 1px solid var(--surface-border-secondary);
-    padding: 0 var(--spacing-4);
+    padding: 0 var(--spacing-3) 0 var(--spacing-4);
+    /* 16px left, 12px right for visual balance with toggle */
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;

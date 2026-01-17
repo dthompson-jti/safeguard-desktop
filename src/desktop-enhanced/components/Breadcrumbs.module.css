@@ -1,15 +1,9 @@
 .breadcrumbs {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-3);
-    padding: 0 var(--spacing-4);
-    height: 44px !important;
-    /* Standardized height strictly enforced */
+    justify-content: flex-start;
     box-sizing: border-box;
-    /* Ensure padding includes border/height */
-    background-color: var(--surface-bg-primary);
-    /* Border removed to merge with search toolbar below */
+    background-color: transparent;
 }
 
 .parts {
@@ -53,10 +47,4 @@
 .chevron {
     font-size: var(--icon-size-sm);
     color: var(--surface-fg-quaternary);
-}
-
-.actions {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-2);
 }

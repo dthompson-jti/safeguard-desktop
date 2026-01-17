@@ -1,12 +1,38 @@
 /* src/desktop/components/FilterSelect.module.css */
+/* ============================================================================
+ * ARCHITECTURAL INVARIANTS - DO NOT BREAK THESE RULES
+ * ============================================================================
+ * 
+ * 1. FILTER DROPDOWNS are SPECIAL - they use "Selected" theme tokens, NOT
+ *    regular dropdown tokens. Regular dropdowns use Select.module.css defaults.
+ * 
+ * 2. VISUAL BORDER MODEL (when in Selected/Customized state):
+ *    - REST: 2px visual border ALL sides (1px physical + 1px inset shadow)
+ *    - HOVER: 2px sides, 4px bottom (1px physical + 1px inset + 2px bottom)
+ *    - PRESSED: Same as hover but with DARKER tokens (-pressed variants)
+ * 
+ * 3. SPLIT BUTTON GEOMETRY:
+ *    - Left piece (trigger): border-radius: md 0 0 md (sharp on RIGHT)
+ *    - Right piece (clear): border-radius: 0 md md 0 (sharp on LEFT)
+ *    - Gap between pieces: 2px
+ * 
+ * 4. TRANSITIONS:
+ *    - transition: none - State changes are INSTANT (no animation)
+ *    - Hover/pressed feedback uses CSS pseudo-classes only
+ * 
+ * 5. TOKENS REQUIRED (must be defined in semantics.css):
+ *    - --control-bg-selected, --control-bg-selected-hover, --control-bg-selected-pressed
+ *    - --control-border-selected, --control-border-selected-hover, --control-border-selected-pressed
+ *    - --control-fg-selected, --control-fg-selected-hover
+ * 
+ * If ANY of these tokens are missing, the visual border model WILL BREAK.
+ * ============================================================================ */
 
 .container {
     display: inline-flex;
     align-items: center;
     height: 36px;
     border-radius: var(--radius-md);
-    transition: none;
-    /* Let Framer Motion handle it */
 }
 
 .selectWrapper {
@@ -14,79 +40,93 @@
     align-items: center;
 }
 
-
+/* Used as a marker class to show the clear button */
 .activeContainer {
-    gap: 1px;
+    display: inline-flex;
+    gap: 2px;
 }
 
-/* Default state: reserve 37px (32px 'x' + 1px split + 4px base gap) INSIDE trigger */
+
+/* ============================================================ */
+/*                 DEFAULT (NON-CUSTOMIZED) TRIGGER             */
+/* ============================================================ */
+/* Uses the base Select component's default Secondary theme.    */
 .defaultSelectTrigger {
-    gap: 37px !important;
-    padding-right: var(--spacing-3) !important;
-    padding-right: var(--spacing-3) !important;
-    transition: background-color 0.2s, border-color 0.2s, color 0.15s, box-shadow 0.2s !important;
-}
-
-
-/* Base trigger styles for the select part */
-.selectTrigger {
+    /* Full radius, no join with clear button */
     border-radius: var(--radius-md);
-    flex: 1;
 }
 
-/* Active (customized) styles */
+
+/* ============================================================ */
+/*             ACTIVE (CUSTOMIZED) FILTER TRIGGER               */
+/* ============================================================ */
+/* Direct state styling for the Selected theme.                 */
+/* This ensures correct borders regardless of CSS variable      */
+/* inheritance quirks.                                          */
 .activeSelectTrigger {
+    /* --- REST STATE: 2px Visual Border All Sides --- */
     background-color: var(--control-bg-selected);
-    border: 1px solid var(--control-border-selected) !important;
+    border: 1px solid var(--control-border-selected);
     color: var(--control-fg-selected);
-    border-radius: var(--radius-md) 0 0 var(--radius-md) !important;
-    gap: var(--spacing-1) !important;
-    /* Standard gap when active */
-    gap: var(--spacing-1) !important;
-    /* Standard gap when active */
-    transition: background-color 0.2s, border-color 0.2s, color 0.15s, box-shadow 0.2s !important;
-    /* Revert to standard 1px border interaction per feedback */
-    box-shadow: none;
+    /* 1px physical + 1px inset = 2px visual */
+    box-shadow: inset 0 0 0 1px var(--control-border-selected);
+    /* Sharp right corners for split button join */
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+    /* Only transition hover states, not state changes */
+    transition: none;
 }
 
-.activeSelectTrigger:hover:not(:disabled) {
-    background-color: var(--control-bg-selected-hover);
-    border-color: var(--control-border-selected-hover) !important;
-    color: var(--control-fg-selected-hover);
-    /* Asymmetric border simulation for hover */
-    box-shadow: inset 0 -3px 0 0 var(--control-border-selected-hover);
-}
-
-.activeSelectTrigger:active:not(:disabled) {
-    /* Match design system for pressed state */
-    background-color: var(--control-bg-selected-hover);
-    border-color: var(--control-border-selected-hover);
-    box-shadow: inset 0 0 0 1px var(--control-border-selected-hover);
-}
-
-/* Chevron icon color in active state */
+/* Chevron in selected state should be blue */
 .activeSelectTrigger [class*="selectIcon"] {
     color: var(--control-fg-selected);
 }
 
+/* --- HOVER STATE: 4px Visual Bottom Border --- */
+.activeSelectTrigger:hover:not(:disabled) {
+    background-color: var(--control-bg-selected-hover);
+    border-color: var(--control-border-selected-hover);
+    color: var(--control-fg-selected-hover);
+    /* 1px physical + 1px all-around + 2px bottom = 2px sides, 4px bottom */
+    box-shadow: inset 0 0 0 1px var(--control-border-selected-hover), inset 0 -2px 0 0 var(--control-border-selected-hover);
+}
+
+/* --- ACTIVE/OPEN STATE: 4px Visual Bottom Border (Darker) --- */
+.activeSelectTrigger:active:not(:disabled),
+.activeSelectTrigger[data-state='open'] {
+    background-color: var(--control-bg-selected-pressed);
+    border-color: var(--control-border-selected-pressed);
+    color: var(--control-fg-selected-hover);
+    /* 1px physical + 1px all-around + 2px bottom = 2px sides, 4px bottom */
+    box-shadow: inset 0 0 0 1px var(--control-border-selected-pressed), inset 0 -2px 0 0 var(--control-border-selected-pressed);
+}
+
+
+/* ============================================================ */
+/*                        CLEAR BUTTON                          */
+/* ============================================================ */
 .clearButton {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 0;
-    /* Hidden by default */
     opacity: 0;
     overflow: hidden;
     height: 36px;
-    background-color: var(--control-bg-selected);
-    border: 1px solid var(--control-border-selected);
-    color: var(--control-fg-selected);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
     cursor: pointer;
-    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
     padding: 0;
     outline: none;
     flex-shrink: 0;
+    /* Only transition hover states, not show/hide */
+    transition: none;
+
+    /* --- REST STATE: Match Selected theme, join with trigger --- */
+    background-color: var(--control-bg-selected);
+    border: 1px solid var(--control-border-selected);
+    color: var(--control-fg-selected);
+    /* Sharp left corners for split button join */
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    /* 2px visual border: 1px physical + 1px inset */
+    box-shadow: inset 0 0 0 1px var(--control-border-selected);
 }
 
 .activeContainer .clearButton {
@@ -94,26 +134,26 @@
     opacity: 1;
 }
 
+/* --- HOVER STATE: 4px Visual Bottom --- */
 .clearButton:hover:not(:disabled) {
     background-color: var(--control-bg-selected-hover);
     border-color: var(--control-border-selected-hover);
     color: var(--control-fg-selected-hover);
-    /* Asymmetric border simulation for hover */
-    box-shadow: inset 0 -3px 0 0 var(--control-border-selected-hover);
+    box-shadow: inset 0 0 0 1px var(--control-border-selected-hover), inset 0 -2px 0 0 var(--control-border-selected-hover);
 }
 
+/* --- ACTIVE STATE: 4px Visual Bottom (Darker) --- */
 .clearButton:active:not(:disabled) {
-    background-color: var(--control-bg-selected-hover);
-    border-color: var(--control-border-selected-hover);
-    /* Match pressed state style */
-    box-shadow: inset 0 0 0 1px var(--control-border-selected-hover);
+    background-color: var(--control-bg-selected-pressed);
+    border-color: var(--control-border-selected-pressed);
+    color: var(--control-fg-selected-hover);
+    box-shadow: inset 0 0 0 1px var(--control-border-selected-pressed), inset 0 -2px 0 0 var(--control-border-selected-pressed);
 }
 
 .clearIcon {
     font-size: 20px;
 }
 
-/* Label for custom dates */
 .customLabel {
     white-space: nowrap;
     overflow: hidden;

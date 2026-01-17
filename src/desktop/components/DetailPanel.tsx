@@ -7,6 +7,7 @@ import { Button } from '../../components/Button';
 import { Tooltip } from '../../components/Tooltip';
 import { LabelValueRow } from '../../components/LabelValueRow';
 import { LinkButton } from '../../components/LinkButton';
+import { SidePanelHeading } from './SidePanelHeading';
 import styles from './DetailPanel.module.css';
 
 interface DetailPanelProps {
@@ -171,8 +172,9 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                     </div>
                 ) : (
                     <>
-                        {/* SECTION 1: METRICS ("The Dashboard") - Vertical Stack Layout */}
+                        {/* SECTION 1: PROPERTIES */}
                         <div className={styles.section}>
+                            <SidePanelHeading title="Properties" />
                             <div className={styles.metaStack}>
                                 <LabelValueRow
                                     label="Room"
@@ -212,9 +214,9 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                             </div>
                         </div>
 
-                        {/* SECTION 2: OFFICER NOTES ("The Log") */}
+                        {/* SECTION 2: OFFICER LOG */}
                         <div className={styles.section}>
-                            <span className={styles.sectionTitle}>Officer Notes</span>
+                            <SidePanelHeading title="Officer Log" />
                             <div className={styles.quoteBlock}>
                                 {record.officerNote ? (
                                     <>
@@ -229,9 +231,9 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                             </div>
                         </div>
 
-                        {/* SECTION 3: SUPERVISOR COMMENTS */}
+                        {/* SECTION 3: SUPERVISOR REVIEW */}
                         <div className={styles.section}>
-                            <span className={styles.sectionTitle}>Supervisor Comments</span>
+                            <SidePanelHeading title="Supervisor Review" />
                             <div className={styles.reviewSection}>
                                 {record.supervisorNote && (
                                     <div className={styles.reviewContent}>

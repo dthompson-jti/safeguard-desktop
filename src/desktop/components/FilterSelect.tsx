@@ -31,6 +31,8 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
     const currentOption = options.find(opt => opt.value === value);
     const triggerLabel = displayLabel || (currentOption ? currentOption.label : placeholder);
 
+    const triggerClass = isCustomized ? styles.activeSelectTrigger : styles.defaultSelectTrigger;
+
     return (
         <div
             className={`${styles.container} ${isCustomized ? styles.activeContainer : ''}`}
@@ -42,7 +44,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
                     onValueChange={onValueChange}
                     placeholder={placeholder}
                     disabled={disabled}
-                    triggerClassName={isCustomized ? styles.activeSelectTrigger : styles.defaultSelectTrigger}
+                    triggerClassName={triggerClass}
                     valueLabel={triggerLabel}
                 >
                     {options.map((opt) => (
@@ -71,7 +73,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
                     close
                 </span>
             </button>
-        </div>
+        </div >
     );
 };
 

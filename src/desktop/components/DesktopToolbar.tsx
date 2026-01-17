@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
     desktopViewAtom,
     desktopFilterAtom,
@@ -7,13 +7,15 @@ import {
     isFilterCustomizedAtom,
     updateFilterAtom,
     clearFilterForKeyAtom,
-    resetFiltersAtom
+    resetFiltersAtom,
+    isAdvancedSearchOpenAtom
 } from '../atoms';
 import { LiveStatusFilter, HistoricalStatusFilter, TimeRangePreset } from '../types';
 import { SearchInput } from '../../components/SearchInput';
 import { Button } from '../../components/Button';
 import { Modal } from '../../components/Modal';
 import { FilterSelect } from './FilterSelect';
+import { AdvancedSearch } from './AdvancedSearch';
 import styles from './DesktopToolbar.module.css';
 
 const formatDateRange = (start: string | null, end: string | null) => {
@@ -70,10 +72,12 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
     const updateFilter = useSetAtom(updateFilterAtom);
     const clearFilter = useSetAtom(clearFilterForKeyAtom);
     const resetFilters = useSetAtom(resetFiltersAtom);
+    const [isAdvancedOpen, setIsAdvancedOpen] = useAtom(isAdvancedSearchOpenAtom);
 
     const [isCustomRangeOpen, setIsCustomRangeOpen] = useState(false);
     const [customStart, setCustomStart] = useState('');
     const [customEnd, setCustomEnd] = useState('');
+
 
     const handleSearchChange = (val: string) => {
         updateFilter({ search: val });
@@ -155,6 +159,10 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
         return undefined;
     }, [filter.timeRangePreset, filter.dateStart, filter.dateEnd]);
 
+    if (view === 'historical' && isAdvancedOpen) {
+        return <AdvancedSearch onClose={() => setIsAdvancedOpen(false)} />;
+    }
+
     return (
         <div className={styles.toolbar}>
             {/* Left Side: Search + Advanced */}
@@ -166,15 +174,18 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                     variant="standalone"
                 />
 
-                <button
-                    className="btn"
-                    data-variant="secondary"
-                    data-size="m"
-                    data-icon-only="true"
-                    aria-label="Advanced search"
-                >
-                    <span className="material-symbols-rounded">tune</span>
-                </button>
+                {view === 'historical' && (
+                    <button
+                        className="btn"
+                        data-variant={isAdvancedOpen ? "primary" : "secondary"}
+                        data-size="m"
+                        data-icon-only="true"
+                        aria-label="Advanced search"
+                        onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
+                    >
+                        <span className="material-symbols-rounded">tune</span>
+                    </button>
+                )}
             </div>
 
             {/* Right Side: Quick Filters */}

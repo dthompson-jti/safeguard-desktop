@@ -144,16 +144,17 @@
   .btn[data-variant="primary"]:hover:not(:disabled) {
     background-color: var(--control-bg-theme-hover);
     border-color: var(--control-border-primary-hover);
-    /* Maintain darker bottom lip on hover */
-    box-shadow: inset 0 -3px 0 0 var(--control-border-primary-pressed);
+    /* 1px border + 2px shadow = 3px visual bottom lip */
+    box-shadow: inset 0 -2px 0 0 var(--control-border-primary-pressed);
   }
 }
 
-.btn[data-variant="primary"]:active:not(:disabled) {
+.btn[data-variant="primary"]:active:not(:disabled),
+.btn[data-variant="primary"][data-state="open"] {
   background-color: var(--control-bg-theme-pressed);
   border-color: var(--control-border-primary-pressed);
-  /* Pressed state: flat/inset look */
-  box-shadow: inset 0 0 0 1px var(--control-border-primary-pressed);
+  /* Refined Pressed State: "Darker Pop" (3px visual bottom) using 1-step darker theme-950 shadow */
+  box-shadow: inset 0 -2px 0 0 var(--primitives-theme-950) !important;
 }
 
 /* --- Secondary Button --- */
@@ -165,20 +166,22 @@
 
 @media (hover: hover) {
   .btn[data-variant="secondary"]:hover:not(:disabled) {
-    /* 1px top/sides, 3px bottom simulated via box-shadow to avoid layout shift */
-    box-shadow: inset 0 -3px 0 0 var(--control-border-secondary-hover);
+    /* 1px top/sides, 3px bottom visual border (1px border + 2px shadow) */
+    box-shadow: inset 0 -2px 0 0 var(--control-border-secondary-hover);
     background-color: var(--control-bg-secondary-hover);
     border-color: var(--control-border-secondary-hover);
   }
 }
 
 .btn[data-variant="secondary"]:active:not(:disabled),
-.btn[data-variant="secondary"].active {
+.btn[data-variant="secondary"][data-state="open"] {
   background-color: var(--control-bg-secondary-pressed);
   border-color: var(--control-border-secondary-pressed);
-  /* Fix: Use box-shadow to simulate thicker border instead of changing border-width */
-  box-shadow: inset 0 0 0 1px var(--control-border-secondary-pressed);
+  /* Refined Pressed State: "Darker Pop" logic (3px visual bottom) per feedback */
+  box-shadow: inset 0 -2px 0 0 var(--control-border-secondary-pressed) !important;
 }
+
+/* --- Secondary Button Active (Consolidated below) --- */
 
 /* --- Tertiary Button --- */
 .btn[data-variant="tertiary"] {
@@ -192,15 +195,18 @@
     background-color: var(--control-bg-tertiary-hover);
     color: var(--control-fg-tertiary-hover);
     border-color: var(--control-border-tertiary-hover);
-    /* 1px top/sides, 2px bottom simulated via box-shadow to avoid layout shift */
-    box-shadow: inset 0 -2px 0 0 var(--control-border-tertiary-hover);
+    /* 1px top/sides, 2px bottom visual border (1px border + 1px shadow) */
+    box-shadow: inset 0 -1px 0 0 var(--control-border-tertiary-hover);
   }
 }
 
-.btn[data-variant="tertiary"]:active:not(:disabled) {
+.btn[data-variant="tertiary"]:active:not(:disabled),
+.btn[data-variant="tertiary"][data-state="open"] {
   background-color: var(--control-bg-tertiary-pressed);
   color: var(--control-fg-tertiary-hover);
   border-color: var(--control-border-tertiary-pressed);
+  /* Refined Pressed State: "Darker Pop" (2px visual bottom) */
+  box-shadow: inset 0 -1px 0 0 var(--control-border-tertiary-pressed) !important;
 }
 
 /* --- Quaternary Button --- */
@@ -241,34 +247,37 @@
   }
 }
 
-.btn[data-variant="on-solid"]:active:not(:disabled) {
+.btn[data-variant="on-solid"]:active:not(:disabled),
+.btn[data-variant="on-solid"][data-state="open"] {
   background-color: var(--control-bg-on-solid-pressed);
   border-color: var(--control-border-tertiary-pressed);
-  /* Pressed state: flat/inset look */
-  box-shadow: inset 0 0 0 1px var(--control-border-tertiary-pressed);
+  /* Refined Pressed State: "Darker Pop" (3px visual bottom) */
+  box-shadow: inset 0 -2px 0 0 var(--control-border-tertiary-pressed) !important;
 }
 
-/* --- Destructive Button --- */
 /* --- Destructive Button --- */
 .btn[data-variant="destructive"] {
   background-color: var(--control-bg-destructive);
   color: var(--control-fg-destructive);
   border-color: var(--control-border-destructive);
-  box-shadow: inset 0 -2px 0 0 var(--control-border-destructive);
+  /* Flat at rest per latest design unification */
+  box-shadow: none;
 }
 
 @media (hover: hover) {
   .btn[data-variant="destructive"]:hover:not(:disabled) {
     background-color: var(--control-bg-destructive-hover);
     border-color: var(--control-border-destructive);
-    box-shadow: inset 0 -2px 0 0 var(--control-bg-destructive-pressed);
+    /* 1px border + 2px shadow = 3px visual bottom */
+    box-shadow: inset 0 -2px 0 0 var(--control-border-destructive-pressed);
   }
 }
 
 .btn[data-variant="destructive"]:active:not(:disabled) {
   background-color: var(--control-bg-destructive-pressed);
-  border-color: var(--control-border-destructive);
-  box-shadow: inset 0 -2px 0 0 var(--control-bg-destructive-pressed);
+  border-color: var(--control-border-destructive-pressed);
+  /* Refined Pressed State: "Darker Pop" logic (3px visual bottom) */
+  box-shadow: inset 0 -2px 0 0 var(--control-border-destructive-pressed) !important;
 }
 
 /* --- Alert Button (Light Red) --- */
@@ -276,7 +285,8 @@
   background-color: var(--control-bg-alert);
   color: var(--control-fg-alert);
   border-color: var(--control-border-alert);
-  box-shadow: inset 0 -2px 0 0 var(--control-border-alert);
+  /* Flat at rest */
+  box-shadow: none;
 }
 
 @media (hover: hover) {
@@ -284,6 +294,7 @@
     background-color: var(--control-bg-alert-hover);
     color: var(--control-fg-alert-hover);
     border-color: var(--control-border-alert-hover);
+    /* 1px border + 2px shadow = 3px visual bottom */
     box-shadow: inset 0 -2px 0 0 var(--control-border-alert-hover);
   }
 }
@@ -292,7 +303,8 @@
   background-color: var(--control-bg-alert-pressed);
   color: var(--control-fg-alert-pressed);
   border-color: var(--control-border-alert-pressed);
-  box-shadow: inset 0 -1px 0 0 var(--control-border-alert-pressed);
+  /* Refined Pressed State: "Darker Pop" logic (3px visual bottom) */
+  box-shadow: inset 0 -2px 0 0 var(--control-border-alert-pressed) !important;
 }
 
 /* --- Warning Button --- */
@@ -300,7 +312,8 @@
   background-color: var(--control-bg-warning);
   color: var(--control-fg-warning);
   border-color: var(--control-border-warning);
-  box-shadow: inset 0 -2px 0 0 var(--control-border-warning);
+  /* Flat at rest */
+  box-shadow: none;
 }
 
 @media (hover: hover) {
@@ -308,6 +321,7 @@
     background-color: var(--control-bg-warning-hover);
     color: var(--control-fg-warning-hover);
     border-color: var(--control-border-warning-hover);
+    /* 1px border + 2px shadow = 3px visual bottom */
     box-shadow: inset 0 -2px 0 0 var(--control-border-warning-hover);
   }
 }
@@ -316,7 +330,8 @@
   background-color: var(--control-bg-warning-pressed);
   color: var(--control-fg-warning-pressed);
   border-color: var(--control-border-warning-pressed);
-  box-shadow: inset 0 -1px 0 0 var(--control-border-warning-pressed);
+  /* Refined Pressed State: "Darker Pop" logic (3px visual bottom) */
+  box-shadow: inset 0 -2px 0 0 var(--control-border-warning-pressed) !important;
 }
 
 /* --- Success Button --- */
@@ -324,7 +339,8 @@
   background-color: var(--control-bg-success);
   color: var(--control-fg-success);
   border-color: var(--control-border-success);
-  box-shadow: inset 0 -2px 0 0 var(--control-border-success);
+  /* Flat at rest */
+  box-shadow: none;
 }
 
 @media (hover: hover) {
@@ -332,6 +348,7 @@
     background-color: var(--control-bg-success-hover);
     color: var(--control-fg-success-hover);
     border-color: var(--control-border-success-hover);
+    /* 1px border + 2px shadow = 3px visual bottom */
     box-shadow: inset 0 -2px 0 0 var(--control-border-success-hover);
   }
 }
@@ -340,7 +357,8 @@
   background-color: var(--control-bg-success-pressed);
   color: var(--control-fg-success-pressed);
   border-color: var(--control-border-success-pressed);
-  box-shadow: inset 0 -1px 0 0 var(--control-border-success-pressed);
+  /* Refined Pressed State: "Darker Pop" logic (3px visual bottom) */
+  box-shadow: inset 0 -2px 0 0 var(--control-border-success-pressed) !important;
 }
 
 /* --- Info Button --- */
@@ -348,7 +366,8 @@
   background-color: var(--control-bg-info);
   color: var(--control-fg-info);
   border-color: var(--control-border-info);
-  box-shadow: inset 0 -2px 0 0 var(--control-border-info);
+  /* Flat at rest */
+  box-shadow: none;
 }
 
 @media (hover: hover) {
@@ -356,6 +375,7 @@
     background-color: var(--control-bg-info-hover);
     color: var(--control-fg-info-hover);
     border-color: var(--control-border-info-hover);
+    /* 1px border + 2px shadow = 3px visual bottom */
     box-shadow: inset 0 -2px 0 0 var(--control-border-info-hover);
   }
 }
@@ -364,36 +384,87 @@
   background-color: var(--control-bg-info-pressed);
   color: var(--control-fg-info-pressed);
   border-color: var(--control-border-info-pressed);
-  box-shadow: inset 0 -1px 0 0 var(--control-border-info-pressed);
+  /* Refined Pressed State: "Darker Pop" logic (3px visual bottom) */
+  box-shadow: inset 0 -2px 0 0 var(--control-border-info-pressed) !important;
+}
+
+/* ------------------------------------------------------------------------ */
+/*                               BUTTONS                                    */
+/* ------------------------------------------------------------------------ */
+/**
+ * ARCHITECTURAL INVARIANTS:
+ * 1. Rest State: All solid/bordered variants (Primary, Secondary, Semantic) must be
+ *    "flat" (1px border only) at rest to minimize visual noise.
+ * 2. Hover State: All solid variants must show a 3px visual bottom border
+ *    (1px physical + 2px inset shadow) for skeuomorphic "pop".
+ * 3. Pressed State: 
+ *    - Primary/Semantic: Recessed look (sharp top inner shadow) for tactile depth.
+ *    - Secondary/Filters: "Darker Pop" logic (Matching hover structural depth but
+ *      with pressed tokens) per latest design specification.
+ * 4. Selected State (data-active="true"): Must maintain distinct priority:
+ *    - Rest: 2px visual all sides (1px + 1px inset).
+ *    - Hover: 4px visual bottom (1px + 1px + 2px extra emphasis).
+ * 5. Tertiary/Ghost: Minimal depth (2px hover) to maintain visual hierarchy.
+ */
+
+.btn {
+  display: inline-flex;
 }
 
 /* ======================================================================== */
 /*                              GLOBAL STATES                               */
 /* ======================================================================== */
 
+/* ============================================================================
+ * SELECTED STATE (data-active="true") - CRITICAL INVARIANTS
+ * ============================================================================
+ * 
+ * VISUAL BORDER MODEL:
+ *   - REST:    2px visual ALL sides (1px physical + 1px inset shadow)
+ *   - HOVER:   2px sides, 4px bottom (1px + 1px + 2px extra bottom)
+ *   - PRESSED: Same geometry as hover but with DARKER (-pressed) tokens
+ * 
+ * REQUIRED TOKENS (must exist in semantics.css for ALL themes):
+ *   - --control-bg-selected, --control-bg-selected-hover, --control-bg-selected-pressed
+ *   - --control-border-selected, --control-border-selected-hover, --control-border-selected-pressed
+ *   - --control-fg-selected, --control-fg-selected-hover
+ * 
+ * SPECIFICITY: Uses !important to override variant-level styles (e.g., secondary)
+ *              because variant styles also use !important for their pressed states.
+ * 
+ * If ANY token is missing, the visual model WILL BREAK silently (empty shadows).
+ * ============================================================================ */
+
 /* --- Active / Selected State --- */
 /* Used for toggles, multi-select triggers, etc. */
-.btn[data-active="true"] {
+.btn[data-active="true"],
+.btn.active {
   background-color: var(--control-bg-selected);
   color: var(--control-fg-selected);
-  border-color: var(--control-border-selected) !important;
-  /* 1px border + 1px inset shadow = 2px total visual border per Figma 22807:54015 */
-  box-shadow: inset 0 0 0 1px var(--control-border-selected) !important;
+  border-color: var(--control-border-selected);
+  /* 1px physical + 1px all-around inset = 2px visual border */
+  box-shadow: inset 0 0 0 1px var(--control-border-selected);
 }
 
 @media (hover: hover) {
-  .btn[data-active="true"]:hover:not(:disabled) {
+
+  .btn[data-active="true"]:hover:not(:disabled),
+  .btn.active:hover:not(:disabled) {
     background-color: var(--control-bg-selected-hover);
     color: var(--control-fg-selected-hover);
-    border-color: var(--control-border-selected-hover) !important;
-    /* 1px border + 1px all-around inset + 2px bottom emphasis = 2px sides/top, 4px bottom */
-    box-shadow: inset 0 0 0 1px var(--control-border-selected), inset 0 -2px 0 0 var(--control-border-selected) !important;
+    border-color: var(--control-border-selected-hover);
+    /* 1px physical + 1px all-around + 2px extra bottom = 2px sides, 4px visual bottom total */
+    box-shadow: inset 0 0 0 1px var(--control-border-selected-hover), inset 0 -2px 0 0 var(--control-border-selected-hover);
   }
 }
 
-.btn[data-active="true"]:active:not(:disabled) {
-  background-color: var(--control-bg-selected-hover);
-  border-color: var(--control-border-selected-hover) !important;
-  /* Pressed state is flat 2px inset */
-  box-shadow: inset 0 0 0 2px var(--control-border-selected-hover) !important;
+.btn[data-active="true"]:active:not(:disabled),
+.btn.active:active:not(:disabled),
+.btn[data-active="true"][data-state="open"],
+.btn.active[data-state="open"] {
+  background-color: var(--control-bg-selected-pressed) !important;
+  border-color: var(--control-border-selected-pressed) !important;
+  /* Refined Pressed State: "Darker Pop" logic (2px sides, 4px visual bottom) */
+  box-shadow: inset 0 0 0 1px var(--control-border-selected-pressed), inset 0 -2px 0 0 var(--control-border-selected-pressed) !important;
+  color: var(--control-fg-selected-hover) !important;
 }

@@ -1,0 +1,104 @@
+.panel {
+    background: var(--surface-bg-secondary);
+    border-top: 1px solid var(--surface-border-secondary);
+    border-bottom: 1px solid var(--surface-border-secondary);
+    padding: var(--spacing-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-2px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--surface-fg-primary);
+    letter-spacing: -0.015em;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-4) var(--spacing-6);
+}
+
+.fieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1p5);
+}
+
+.label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--surface-fg-secondary);
+}
+
+.input {
+    height: var(--control-height-lg);
+    padding: 0 var(--spacing-3);
+    border: 1px solid var(--surface-border-primary);
+    border-radius: var(--radius-md);
+    background: var(--surface-bg-primary);
+    color: var(--surface-fg-primary);
+    font-size: var(--font-size-sm);
+    outline: none;
+    transition: all 0.2s;
+}
+
+.input:hover {
+    border-color: var(--control-border-tertiary-hover);
+}
+
+.input:focus {
+    border-color: var(--surface-border-theme);
+    box-shadow: 0 0 0 var(--ring-width-focus) var(--control-focus-ring-standard);
+}
+
+.input::placeholder {
+    color: var(--control-fg-placeholder);
+}
+
+/* Custom styles for the Select trigger in this context */
+.selectTrigger {
+    background: var(--surface-bg-primary) !important;
+    border: 1px solid var(--surface-border-primary) !important;
+    color: var(--surface-fg-primary) !important;
+    height: var(--control-height-lg) !important;
+    font-weight: 400 !important;
+    border-radius: var(--radius-md) !important;
+}
+
+.selectTrigger:hover {
+    border-color: var(--control-border-tertiary-hover) !important;
+}
+
+.selectTrigger:focus {
+    border-color: var(--surface-border-theme) !important;
+    box-shadow: 0 0 0 var(--ring-width-focus) var(--control-focus-ring-standard) !important;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-3);
+    margin-top: var(--spacing-2);
+}

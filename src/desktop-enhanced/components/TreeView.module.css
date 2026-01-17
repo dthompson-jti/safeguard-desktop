@@ -79,25 +79,9 @@
 }
 
 .chevron {
-    background: none;
-    border: none;
     color: var(--surface-fg-tertiary);
-    font-size: 10px;
     margin-right: 4px;
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    transition: all 0.2s ease;
     flex-shrink: 0;
-}
-
-.chevron:hover {
-    color: var(--surface-fg-primary);
-    background-color: var(--surface-bg-secondary_hover);
 }
 
 .row.selected .chevron,

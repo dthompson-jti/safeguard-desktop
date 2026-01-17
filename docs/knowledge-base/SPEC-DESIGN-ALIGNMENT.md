@@ -73,15 +73,17 @@ This audit compares the desktop UI patterns between the reference project and th
 | **Icon-only** | Uses `--radius-xl` for fully rounded |
 | **On-solid hover** | Uses `--control-bg-on-solid-hover` with no visible border |
 
-### Current: `buttons.css` (254 lines)
+### Current: `buttons.css` (Updated 2026-01-17)
 
-| Aspect | Current Value | Gap |
-|--------|---------------|-----|
-| **Font Weight** | `600` | ⚠️ Heavier than reference |
-| **Gap** | `var(--spacing-2)` inside button | ✅ Present |
-| **On-solid variant** | Present with correct tokens | ✅ Matches |
-| **@media (hover: hover)** | Applied to all hover states | ✅ Good |
-| **Destructive variant** | Present | ✅ Current has it, reference doesn't |
+| Aspect | Current Value | Status |
+|--------|---------------|--------|
+| **Rest State** | `1px solid` border, no shadow (**flat**) | ✅ Optimized |
+| **Hover State** | `3px` visual bottom (1px border + 2px inset shadow) | ✅ Optimized |
+| **Pressed State** | Recessed inner shadow (`inset 0 2px 4px`) | ✅ Optimized |
+| **Active/Selected** | `2px` visual all sides rest, `4px` visual bottom hover | ✅ High Fidelity |
+| **Font Weight** | `600` | ✅ Purpose-built |
+| **Gap** | `8px` (`var(--spacing-2)`) | ✅ Matches |
+| **Semantic Variants** | Unified to flat-at-rest logic | ✅ Consistent |
 
 ### Recommended Changes
 

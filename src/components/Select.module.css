@@ -1,6 +1,10 @@
 /* src/components/Select.module.css */
 
 .selectTrigger {
+  /* === DEFAULT THEME: Simple, non-skeuomorphic ===
+   * Regular dropdowns have a clean, flat style.
+   * FilterSelect overrides with its own explicit styling.
+   */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -10,44 +14,40 @@
   min-width: 0;
   height: 36px;
   padding: 0 var(--spacing-3);
-  border: 1px solid var(--surface-border-primary);
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   font-weight: 600;
   letter-spacing: -0.21px;
   white-space: nowrap;
-  background-color: var(--control-bg-secondary);
-  color: var(--control-fg-secondary);
   outline: none;
-  transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
   cursor: pointer;
   position: relative;
   user-select: none;
+
+  /* === REST STATE: Secondary button look === */
+  background-color: var(--control-bg-secondary);
+  border: 1px solid var(--control-border-secondary);
+  color: var(--surface-fg-primary);
+  box-shadow: none;
+  transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.15s;
 }
 
-/* Desktop: Secondary style with visible border */
-[data-platform="desktop"] .selectTrigger {
-  border-color: var(--control-border-secondary);
-}
-
+/* === HOVER STATE: Simple border change, NO thick bottom === */
 .selectTrigger:hover:not(:disabled) {
-  /* 1px top/sides, 3px bottom simulated via box-shadow to avoid layout shift (Matches Secondary Button) */
-  box-shadow: inset 0 -3px 0 0 var(--control-border-secondary-hover);
   background-color: var(--control-bg-secondary-hover);
   border-color: var(--control-border-secondary-hover);
-  color: var(--control-fg-secondary_hover);
+  color: var(--surface-fg-primary);
+  /* No skeuomorphic shadow for regular selects */
+  box-shadow: none;
 }
 
+/* === ACTIVE/OPEN STATE: Pressed look === */
 .selectTrigger:active:not(:disabled),
 .selectTrigger[data-state='open'] {
   background-color: var(--control-bg-secondary-pressed);
   border-color: var(--control-border-secondary-pressed);
-  /* Fix: Use box-shadow to simulate thicker border if needed, similar to buttons? 
-     Buttons use box-shadow: inset 0 0 0 1px ...
-     Let's match the button pattern if possible, or just color if that's what secondary buttons do.
-     Ref Checking buttons.css: .btn[data-variant="secondary"]:active ... box-shadow: inset 0 0 0 1px var(--control-border-secondary-pressed);
-  */
-  box-shadow: inset 0 0 0 1px var(--control-border-secondary-pressed);
+  color: var(--surface-fg-primary);
+  box-shadow: none;
 }
 
 .selectTrigger:disabled {
@@ -62,7 +62,7 @@
 
 .selectIcon {
   color: var(--surface-fg-tertiary);
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, color 0.15s;
   display: flex;
   align-items: center;
 }

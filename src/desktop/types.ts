@@ -44,6 +44,13 @@ export interface DesktopFilter {
     timeRangePreset: TimeRangePreset;
     dateStart: string | null; // ISO Date string (YYYY-MM-DD)
     dateEnd: string | null;   // ISO Date string (YYYY-MM-DD)
+    // Advanced Search Fields
+    officer: string;
+    afterDate: string | null;
+    beforeDate: string | null;
+    specialStatus: 'any' | 'sr' | 'mw';
+    commentFilter: 'any' | 'has' | 'none';
+    commentSearch: string;
 }
 
 /** Derived live check for table display */

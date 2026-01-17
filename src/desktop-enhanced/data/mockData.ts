@@ -13,7 +13,7 @@ const RESIDENT_NAMES = [
     'Sarah Martin', 'Daniel Thompson', 'Lisa Garcia', 'Anthony Martinez', 'Dorothy Robinson'
 ];
 
-const OFFICER_NAMES = [
+export const OFFICER_NAMES = [
     'Brett Corbin', 'Sarah Jenkins', 'John Doe', 'Alice Miller', 'Robert Smith'
 ];
 
@@ -285,27 +285,48 @@ export const loadEnhancedHistoricalPage = (
                 if (filter.dateStart || filter.dateEnd) {
                     const checkDate = (iso: string) => iso.split('T')[0];
                     filtered = filtered.filter(r => {
-                        // Support full ISO timestamp filtering if provided (contains 'T')
-                        // otherwise fall back to simple YYYY-MM-DD date comparison
-                        if (filter.dateStart && filter.dateStart.includes('T')) {
-                            const rTime = new Date(r.scheduledTime).getTime();
-                            const startTime = new Date(filter.dateStart).getTime();
-                            if (rTime < startTime) return false;
-                        } else if (filter.dateStart) {
+                        if (filter.dateStart) {
                             const date = checkDate(r.scheduledTime);
                             if (date < filter.dateStart) return false;
                         }
-
-                        if (filter.dateEnd && filter.dateEnd.includes('T')) {
-                            const rTime = new Date(r.scheduledTime).getTime();
-                            const endTime = new Date(filter.dateEnd).getTime();
-                            if (rTime > endTime) return false;
-                        } else if (filter.dateEnd) {
+                        if (filter.dateEnd) {
                             const date = checkDate(r.scheduledTime);
                             if (date > filter.dateEnd) return false;
                         }
                         return true;
                     });
+                }
+
+                // Advanced Fields
+                if (filter.officer) {
+                    filtered = filtered.filter(r =>
+                        r.officerName.toLowerCase().includes(filter.officer.toLowerCase())
+                    );
+                }
+                if (filter.afterDate) {
+                    filtered = filtered.filter(r => r.scheduledTime.split('T')[0] >= filter.afterDate!);
+                }
+                if (filter.beforeDate) {
+                    filtered = filtered.filter(r => r.scheduledTime.split('T')[0] <= filter.beforeDate!);
+                }
+                if (filter.specialStatus && filter.specialStatus !== 'any') {
+                    filtered = filtered.filter(r => {
+                        if (filter.specialStatus === 'sr') return !!r.hasHighRisk;
+                        if (filter.specialStatus === 'mw') return r.location.includes('MW'); // Mock logic
+                        return true;
+                    });
+                }
+                if (filter.commentFilter && filter.commentFilter !== 'any') {
+                    filtered = filtered.filter(r => {
+                        if (filter.commentFilter === 'has') return !!r.supervisorNote;
+                        if (filter.commentFilter === 'none') return !r.supervisorNote;
+                        return true;
+                    });
+                }
+                if (filter.commentSearch) {
+                    filtered = filtered.filter(r =>
+                        r.supervisorNote?.toLowerCase().includes(filter.commentSearch.toLowerCase())
+                    );
                 }
             }
             const data = filtered.slice(cursor, cursor + pageSize);

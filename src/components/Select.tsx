@@ -48,6 +48,8 @@ SelectItem.displayName = 'SelectItem';
 
 export const Select = ({ children, value, onValueChange, placeholder, disabled, triggerClassName, valueLabel }: SelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+
 
   return (
     <RadixSelect.Root
@@ -58,6 +60,7 @@ export const Select = ({ children, value, onValueChange, placeholder, disabled, 
       disabled={disabled}
     >
       <RadixSelect.Trigger
+        ref={triggerRef}
         className={`${styles.selectTrigger} ${triggerClassName || ''}`}
         aria-label={placeholder}
       >

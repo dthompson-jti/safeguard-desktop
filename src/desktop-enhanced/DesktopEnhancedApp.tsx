@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import * as ToastPrimitive from '@radix-ui/react-toast';
 import { AnimatePresence } from 'framer-motion';
@@ -23,6 +23,8 @@ import { SupervisorNoteModal } from '../desktop/components/SupervisorNoteModal';
 import { ToastContainer } from '../components/ToastContainer';
 import { ToastMessage } from '../components/Toast';
 import { toastsAtom } from '../data/toastAtoms';
+import { Button } from '../components/Button';
+import { Popover } from '../components/Popover';
 import styles from './DesktopEnhancedApp.module.css';
 
 export default function DesktopEnhancedApp() {
@@ -30,8 +32,9 @@ export default function DesktopEnhancedApp() {
     const setFilter = useSetAtom(desktopFilterAtom);
     const setDesktopView = useSetAtom(desktopViewAtom);
     const activeRecord = useAtomValue(activeDetailRecordAtom);
-    const isPanelOpen = useAtomValue(isDetailPanelOpenAtom);
+    const [isPanelOpen, setIsPanelOpen] = useAtom(isDetailPanelOpenAtom);
     const panelWidth = useAtomValue(panelWidthAtom);
+    const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
     const toasts = useAtomValue(toastsAtom);
 
     // Selection counts for panel empty states
@@ -88,7 +91,63 @@ export default function DesktopEnhancedApp() {
                     style={mainContainerStyle}
                 >
                     <div className={styles.contentWrapper}>
-                        <Breadcrumbs />
+                        <div className={styles.navContainer}>
+                            <div className={styles.navRow1}>
+                                <Breadcrumbs />
+                            </div>
+                            <div className={styles.navRow2}>
+                                <div className={styles.row2Actions}>
+                                    {view === 'historical' && (
+                                        <Button variant="secondary" size="s">
+                                            Export
+                                        </Button>
+                                    )}
+                                    <Popover
+                                        open={isMoreActionsOpen}
+                                        onOpenChange={setIsMoreActionsOpen}
+                                        trigger={
+                                            <Button variant="secondary" size="s" iconOnly>
+                                                <span className="material-symbols-rounded">more_horiz</span>
+                                            </Button>
+                                        }
+                                    >
+                                        <div className="menuPopover">
+                                            <button className="menuItem" onClick={() => setIsMoreActionsOpen(false)}>
+                                                <span className="material-symbols-rounded">qr_code</span>
+                                                Generate QR codes
+                                            </button>
+                                            <button className="menuItem" onClick={() => setIsMoreActionsOpen(false)}>
+                                                <span className="material-symbols-rounded">corporate_fare</span>
+                                                Manage facilities
+                                            </button>
+                                            <hr style={{ margin: '4px 0', border: 'none', borderTop: '1px solid var(--control-border-secondary)' }} />
+                                            <button className="menuItem" onClick={() => setIsMoreActionsOpen(false)}>
+                                                <span className="material-symbols-rounded">bookmark</span>
+                                                Save as my defaults
+                                            </button>
+                                            <button className="menuItem" onClick={() => setIsMoreActionsOpen(false)}>
+                                                <span className="material-symbols-rounded">settings</span>
+                                                Settings
+                                            </button>
+                                        </div>
+                                    </Popover>
+                                    {view === 'historical' && (
+                                        <Button
+                                            variant="secondary"
+                                            size="s"
+                                            iconOnly
+                                            active={isPanelOpen}
+                                            onClick={() => setIsPanelOpen(!isPanelOpen)}
+                                        >
+                                            <span className="material-symbols-rounded">
+                                                {isPanelOpen ? 'right_panel_close' : 'right_panel_open'}
+                                            </span>
+                                        </Button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
                         <div className={styles.toolbarWrapper}>
                             <DesktopToolbar isEnhanced={true} />
                         </div>

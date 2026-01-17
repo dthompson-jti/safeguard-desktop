@@ -7,9 +7,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
-### Added
-- Sort state toggle logic to `DataTable` that prevents "sorting removal" (sticky sorting).
-- Enhanced hover visibility for sort indicators (opacity increased to 0.6).
+
+### Fixed (2026-01-17)
+- **Architectural Overhaul of Control States**: Fixed pixel-perfect styling for all button and select components.
+    - Added missing `--control-border-selected-pressed` token to `semantics.css` (all themes) - this was causing silent shadow failures.
+    - Fixed Selected button hover/pressed states to show correct 2/2/4/2 visual border model (2px sides, 4px bottom).
+    - Added `!important` to selected/active pressed state styles to override variant-level `!important` declarations.
+    - FilterSelect split-button now has 2px gap between trigger and clear button.
+    - FilterSelect chevron now inherits theme color (blue) in selected state.
+    - FilterSelect state changes are now instant (no transition animations).
+    - Added comprehensive architectural invariant comments to prevent future regressions.
+
+- **Enhanced Navigation Restructuring**: Split the navigation area into two distinct rows for better visual hierarchy.
+    - Added Row 1 strictly for breadcrumbs, centered vertically in a 20px height.
+    - Added Row 2 for right-aligned actions (Export, More Actions, Panel Toggle) with an 8px gap.
+- **Button Styling Refinement**: Reached high-fidelity skeuomorphic standards for all button variants.
+    - Standardized **Primary**, **Secondary**, and **Semantic** buttons to be flat at rest (1px border) with 3px visual bottom on hover.
+    - Refined the **Pressed state** with a recessed skeuomorphic inner shadow (`inset 0 2px 4px`) across all solid variants.
+    - Increased **Selected Hover** logic to 4px visual bottom (2px base + 2px extra emphasis) for distinct feedback on active toggles.
+    - Unified all semantic variants (Destructive, Success, Info, Warning, Alert) to follow the "flat at rest" design system rule.
+- **Dropdown Standardisation**: Refined Select and FilterSelect triggers.
+    - Standard dropdowns now match text input hover states (subtle 1px border).
+    - Filter dropdowns now explicitly match Secondary button characteristics for rest, hover (3px), and pressed (recessed) states.
+- **Button Token Standardization**: Reached 100% Figma parity for quaternary button hover and active states.
+    - Restored hover borders for `quaternary` buttons across the design system.
+    - Refactored `TreeView` chevrons to use the standard root `Button` component for styling consistency.
+- **Mode Toggle Refinement**: Standardized the view toggle switcher.
+    - Applied quaternary styling to unselected items (with borderless hover specifically for the toggle row).
+    - Reduced gap and internal padding to 2px (`var(--spacing-0p5)`) for a more compact vertical rhythm.
+- **More Actions Popover**: Implemented a list-style menu for the `[...]` button in the Enhanced UI.
+    - Includes actions: "Generate QR codes", "Manage facilities", "Save as my defaults", and "Settings".
+    - Standardized sentence casing and concise wording across all action menus.
+- **Improved Alignment**: Synchronized margins for `ModeToggle` and `Breadcrumbs` to 12px (`var(--spacing-3)`) for a perfectly balanced toolbar layout.
 
 - Smooth auto-width transitions for filter controls using mechanical (linear) motion.
 - "Save Filters as Default" feature with `localStorage` persistence and dynamic time presets.
@@ -23,6 +52,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 - Custom Time Range filter from a Popover to a refined Centered Modal.
 - Refined Custom Range UI with date-only inputs, internal button alignment, and tertiary Cancel variant.
+- **Advanced Search Refinement**: Reached 100% Figma parity for the Historical filter panel.
+    - Standardized control height to `44px` (`--control-height-lg`) and gaps to `16px`.
+    - Applied `surface-bg-secondary` background to all toolbar search bars.
+    - Migrated all dropdowns to Radix-based `Select` components with 8px radii.
+    - Updated typography to 14px Medium with precise 6px vertical label spacing.
+- **Toolbar**: Conditionally removed "Advanced search" trigger from the Live view.
 - **Design System**: Redefined `size="m"` (36px) and `size="s"` (32px) buttons to align with desktop standards.
 - **Selected States**: Refined active button appearance with a 2px visual border and 4px depth on hover (Figma parity).
 - **Side Panel Resizers**: Standardized resizer width to 2px and applied `control-border-selected` blue theme.
@@ -39,6 +74,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Bulk Action Footer layering issue by increasing z-index to 102.
 - Layout instability by enforcing max-width on the navigation panel.
 - Border flicker on side panel resizers by syncing indicator width and background color.
+- **Advanced Search**: Fixed critical `SyntaxError` and Radix Select empty-value crash.
 
 ---
 

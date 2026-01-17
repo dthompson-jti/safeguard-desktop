@@ -2,6 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import { desktopEnhancedSelectionAtom, desktopEnhancedExpandedNodesAtom, desktopEnhancedViewAtom, SelectionType } from '../atoms';
 import { TreeGroup, TreeUnit, useTreeData } from '../hooks/useTreeData';
+import { Button } from '../../components/Button';
 import styles from './TreeView.module.css';
 
 interface TreeItemProps {
@@ -39,7 +40,10 @@ const TreeItem = React.memo<TreeItemProps & { view: string }>(({
             >
                 {/* Icon Section - Always 24px for alignment */}
                 {isExpandable ? (
-                    <button
+                    <Button
+                        variant="quaternary"
+                        size="xs"
+                        iconOnly
                         className={styles.chevron}
                         onClick={(e) => {
                             e.stopPropagation();
@@ -55,7 +59,7 @@ const TreeItem = React.memo<TreeItemProps & { view: string }>(({
                         >
                             chevron_right
                         </span>
-                    </button>
+                    </Button>
                 ) : (
                     /* Spacer for leaf nodes to align label with parent */
                     <div className={styles.iconSpacer} />

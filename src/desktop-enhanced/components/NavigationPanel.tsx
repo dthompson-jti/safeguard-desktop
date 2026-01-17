@@ -73,16 +73,16 @@ export const NavigationPanel: React.FC = () => {
                         <div className="menuPopover">
                             <button className="menuItem" onClick={handleExpandAll}>
                                 <span className="material-symbols-rounded">unfold_more</span>
-                                Expand All
+                                Expand all
                             </button>
                             <button className="menuItem" onClick={handleCollapseAll}>
                                 <span className="material-symbols-rounded">unfold_less</span>
-                                Collapse All
+                                Collapse all
                             </button>
                             <hr style={{ margin: '4px 0', border: 'none', borderTop: '1px solid var(--control-border-secondary)' }} />
                             <button className="menuItem" onClick={handleSaveDefaults}>
                                 <span className="material-symbols-rounded">bookmark</span>
-                                Save Filters as Default
+                                Set as my defaults
                             </button>
                         </div>
                     </Popover>

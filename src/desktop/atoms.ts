@@ -13,6 +13,10 @@ import { enhancedMockData } from '../desktop-enhanced/data/mockData';
 /** Current desktop view: 'live' or 'historical' */
 export const desktopViewAtom = atomWithStorage<DesktopView>(`${STORAGE_PREFIX}view`, 'live');
 
+/** Global state for advanced search panel visibility */
+export const isAdvancedSearchOpenAtom = atom(false);
+
+
 /** Factory default filters (Immutable) */
 export const FACTORY_FILTER_DEFAULTS: DesktopFilter = {
     facility: 'all',
@@ -25,6 +29,12 @@ export const FACTORY_FILTER_DEFAULTS: DesktopFilter = {
     timeRangePreset: 'last-24h',
     dateStart: null,
     dateEnd: null,
+    officer: '',
+    afterDate: null,
+    beforeDate: null,
+    specialStatus: 'any',
+    commentFilter: 'any',
+    commentSearch: '',
 };
 
 /** User's saved filter defaults (Persisted) */
@@ -64,11 +74,16 @@ export const isFilterCustomizedAtom = atom((get) => {
         current.statusFilter !== saved.statusFilter ||
         current.historicalStatusFilter !== saved.historicalStatusFilter ||
         current.timeRangePreset !== saved.timeRangePreset ||
-        (current.timeRangePreset === 'custom' && (current.dateStart !== saved.dateStart || current.dateEnd !== saved.dateEnd))
+        (current.timeRangePreset === 'custom' && (current.dateStart !== saved.dateStart || current.dateEnd !== saved.dateEnd)) ||
+        current.officer !== saved.officer ||
+        current.afterDate !== saved.afterDate ||
+        current.beforeDate !== saved.beforeDate ||
+        current.specialStatus !== saved.specialStatus ||
+        current.commentFilter !== saved.commentFilter ||
+        current.commentSearch !== saved.commentSearch
     );
 });
 
-/** Write-only: Update a filter and mark it as modified */
 export const updateFilterAtom = atom(null, (get, set, update: Partial<DesktopFilter>) => {
     const current = get(desktopFilterAtom);
     const modified = new Set(get(modifiedFiltersAtom));
@@ -157,11 +172,33 @@ export const filteredHistoricalChecksAtom = atom((get) => {
             }
         }
 
-        // Date Range Filter
-        if (filter.dateStart || filter.dateEnd) {
-            const checkDate = check.scheduledTime.split('T')[0]; // Extract YYYY-MM-DD
-            if (filter.dateStart && checkDate < filter.dateStart) return false;
-            if (filter.dateEnd && checkDate > filter.dateEnd) return false;
+        // Officer filter
+        if (filter.officer) {
+            if (!check.officerName.toLowerCase().includes(filter.officer.toLowerCase())) return false;
+        }
+
+        // Advanced Date filters
+        const checkDate = check.scheduledTime.split('T')[0];
+        if (filter.afterDate && checkDate < filter.afterDate) return false;
+        if (filter.beforeDate && checkDate > filter.beforeDate) return false;
+
+        // Special Status filter
+        if (filter.specialStatus !== 'any') {
+            const hasSR = check.hasHighRisk;
+            const hasMW = check.location.includes('MW'); // Mock MW logic
+            if (filter.specialStatus === 'sr' && !hasSR) return false;
+            if (filter.specialStatus === 'mw' && !hasMW) return false;
+        }
+
+        // Comment filters
+        if (filter.commentFilter !== 'any') {
+            const hasNote = !!check.supervisorNote;
+            if (filter.commentFilter === 'has' && !hasNote) return false;
+            if (filter.commentFilter === 'none' && hasNote) return false;
+        }
+
+        if (filter.commentSearch && check.supervisorNote) {
+            if (!check.supervisorNote.toLowerCase().includes(filter.commentSearch.toLowerCase())) return false;
         }
 
         return true;
