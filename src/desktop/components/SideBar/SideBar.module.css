@@ -1,0 +1,31 @@
+/* Sidebar Container */
+.container {
+    /* Dimensions from Audit */
+    width: 236px;
+    /* Fixed width (Expanded) */
+    height: 100%;
+
+    /* Layout */
+    display: flex;
+    flex-direction: column;
+
+    /* Surface */
+    background-color: var(--surface-bg-secondary);
+    /* #F9F9F9 (Light) / #0A0C12 (Dark) */
+    border-right: 1px solid var(--surface-border-tertiary);
+    /* Divider line */
+    /* Divider line */
+
+    /* Transition for collapse animation (Phase 2 polish, setting up now) */
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: width;
+    /* Optimization from Architecture Review */
+    overflow: hidden;
+    /* Hide content when collapsing */
+}
+
+/* Collapsed State Modifier */
+.container[data-collapsed="true"] {
+    width: 60px;
+    /* Standard collapsed width */
+}

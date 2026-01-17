@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import * as ToastPrimitive from '@radix-ui/react-toast';
 import { AnimatePresence } from 'framer-motion';
 import { Layout } from './Layout';
-import { NavigationPanel } from './components/NavigationPanel';
+// import { NavigationPanel } from './components/NavigationPanel'; // Migrated to SideBar
+import { SideBar } from '../desktop/components/SideBar/SideBar';
 import { Breadcrumbs } from './components/Breadcrumbs';
-import { desktopEnhancedViewAtom } from './atoms';
 import {
     desktopFilterAtom,
     desktopViewAtom,
@@ -28,9 +28,8 @@ import { Popover } from '../components/Popover';
 import styles from './DesktopEnhancedApp.module.css';
 
 export default function DesktopEnhancedApp() {
-    const view = useAtomValue(desktopEnhancedViewAtom);
+    const view = useAtomValue(desktopViewAtom);
     const setFilter = useSetAtom(desktopFilterAtom);
-    const setDesktopView = useSetAtom(desktopViewAtom);
     const activeRecord = useAtomValue(activeDetailRecordAtom);
     const [isPanelOpen, setIsPanelOpen] = useAtom(isDetailPanelOpenAtom);
     const panelWidth = useAtomValue(panelWidthAtom);
@@ -43,15 +42,25 @@ export default function DesktopEnhancedApp() {
     const setActiveRecord = useSetAtom(activeDetailRecordAtom);
     const totalSelected = selectedLive.size + selectedHistory.size;
 
-    // Sync View Mode to Legacy Atom (so Toolbar works)
+    // Track mount state to prevent resetting persisted filters on reload
+    const isMountedRef = useRef(false);
+
+    // Handle View Switching Logic
     useEffect(() => {
-        setDesktopView(view);
         // Clear active record and selections on view switch to prevent stale states
+        // We do this on mount too? Maybe not. Let's do it on switch.
+        // Actually, if we stick to "Reset on Change but not Mount", we only run this if mounted.
+
+        if (!isMountedRef.current) {
+            isMountedRef.current = true;
+            return;
+        }
+
         setActiveRecord(null);
         setSelectedLive(new Set());
         setSelectedHistory(new Set());
 
-        // Apply default filters when switching to historical
+        // Apply default filters when explicitly switching views
         if (view === 'historical') {
             setFilter(prev => ({
                 ...prev,
@@ -69,7 +78,7 @@ export default function DesktopEnhancedApp() {
                 dateEnd: null,
             }));
         }
-    }, [view, setDesktopView, setFilter, setActiveRecord, setSelectedLive, setSelectedHistory]);
+    }, [view, setFilter, setActiveRecord, setSelectedLive, setSelectedHistory]);
 
     // Note: Selection syncing to desktop filter is now handled exclusively in Layout.tsx
     // to avoid duplication and potential race conditions.
@@ -81,7 +90,7 @@ export default function DesktopEnhancedApp() {
     }), [showPanel, panelWidth]);
 
     return (
-        <Layout leftPanel={<NavigationPanel />}>
+        <Layout leftPanel={<SideBar />}>
             <ToastPrimitive.Provider swipeDirection="right" swipeThreshold={80}>
                 <div
                     data-platform="desktop"
@@ -179,4 +188,3 @@ export default function DesktopEnhancedApp() {
         </Layout>
     );
 }
-

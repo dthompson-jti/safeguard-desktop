@@ -15,6 +15,8 @@ import { ToastMessage } from '../components/Toast';
 import styles from './App.module.css';
 
 
+import { SideBar } from './components/SideBar/SideBar';
+
 /**
  * Desktop Application Root
  * Supervisor dashboard with Live Monitor and Historical Review views.
@@ -44,6 +46,7 @@ export default function App() {
                     data-panel-open={showPanel}
                     style={{ '--panel-width': `${panelWidth}px` } as React.CSSProperties}
                 >
+                    <SideBar />
                     <div className={styles.mainWrapper}>
                         <DesktopHeader
                             onTogglePanel={() => setIsPanelOpen(!isPanelOpen)}

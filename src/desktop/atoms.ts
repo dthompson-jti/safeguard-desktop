@@ -43,8 +43,11 @@ export const savedFilterDefaultsAtom = atomWithStorage<DesktopFilter>(
     FACTORY_FILTER_DEFAULTS
 );
 
-/** Desktop filter state (Session) */
-export const desktopFilterAtom = atom<DesktopFilter>(FACTORY_FILTER_DEFAULTS);
+/** Desktop filter state (Session - Persisted) */
+export const desktopFilterAtom = atomWithStorage<DesktopFilter>(
+    `${STORAGE_PREFIX}filter_session`,
+    FACTORY_FILTER_DEFAULTS
+);
 
 /** Keys of filters that have been explicitly modified by the user */
 export const modifiedFiltersAtom = atomWithStorage<string[]>(
@@ -309,3 +312,16 @@ export const desktopTabCountsAtom = atom((get) => {
         unreviewed: unreviewed, // 👤⚠ gray
     };
 });
+
+/**
+ * SIDEBAR STATE
+ * Persists the expanded/collapsed state of the left navigation.
+ * Default: true (Expanded)
+ */
+export const sidebarExpandedAtom = atomWithStorage<boolean>('sidebar-expanded', true);
+
+/**
+ * SIDEBAR SEARCH
+ * Tracks the current input in the sidebar search box.
+ */
+export const sidebarSearchQueryAtom = atom<string>('');

@@ -1,17 +1,23 @@
 /* src/desktop/App.module.css */
 
+/* Wrapper for everything that gets "pushed" (Header, Toolbar, Content) */
 .app {
-    height: 100vh;
+    height: 100%;
+    /* Fit to Layout.mainContent */
     display: grid;
-    grid-template-columns: 1fr;
+    /* Column 1: Sidebar (Auto-width based on content/style) | Column 2: Main Content */
+    grid-template-columns: max-content 1fr;
     background: var(--surface-bg-secondary);
+    /* DEBUGGING: Verify HMR */
+    /* background: var(--surface-bg-secondary); */
     transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     position: relative;
 }
 
 .app[data-panel-open="true"] {
-    grid-template-columns: 1fr var(--panel-width, 400px);
+    /* Sidebar | Main | DetailPanel */
+    grid-template-columns: max-content 1fr var(--panel-width, 400px);
 }
 
 /* Wrapper for everything that gets "pushed" (Header, Toolbar, Content) */

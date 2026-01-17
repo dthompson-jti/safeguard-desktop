@@ -13,6 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - Added missing `--control-border-selected-pressed` token to `semantics.css` (all themes) - this was causing silent shadow failures.
     - Fixed Selected button hover/pressed states to show correct 2/2/4/2 visual border model (2px sides, 4px bottom).
     - Added `!important` to selected/active pressed state styles to override variant-level `!important` declarations.
+    - **Left Navigation Phase 1**: Implemented the foundation for the new sidebar.
+        - Created `SideBar` component with rigid 236px width and correct semantic surface tokens.
+        - Migrated Left Nav integration from legacy `App.tsx` to `DesktopEnhancedApp.tsx` for the Enhanced view.
+        - Resolved render-blocking import errors in `Layout.tsx`.
     - FilterSelect split-button now has 2px gap between trigger and clear button.
     - FilterSelect chevron now inherits theme color (blue) in selected state.
     - FilterSelect state changes are now instant (no transition animations).
