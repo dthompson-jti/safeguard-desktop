@@ -27,7 +27,7 @@ const NAVIGATION_DATA: NavNode[] = [
             { type: 'link', id: 'action-items', label: 'Action Items' },
             { type: 'link', id: '22stcp00011', label: '22STCP00011' },
             { type: 'link', id: '22stcp00013', label: '22STCP00013' },
-            { type: 'link', id: 'safeguard', label: 'Safeguard' },
+            { type: 'link', id: 'safeguard', label: 'Safeguard checks' },
             { type: 'link', id: 'open-till', label: 'Open Till' },
             { type: 'link', id: 'close-till', label: 'Close Till' },
         ]
@@ -157,7 +157,7 @@ export function SideBar() {
                     </LeftNavigationSubSection>
                 );
             case 'link': {
-                const isSelected = node.label === 'Safeguard';
+                const isSelected = node.label === 'Safeguard checks';
                 return (
                     <LeftNavigationLinkItem
                         key={node.id}

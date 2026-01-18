@@ -260,7 +260,7 @@
   --nav-item-bg: transparent;
   --nav-item-bg-hover: var(--primitives-theme-50);
   --nav-item-bg-selected: var(--primitives-theme-800);
-  --nav-item-bg-selected-hover: var(--primitives-theme-950);
+  --nav-item-selected-hover: var(--primitives-theme-900);
 
   --nav-item-fg: var(--primitives-theme-900);
   --nav-item-fg-hover: var(--primitives-theme-950);
