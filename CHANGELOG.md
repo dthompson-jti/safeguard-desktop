@@ -8,15 +8,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added (2026-01-18)
+- **Search Experience Refinement**: Overhauled search inputs for consistency and visual polish.
+    - **Unified Presentation**: Updated search inputs: "Find..." for Side Nav/Table, and "Search people and cases..." for Top Nav.
+    - **Visual Polish**: Removed "janky" double-focus states in Side Navigation by stripping redundant container borders.
+    - **Top Nav Integration**: Implemented a "proper on-solid" search button in the Top Navigation, ensuring it is flush, square, and lacks independent border radius for a seamless look.
+    - **Cleaner Focus**: Established a co-linear focus state for the Top Nav search, eliminating gaps and misalignment.
+- **Legacy Cleanup**: Removed outdated `SearchInput` implementation from `NavigationPanel`, properly migrating all logic to `SideBar/SearchController`.
+
+- **Navigation Visuals**: Reached parity with high-fidelity visual design for Sidebar and Top Navigation.
+    - **Visual Hierarchy**: Refined Sidebar with "Quick Access", "Recent Cases", and "Notes Library" sections.
+    - **Semantic Theme**: Implemented "Hybrid" theme for navigation (Dark top nav, Light sidebar) using new `nav-*` semantic tokens.
+    - **3-Column Top Nav**: Overhauled header layout to support System Icons (Left), Global Search (Center), and Session Actions (Right).
+    - **Refined Avatar**: Updated user avatar to use high-contrast initials on a white background.
+    - **Unified Spacing**: Standardized left navigation item spacing to a consistent 1px gap using Flexbox.
+    - **Token Alignment**: Removed `32px`/`48px` magic numbers, replacing them with standard sizing tokens (`control-height-sm`, `avatar-size-md`).
+
+### Fixed (2026-01-18)
+- **Save Filters as Default**: Fixed the "Save as my defaults" action in the enhanced view which was previously non-functional.
+    - Connected the action to `saveFiltersAsDefaultAtom` to properly save user preferences.
+    - Added success toast notification.
+    - Ensured that saving defaults correctly resets the "modified" state of dropdowns (returning them to normal gray appearance).
+
 ### Fixed (2026-01-17)
 - **Architectural Overhaul of Control States**: Fixed pixel-perfect styling for all button and select components.
     - Added missing `--control-border-selected-pressed` token to `semantics.css` (all themes) - this was causing silent shadow failures.
     - Fixed Selected button hover/pressed states to show correct 2/2/4/2 visual border model (2px sides, 4px bottom).
     - Added `!important` to selected/active pressed state styles to override variant-level `!important` declarations.
-    - **Left Navigation Phase 1**: Implemented the foundation for the new sidebar.
-        - Created `SideBar` component with rigid 236px width and correct semantic surface tokens.
-        - Migrated Left Nav integration from legacy `App.tsx` to `DesktopEnhancedApp.tsx` for the Enhanced view.
-        - Resolved render-blocking import errors in `Layout.tsx`.
     - FilterSelect split-button now has 2px gap between trigger and clear button.
     - FilterSelect chevron now inherits theme color (blue) in selected state.
     - FilterSelect state changes are now instant (no transition animations).

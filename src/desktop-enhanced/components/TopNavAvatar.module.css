@@ -5,24 +5,21 @@
     height: 28px;
     border-radius: 50%;
     border: none;
-    color: var(--surface-fg-primary_on_brand);
+    background-color: var(--surface-bg-primary);
+    color: var(--surface-fg-theme-strong);
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: background-color 0.15s ease;
 }
 
 .avatarButton:hover {
-    transform: scale(1.08);
-    box-shadow: 0 0 0 2px var(--surface-bg-brand-section);
+    background-color: var(--surface-bg-primary_hover);
 }
 
-.avatarButton:active {
-    transform: scale(0.96);
-}
 
 .popoverContent {
     background: var(--surface-bg-primary);
@@ -45,13 +42,13 @@
 }
 
 .avatarLarge {
-    width: 48px;
-    height: 48px;
+    width: var(--avatar-size-md);
+    height: var(--avatar-size-md);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--surface-fg-primary_on_brand);
+    color: var(--surface-fg-theme-strong);
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: var(--spacing-2);

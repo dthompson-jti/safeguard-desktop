@@ -1,0 +1,77 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    padding: 0 var(--spacing-2);
+    /* Remove gap to allow full width search input if needed, or keep for toggle button spacing */
+    gap: var(--spacing-2);
+}
+
+.inputWrapper {
+    flex: 1;
+    min-width: 0;
+    /* Ensure no double border/background - let SearchInput handle it */
+    padding: 0;
+    background: transparent;
+    border: none;
+}
+
+/* Collapsed State Styles */
+.collapsedIcon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--surface-fg-secondary);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s;
+}
+
+.collapsedIcon:hover {
+    background-color: var(--surface-bg-secondary-hover);
+    color: var(--surface-fg-primary);
+}
+
+.toggleButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    color: var(--surface-fg-tertiary);
+    transition: all 0.1s ease;
+    flex-shrink: 0;
+}
+
+.toggleButton:hover {
+    background: var(--surface-bg-secondary_hover);
+    color: var(--control-fg-primary);
+}
+
+.container[data-collapsed="true"] {
+    flex-direction: column;
+    height: auto;
+    padding: var(--spacing-2) 0;
+    gap: var(--spacing-2);
+}
+
+.icon {
+    width: 18px;
+    height: 18px;
+    color: currentColor;
+}
+
+.customSearchInput {
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+    font-size: 13px;
+    /* Slightly smaller text for 32px height */
+}

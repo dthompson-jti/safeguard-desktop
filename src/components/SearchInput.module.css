@@ -63,6 +63,7 @@
   /* Ensure it takes available space */
   box-sizing: border-box;
   order: 2;
+  outline: none;
 }
 
 .wrapper input::placeholder {

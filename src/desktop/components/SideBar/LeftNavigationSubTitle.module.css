@@ -1,0 +1,29 @@
+.subtitle {
+    display: flex;
+    align-items: center;
+    height: var(--spacing-6);
+    padding: 0 16px 0 34px;
+    /* Align with indented link items */
+    margin: 4px 0;
+
+    color: var(--surface-fg-tertiary);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+    /* Content categorizer, not interactive */
+}
+
+/* Indentation Levels */
+/* Base (Level 0) is 34px (set in .subtitle) */
+
+.subtitle[data-level="1"] {
+    padding-left: 34px;
+}
+
+.subtitle[data-level="2"] {
+    padding-left: 54px;
+}
+
+.subtitle[data-level="3"] {
+    padding-left: 74px;
+}

@@ -3,18 +3,18 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import * as ToastPrimitive from '@radix-ui/react-toast';
 import { AnimatePresence } from 'framer-motion';
 import { Layout } from './Layout';
-// import { NavigationPanel } from './components/NavigationPanel'; // Migrated to SideBar
-import { SideBar } from '../desktop/components/SideBar/SideBar';
+import { NavigationPanel } from './components/NavigationPanel';
 import { Breadcrumbs } from './components/Breadcrumbs';
 import {
     desktopFilterAtom,
-    desktopViewAtom,
     activeDetailRecordAtom,
     isDetailPanelOpenAtom,
     selectedHistoryRowsAtom,
     selectedLiveRowsAtom,
-    panelWidthAtom
+    panelWidthAtom,
+    saveFiltersAsDefaultAtom
 } from '../desktop/atoms';
+import { desktopEnhancedViewAtom } from './atoms';
 import { EnhancedLiveMonitorView as LiveMonitorView } from './components/EnhancedLiveMonitorView';
 import { EnhancedHistoricalReviewView as HistoricalReviewView } from './components/EnhancedHistoricalReviewView';
 import { DesktopToolbar } from '../desktop/components/DesktopToolbar';
@@ -22,14 +22,18 @@ import { DetailPanel } from '../desktop/components/DetailPanel';
 import { SupervisorNoteModal } from '../desktop/components/SupervisorNoteModal';
 import { ToastContainer } from '../components/ToastContainer';
 import { ToastMessage } from '../components/Toast';
-import { toastsAtom } from '../data/toastAtoms';
+import { toastsAtom, addToastAtom } from '../data/toastAtoms';
 import { Button } from '../components/Button';
 import { Popover } from '../components/Popover';
 import styles from './DesktopEnhancedApp.module.css';
 
 export default function DesktopEnhancedApp() {
-    const view = useAtomValue(desktopViewAtom);
+    // FIX: Use the specific enhanced view atom shared with ModeToggle
+    const view = useAtomValue(desktopEnhancedViewAtom);
+
     const setFilter = useSetAtom(desktopFilterAtom);
+    const saveDefaults = useSetAtom(saveFiltersAsDefaultAtom);
+    const addToast = useSetAtom(addToastAtom);
     const activeRecord = useAtomValue(activeDetailRecordAtom);
     const [isPanelOpen, setIsPanelOpen] = useAtom(isDetailPanelOpenAtom);
     const panelWidth = useAtomValue(panelWidthAtom);
@@ -47,10 +51,6 @@ export default function DesktopEnhancedApp() {
 
     // Handle View Switching Logic
     useEffect(() => {
-        // Clear active record and selections on view switch to prevent stale states
-        // We do this on mount too? Maybe not. Let's do it on switch.
-        // Actually, if we stick to "Reset on Change but not Mount", we only run this if mounted.
-
         if (!isMountedRef.current) {
             isMountedRef.current = true;
             return;
@@ -80,17 +80,24 @@ export default function DesktopEnhancedApp() {
         }
     }, [view, setFilter, setActiveRecord, setSelectedLive, setSelectedHistory]);
 
-    // Note: Selection syncing to desktop filter is now handled exclusively in Layout.tsx
-    // to avoid duplication and potential race conditions.
-
     const showPanel = view === 'historical' && isPanelOpen;
+
+    const handleSaveDefaults = () => {
+        saveDefaults();
+        addToast({
+            message: 'Current filters saved as default',
+            icon: 'bookmark',
+            variant: 'success'
+        });
+        setIsMoreActionsOpen(false);
+    };
 
     const mainContainerStyle = useMemo(() => ({
         gridTemplateColumns: showPanel ? `1fr ${panelWidth}px` : '1fr',
     }), [showPanel, panelWidth]);
 
     return (
-        <Layout leftPanel={<SideBar />}>
+        <Layout leftPanel={<NavigationPanel />}>
             <ToastPrimitive.Provider swipeDirection="right" swipeThreshold={80}>
                 <div
                     data-platform="desktop"
@@ -130,7 +137,7 @@ export default function DesktopEnhancedApp() {
                                                 Manage facilities
                                             </button>
                                             <hr style={{ margin: '4px 0', border: 'none', borderTop: '1px solid var(--control-border-secondary)' }} />
-                                            <button className="menuItem" onClick={() => setIsMoreActionsOpen(false)}>
+                                            <button className="menuItem" onClick={handleSaveDefaults}>
                                                 <span className="material-symbols-rounded">bookmark</span>
                                                 Save as my defaults
                                             </button>

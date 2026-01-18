@@ -1,0 +1,61 @@
+.section {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--control-height-sm);
+    padding: 0 var(--spacing-4);
+    width: 100%;
+
+    background-color: var(--nav-group-bg);
+    border: none;
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+
+    color: var(--nav-group-fg);
+    font-family: 'Inter', sans-serif;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+}
+
+.header:hover {
+    background-color: var(--nav-group-bg-hover);
+    color: var(--nav-group-fg-hover);
+}
+
+.label {
+    flex: 1;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chevron {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+    transform: rotate(90deg);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    overflow: hidden;
+}
+
+/* Focus State */
+.header:focus-visible {
+    outline: none;
+    box-shadow:
+        0 0 0 2px var(--control-bg-secondary),
+        0 0 0 4px var(--control-border-theme);
+}

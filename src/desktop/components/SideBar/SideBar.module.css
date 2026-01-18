@@ -10,9 +10,8 @@
     flex-direction: column;
 
     /* Surface */
-    background-color: var(--surface-bg-secondary);
-    /* #F9F9F9 (Light) / #0A0C12 (Dark) */
-    border-right: 1px solid var(--surface-border-tertiary);
+    background-color: var(--nav-bg);
+    border-right: 1px solid var(--nav-surface-border);
     /* Divider line */
     /* Divider line */
 
@@ -22,6 +21,26 @@
     /* Optimization from Architecture Review */
     overflow: hidden;
     /* Hide content when collapsing */
+}
+
+.scrollArea {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--spacing-2);
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.scrollArea::-webkit-scrollbar {
+    display: none;
 }
 
 /* Collapsed State Modifier */

@@ -229,6 +229,42 @@
   /* Focus Rings */
   --control-focus-ring-standard: var(--primitives-blue-500);
   --control-focus-ring-error: var(--primitives-red-500);
+
+  /* ----------------------------------------- */
+  /*             SEMANTIC - NAVIGATION         */
+  /* ----------------------------------------- */
+
+  /* Main Container */
+  --nav-bg: var(--primitives-base-white);
+  --nav-surface-border: var(--primitives-grey-200);
+
+  /* Top Navigation (Darkish) */
+  --top-nav-bg: var(--primitives-theme-800);
+  --top-nav-fg: var(--primitives-base-white);
+  --top-nav-fg-secondary: rgba(255, 255, 255, 0.7);
+  --top-nav-skeleton-bg: rgba(255, 255, 255, 0.15);
+  --top-nav-search-bg: rgba(255, 255, 255, 0.1);
+  --top-nav-search-bg-hover: rgba(255, 255, 255, 0.2);
+
+  /* Nav Groups (Light Theme) */
+  --nav-group-bg: var(--primitives-theme-50);
+  --nav-group-bg-hover: var(--primitives-theme-100);
+  --nav-group-bg-selected: var(--primitives-theme-100);
+  --nav-group-bg-selected-hover: var(--primitives-theme-200);
+
+  --nav-group-fg: var(--primitives-theme-900);
+  --nav-group-fg-hover: var(--primitives-theme-950);
+  --nav-group-fg-selected: var(--primitives-theme-950);
+
+  /* Nav Items (Transparent -> Dark Selected) */
+  --nav-item-bg: transparent;
+  --nav-item-bg-hover: var(--primitives-theme-50);
+  --nav-item-bg-selected: var(--primitives-theme-800);
+  --nav-item-bg-selected-hover: var(--primitives-theme-950);
+
+  --nav-item-fg: var(--primitives-theme-900);
+  --nav-item-fg-hover: var(--primitives-theme-950);
+  --nav-item-fg-selected: var(--primitives-base-white);
 }
 
 /* ----------------------------------------- */

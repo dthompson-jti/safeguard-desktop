@@ -1,0 +1,58 @@
+.container {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    /* Standardized height */
+    padding: 0 var(--spacing-4);
+    border-top: 1px solid var(--surface-border-tertiary);
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.1s ease;
+}
+
+.profileButton:hover {
+    background: var(--surface-bg-secondary_hover);
+}
+
+.avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--control-height-sm);
+    height: var(--control-height-sm);
+    border-radius: 50%;
+    background: var(--surface-border-tertiary);
+    color: var(--control-fg-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.info {
+    margin-left: var(--spacing-3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.name {
+    color: var(--surface-fg-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.container[data-collapsed="true"] {
+    justify-content: center;
+    padding: 0;
+}

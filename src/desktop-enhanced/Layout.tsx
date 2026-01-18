@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import styles from './Layout.module.css';
 import { TopNav } from './components/TopNav';
+import { SideBar } from '../desktop/components/SideBar/SideBar';
 // import { ExtremeLeftNav } from './components/ExtremeLeftNav'; // Removed
 import { desktopEnhancedPanelWidthAtom, desktopEnhancedSelectionAtom } from './atoms';
 import { desktopFilterAtom } from '../desktop/atoms';
@@ -76,7 +77,7 @@ export const Layout: React.FC<LayoutProps> = ({ leftPanel, children }) => {
         <div className={styles.layout}>
             <TopNav ref={topNavRef as React.RefObject<HTMLDivElement>} />
             <div className={styles.body}>
-                {/* <ExtremeLeftNav />  -- REMOVED: Replaced by SideBar within App.tsx */}
+                <SideBar />
                 {leftPanel && (
                     <div
                         className={styles.leftPanelWrapper}

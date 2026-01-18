@@ -89,6 +89,7 @@ export const NavigationPanel: React.FC = () => {
                 </div>
             </div>
 
+
             <ModeToggle />
 
             <div className={styles.treeWrapper}>

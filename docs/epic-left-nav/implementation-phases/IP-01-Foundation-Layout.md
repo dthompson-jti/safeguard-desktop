@@ -87,54 +87,38 @@ export function SideBar() {
 }
 ```
 
-## 4. App Grid Refactor (The Injection)
-**File**: `src/desktop/App.module.css`
-**Action**: Change the grid engine to support a 3rd column.
+## 4. Architecture Strategy (The "Addition" Model)
+**Concept**: The `SideBar` is a **Global Component** that sits at the root of the application shell (`Layout.tsx`), acting as the "Extreme Left Nav". It does NOT replace the contextual "Tree View" (`NavigationPanel`).
 
-**Current**:
-```css
-.app {
-    /* ... */
-    grid-template-columns: 1fr;
-}
-.app[data-panel-open="true"] {
-    grid-template-columns: 1fr var(--panel-width, 400px);
-}
-```
+**Core Requirement**:
+*   **Column 1 (Global)**: `SideBar` (Icon Navigation, User Profile)
+*   **Column 2 (Contextual)**: `NavigationPanel` (Tree View), handled by the page/view itself.
 
-**New (Replace with this)**:
-```css
-.app {
-    /* ... */
-    /* Column 1: Sidebar (Auto-width based on content/style) | Column 2: Main Content */
-    grid-template-columns: max-content 1fr; 
-}
-
-.app[data-panel-open="true"] {
-    /* Sidebar | Main | DetailPanel */
-    grid-template-columns: max-content 1fr var(--panel-width, 400px);
-}
-```
-
-## 5. App Integration
-**File**: `src/desktop/App.tsx`
-**Action**: Inject the component.
+## 5. Layout Integration
+**File**: `src/desktop-enhanced/Layout.tsx`
+**Action**: Inject the `SideBar` as the first child of the `body` flex container.
 
 ```typescript
 // Imports
-import { SideBar } from './components/SideBar/SideBar';
+import { SideBar } from '../desktop/components/SideBar/SideBar';
 
-// ... inside App component return ...
-<div className={styles.app} ... >
-    {/* INJECT HERE: First Child */}
+// ... inside Layout component return ...
+<div className={styles.body}>
+    {/* INJECT HERE: Global Extreme Left Nav */}
     <SideBar />
     
-    <div className={styles.mainWrapper}>
-        {/* Existing Content */}
-    </div>
+    {/* Existing "Left Panel" (Tree View) which is passed as a prop */}
+    {leftPanel && (
+        <div className={styles.leftPanelWrapper}>
+            {leftPanel}
+            ...
+        </div>
+    )}
     ...
 </div>
 ```
+
+**Note**: Do NOT modify `App.tsx` or `DesktopEnhancedApp.tsx` grid columns. The `SideBar` lives outside the "Page" grid.
 
 ## 6. Verification Checklist
 1.  [ ] **Lint Check**: `npm run lint`.

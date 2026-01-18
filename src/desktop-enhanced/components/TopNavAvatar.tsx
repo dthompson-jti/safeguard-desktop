@@ -3,7 +3,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import * as Popover from '@radix-ui/react-popover';
 import { sessionAtom, userPreferencesAtom } from '../../data/atoms';
 import { useTheme } from '../../data/useTheme';
-import { generateAvatarHue, getAvatarColor } from '../../data/users';
+import { generateAvatarHue } from '../../data/users';
 import { SegmentedControl } from '../../components/SegmentedControl';
 import { ColorSlider } from '../../components/ColorSlider';
 import styles from './TopNavAvatar.module.css';
@@ -18,7 +18,6 @@ export const TopNavAvatar = () => {
     const { initials, username } = session.user;
     const customHue = userPreferences[username]?.avatarHue;
     const hue = customHue !== undefined ? customHue : generateAvatarHue(username);
-    const backgroundColor = getAvatarColor(hue);
 
     const handleThemeChange = (value: string) => {
         setTheme(value as 'light' | 'dark-a' | 'dark-b' | 'dark-c');
@@ -36,7 +35,6 @@ export const TopNavAvatar = () => {
             <Popover.Trigger asChild>
                 <button
                     className={styles.avatarButton}
-                    style={{ backgroundColor }}
                     aria-label={`Settings for ${session.user.displayName}`}
                 >
                     {initials}
@@ -51,7 +49,7 @@ export const TopNavAvatar = () => {
                 >
                     {/* Header */}
                     <div className={styles.header}>
-                        <div className={styles.avatarLarge} style={{ backgroundColor }}>
+                        <div className={styles.avatarLarge}>
                             {initials}
                         </div>
                         <div className={styles.displayName}>{session.user.displayName}</div>

@@ -9,6 +9,7 @@ interface SearchInputProps {
   placeholder: string;
   variant: 'standalone' | 'integrated';
   autoFocus?: boolean;
+  className?: string;
 }
 
 export const SearchInput = ({
@@ -17,6 +18,7 @@ export const SearchInput = ({
   placeholder,
   variant,
   autoFocus = false,
+  className = '',
 }: SearchInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +30,7 @@ export const SearchInput = ({
     }
   }, [autoFocus]);
 
-  const wrapperClasses = `${styles.wrapper} ${isFocused ? styles.focused : ''}`;
+  const wrapperClasses = `${styles.wrapper} ${isFocused ? styles.focused : ''} ${className}`;
 
   return (
     <div className={wrapperClasses} data-variant={variant}>

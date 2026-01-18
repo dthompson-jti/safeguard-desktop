@@ -1,10 +1,10 @@
 .hamburgerButton {
-    width: 32px;
-    height: 32px;
+    width: var(--control-height-sm);
+    height: var(--control-height-sm);
     border-radius: var(--radius-md);
     border: none;
     background: transparent;
-    color: var(--surface-fg-primary_on_brand);
+    color: var(--top-nav-fg);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -13,7 +13,7 @@
 }
 
 .hamburgerButton:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--top-nav-search-bg-hover);
 }
 
 .popoverContent {

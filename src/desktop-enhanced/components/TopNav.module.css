@@ -2,7 +2,8 @@
     width: 100%;
     height: 44px;
     /* Standardized height */
-    background-color: var(--surface-bg-brand-section);
+    background-color: var(--top-nav-bg);
+    color: var(--top-nav-fg);
     border-bottom: none;
     display: flex;
     align-items: center;
@@ -32,21 +33,151 @@
     max-width: 600px;
 }
 
+.iconButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--control-height-sm);
+    height: var(--control-height-sm);
+    border-radius: var(--radius-md);
+    border: none;
+    background: transparent;
+    color: var(--top-nav-fg);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.iconButton:hover {
+    background-color: var(--top-nav-search-bg-hover);
+}
+
+.verticalDivider {
+    width: 1px;
+    height: 20px;
+    background-color: var(--top-nav-fg);
+    opacity: 0.2;
+}
+
+.iconMd {
+    font-size: var(--icon-size-md);
+    color: var(--top-nav-fg);
+}
+
+.iconSm {
+    font-size: var(--icon-size-sm);
+}
+
+.searchContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: var(--control-height-sm);
+    background-color: var(--top-nav-search-bg);
+    border-radius: var(--radius-md);
+    padding: 0;
+    /* Full reset */
+    gap: 0;
+    /* Handle gap in input padding */
+    overflow: hidden;
+    /* Remove physical border to allow button to be perfectly flush */
+    border: none;
+    box-shadow: inset 0 0 0 1px transparent;
+    /* Placeholder for border if needed */
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.searchContainer:hover {
+    background-color: var(--top-nav-search-bg-hover);
+}
+
+.searchContainer:focus-within {
+    background-color: var(--surface-bg-primary);
+    /* Focus ring using box-shadow to avoid layout shift and encompass everything */
+    box-shadow: 0 0 0 2px var(--control-focus-ring-standard);
+}
+
+.searchInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--top-nav-fg);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    outline: none;
+    min-width: 0;
+    /* Add padding here since container has none */
+    padding: 0 var(--spacing-2) 0 var(--spacing-3);
+    height: 100%;
+}
+
+.searchInput::placeholder {
+    color: var(--top-nav-fg-secondary);
+}
+
+.searchButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: var(--control-height-sm);
+    /* Square button */
+    border: none;
+    background-color: var(--control-bg-primary-solid);
+    /* Ensure this token exists and is solid color */
+    color: var(--control-fg-primary-solid);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+    border-radius: 0;
+}
+
+.searchButton:hover {
+    background-color: var(--control-bg-primary-solid-hover);
+}
+
+.logoText {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--top-nav-fg);
+    letter-spacing: -0.01em;
+    margin-right: var(--spacing-1);
+}
+
+.actionLink {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-md);
+    color: var(--top-nav-fg);
+    background: transparent;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.actionLink:hover {
+    background-color: var(--top-nav-search-bg-hover);
+}
+
 .title {
-    color: var(--surface-fg-primary_on_brand);
-    font-size: var(--font-size-md);
+    color: inherit;
     font-weight: 600;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.01em;
 }
 
 .placeholder {
-    color: var(--surface-fg-primary_on_brand);
+    color: var(--top-nav-fg-secondary);
     font-weight: 500;
 }
 
 .skeletonBlock {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--top-nav-skeleton-bg);
     border-radius: var(--radius-xs);
 }
 
@@ -58,7 +189,7 @@
 .skeletonSearch {
     width: 240px;
     height: 32px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--top-nav-search-bg);
 }
 
 .skeletonText {

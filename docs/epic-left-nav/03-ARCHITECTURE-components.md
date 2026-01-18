@@ -1,83 +1,57 @@
 # Architecture: Left Navigation Components
 
 ## 1. Component Hierarchy
-We will implement a recursive, data-driven navigation system.
+We will implement a recursive, data-driven navigation system based on the `Journal Design System`.
 
 ```mermaid
 graph TD
-    A[SideBar] --> B[SearchInput]
+    A[SideBar] --> B[SearchController]
     A --> C[NavScrollArea]
-    C --> D[NavGroup (Section)]
-    D --> E[NavItem (Primary)]
-    D --> F[NavGroup (Nested)]
-    A --> G[UserProfile / Footer]
+    C --> D[Left Navigation Section]
+    D --> E[Left Navigation Link Item]
+    D --> F[Left Navigation Sub-section]
+    F --> G[Left Navigation Link Item]
+    C --> H[Left Navigation Sub-title]
+    A --> I[UserProfile / Footer]
 ```
 
-### Components Definition
-1.  **`SideBar.tsx`**: The main layout container. Manages the expanded/collapsed width transitions and global keyboard listeners.
-2.  **`NavGroup.tsx`**: A purely presentational wrapper for sections (e.g., "Main", "Workspaces"). Handles the `h3` headers.
-3.  **`NavItem.tsx`**: The core interactive unit.
-    *   **Props**: `icon`, `label`, `href`, `isActive`, `isExpanded`, `onClick`.
-    *   **Variants**: `standard`, `quickAccess`, `subItem`.
-4.  **`SidebarSearch.tsx`**: The specialized search input with validity polling logic.
+### Components Definition (Terminology)
+1.  **`SideBar.tsx`**: Main container. Handles expansion/collapse.
+2.  **`LeftNavigationSection.tsx`**: Top-level group with bold header and toggle.
+3.  **`LeftNavigationSubSection.tsx`**: Nested folder-like group.
+4.  **`LeftNavigationLinkItem.tsx`**: Terminal interactive node (Link).
+5.  **`LeftNavigationSubTitle.tsx`**: Static heading (`h3`/`h4`).
+6.  **`SearchController.tsx`**: Specialized search area with collapse trigger.
 
 ## 2. State Management (Jotai)
-We will use Atoms to avoid prop drilling and managing specific UI states.
-
 ### `sidebarAtom.ts`
 ```typescript
 import { atom } from 'jotai';
 
-// Persisted expansion state (Collapsed vs Expanded)
 export const sidebarExpandedAtom = atomWithStorage('sidebar-expanded', true);
-
-// Active navigation selection (Derived or synced with Router)
-export const activeNavIdAtom = atom<string | null>(null);
-
-// Search interactions
 export const sidebarSearchQueryAtom = atom('');
 ```
 
-## 3. Interfaces
-
+## 3. Data Structure
 ```typescript
-interface NavItemProps {
+interface NavNode {
+  type: 'section' | 'sub-section' | 'link' | 'sub-title' | 'divider';
   id: string;
   label: string;
-  icon?: React.ComponentType<{ className?: string }>;
+  icon?: string;
   href?: string;
-  children?: NavItemProps[]; // For recursion
-  isExpanded?: boolean; // Controlled by parent or local state?
+  children?: NavNode[]; // Recursive for sections/sub-sections
+  selected?: boolean;   // For Link Items
 }
 ```
 
-## 4. Accessibility Strategy
-*   **Landmark**: `<nav aria-label="Main Navigation">`.
-*   **List Structure**: `<ul>` -> `<li>` for all items.
-*   **Icons**: `aria-hidden="true"` for decorative icons.
-*   **Collapse Button**: `aria-expanded={isExpanded}` `aria-controls="sidebar-content"`.
-*   **Keyboard**:
-    *   `Tab`: Moves focus linearly.
-    *   `Space/Enter`: Activates link or toggles group.
-    *   `Arrow Keys` (Bonus): Map Up/Down to traverse list without Tabbing (Phase 2 feature, strictly not MVP but good for Dev Notes compliance).
+## 4. CSS Strategy (Atomic Tokens)
+*   **Section Header**: `color: var(--control-fg-faint)` (#436289)
+*   **Link Item (Default)**: `color: var(--control-fg-faint)`
+*   **Link Item (Selected)**: `background-color: var(--surface-bg-sunken)`, `color: var(--control-fg-secondary)` (#223a58)
+*   **Link Item (Dark Active)**: Inverted variant for special items (e.g. Search Case).
 
-## 5. CSS Modules Strategy
-We will use CSS Modules mapping to our Semantic Tokens.
-*   `SideBar.module.css`:
-    *   `.container`: `background-color: var(--surface-bg-secondary)`
-    *   `.container[data-collapsed="true"]`: Width changes, labels hide.
-```css
-/* Example Mapping */
-.navItem {
-  color: var(--surface-fg-secondary); /* Mapped from #223a58 */
-  height: var(--control-height-sm); /* 32px */
-}
-.navItem:hover {
-  background-color: var(--surface-bg-secondary-hover);
-}
-.navItem[data-active="true"] {
-  background-color: var(--surface-bg-active);
-  color: var(--surface-fg-secondary);
-  border-left: 2px solid var(--surface-border-theme);
-}
-```
+## 5. Accessibility
+*   **Enter/Space**: Toggle expansion.
+*   **Aria**: `aria-expanded` and `role="menuitem"`.
+*   **Focus**: Custom double-ring `box-shadow` on focus-visible.

@@ -170,7 +170,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                 <SearchInput
                     value={filter.search}
                     onChange={handleSearchChange}
-                    placeholder="Find..."
+                    placeholder="Find"
                     variant="standalone"
                 />
 
