@@ -265,6 +265,20 @@
   --nav-item-fg: var(--primitives-theme-900);
   --nav-item-fg-hover: var(--primitives-theme-950);
   --nav-item-fg-selected: var(--primitives-base-white);
+
+  /* ----------------------------------------- */
+  /*             SEMANTIC - SEARCH             */
+  /* ----------------------------------------- */
+  --search-input-bg-primary: var(--primitives-base-white);
+  --search-input-fg-primary: var(--surface-fg-primary);
+  --search-input-border-primary: var(--surface-border-primary);
+  --search-input-focused-border-theme: var(--surface-border-theme);
+
+  /* TopNav Specific Context Resets */
+  --top-nav-search-focused-bg: var(--primitives-base-white);
+  --top-nav-search-focused-fg: var(--primitives-grey-900);
+  --top-nav-search-focused-placeholder: var(--primitives-grey-500);
+  --top-nav-search-focused-caret: var(--primitives-theme-600);
 }
 
 /* ----------------------------------------- */

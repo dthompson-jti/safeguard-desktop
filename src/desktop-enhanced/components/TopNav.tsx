@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './TopNav.module.css';
 import { TopNavAvatar } from './TopNavAvatar';
 import { TopNavMenu } from './TopNavMenu';
+import { SearchInput } from '../../components/SearchInput';
 
 export const TopNav = React.forwardRef<HTMLDivElement>((_, ref) => {
+    const [searchValue, setSearchValue] = useState('');
+
+    const handleSearch = (val: string) => {
+        console.log('Search triggered:', val);
+    };
+
     return (
         <div className={styles.topNav} ref={ref}>
             {/* LEFT GROUP: System & Quick Tools */}
@@ -27,14 +34,14 @@ export const TopNav = React.forwardRef<HTMLDivElement>((_, ref) => {
             {/* CENTER GROUP: Global Search */}
             <div className={styles.centerSection}>
                 <div className={styles.searchContainer}>
-                    <input
-                        type="text"
-                        className={styles.searchInput}
+                    <SearchInput
+                        value={searchValue}
+                        onChange={setSearchValue}
+                        onSearch={handleSearch}
                         placeholder="Search people and cases"
+                        flavor="trigger"
+                        size="sm"
                     />
-                    <button className={styles.searchButton}>
-                        <span className={`material-symbols-rounded ${styles.iconMd}`}>search</span>
-                    </button>
                 </div>
             </div>
 

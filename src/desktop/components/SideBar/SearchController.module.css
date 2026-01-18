@@ -67,11 +67,3 @@
     height: 18px;
     color: currentColor;
 }
-
-.customSearchInput {
-    height: 32px !important;
-    min-height: 32px !important;
-    max-height: 32px !important;
-    font-size: 13px;
-    /* Slightly smaller text for 32px height */
-}

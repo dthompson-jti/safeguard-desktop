@@ -11,9 +11,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added (2026-01-18)
 - **Search Experience Refinement**: Overhauled search inputs for consistency and visual polish.
     - **Unified Presentation**: Updated search inputs: "Find..." for Side Nav/Table, and "Search people and cases..." for Top Nav.
-    - **Visual Polish**: Removed "janky" double-focus states in Side Navigation by stripping redundant container borders.
-    - **Top Nav Integration**: Implemented a "proper on-solid" search button in the Top Navigation, ensuring it is flush, square, and lacks independent border radius for a seamless look.
-    - **Cleaner Focus**: Established a co-linear focus state for the Top Nav search, eliminating gaps and misalignment.
+    - **Visual Polish**: Removed "janky" double-focus states in Side Navigation and standardized focus rings.
+    - **Top Nav Integration**: Implemented a centered, balanced search bar with "on-solid" color transitions.
+    - **Optical Spacing**: Perfectly balanced clear buttons and search triggers using dynamic internal margins.
+    - **Legibility**: Resolved faint search text issues with explicit semantic foreground tokens.
 - **Legacy Cleanup**: Removed outdated `SearchInput` implementation from `NavigationPanel`, properly migrating all logic to `SideBar/SearchController`.
 
 - **Navigation Visuals**: Reached parity with high-fidelity visual design for Sidebar and Top Navigation.

@@ -171,7 +171,8 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                     value={filter.search}
                     onChange={handleSearchChange}
                     placeholder="Find"
-                    variant="standalone"
+                    flavor="instant"
+                    size="md"
                 />
 
                 {view === 'historical' && (

@@ -29,8 +29,8 @@ export const SearchController: React.FC = () => {
                         value={query}
                         onChange={setQuery}
                         placeholder="Find"
-                        variant="standalone"
-                        className={styles.customSearchInput}
+                        flavor="instant"
+                        size="sm"
                     />
                 </div>
             ) : (

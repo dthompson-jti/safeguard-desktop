@@ -30,7 +30,8 @@
     gap: var(--spacing-3);
     flex: 1;
     justify-content: center;
-    max-width: 600px;
+    max-width: 480px;
+    /* Reduced from 600px */
 }
 
 .iconButton {
@@ -68,72 +69,11 @@
 }
 
 .searchContainer {
-    display: flex;
-    align-items: center;
     width: 100%;
-    height: var(--control-height-sm);
-    background-color: var(--top-nav-search-bg);
-    border-radius: var(--radius-md);
-    padding: 0;
-    /* Full reset */
-    gap: 0;
-    /* Handle gap in input padding */
-    overflow: hidden;
-    /* Remove physical border to allow button to be perfectly flush */
-    border: none;
-    box-shadow: inset 0 0 0 1px transparent;
-    /* Placeholder for border if needed */
-    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    /* Let SearchInput handle height and visuals */
 }
 
-.searchContainer:hover {
-    background-color: var(--top-nav-search-bg-hover);
-}
-
-.searchContainer:focus-within {
-    background-color: var(--surface-bg-primary);
-    /* Focus ring using box-shadow to avoid layout shift and encompass everything */
-    box-shadow: 0 0 0 2px var(--control-focus-ring-standard);
-}
-
-.searchInput {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: var(--top-nav-fg);
-    font-family: 'Inter', sans-serif;
-    font-size: 0.875rem;
-    outline: none;
-    min-width: 0;
-    /* Add padding here since container has none */
-    padding: 0 var(--spacing-2) 0 var(--spacing-3);
-    height: 100%;
-}
-
-.searchInput::placeholder {
-    color: var(--top-nav-fg-secondary);
-}
-
-.searchButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: var(--control-height-sm);
-    /* Square button */
-    border: none;
-    background-color: var(--control-bg-primary-solid);
-    /* Ensure this token exists and is solid color */
-    color: var(--control-fg-primary-solid);
-    cursor: pointer;
-    transition: background-color 0.2s;
-    flex-shrink: 0;
-    border-radius: 0;
-}
-
-.searchButton:hover {
-    background-color: var(--control-bg-primary-solid-hover);
-}
+/* Removed .searchInput, .searchButton as they are replaced by SearchInput component */
 
 .logoText {
     font-family: 'Inter', sans-serif;

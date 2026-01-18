@@ -1,26 +1,29 @@
 // src/components/SearchInput.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Button } from './Button';
 import styles from './SearchInput.module.css';
 
 interface SearchInputProps {
-  value: string;
-  onChange: (value: string) => void;
+  value?: string; // Optional for uncontrolled scenarios if needed, but let's stick to controlled for now
+  onChange?: (value: string) => void;
+  onSearch?: (value: string) => void; // For trigger flavor
   placeholder: string;
-  variant: 'standalone' | 'integrated';
+  flavor?: 'instant' | 'trigger';
+  size?: 'sm' | 'md';
   autoFocus?: boolean;
   className?: string;
 }
 
 export const SearchInput = ({
-  value,
+  value = '',
   onChange,
+  onSearch,
   placeholder,
-  variant,
+  flavor = 'instant',
+  size = 'md',
   autoFocus = false,
   className = '',
 }: SearchInputProps) => {
-  const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const inputId = React.useId();
 
@@ -30,15 +33,24 @@ export const SearchInput = ({
     }
   }, [autoFocus]);
 
-  const wrapperClasses = `${styles.wrapper} ${isFocused ? styles.focused : ''} ${className}`;
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && onSearch) {
+      onSearch(value);
+    }
+  };
+
+  const wrapperClasses = `${styles.wrapper} ${className}`;
 
   return (
-    <div className={wrapperClasses} data-variant={variant}>
+    <div className={wrapperClasses} data-flavor={flavor} data-size={size}>
       <label htmlFor={inputId} className={styles.visuallyHidden}>
         {placeholder}
       </label>
 
-      <span className={`material-symbols-rounded ${styles.searchIcon}`}>search</span>
+      {/* Instant Flavor: Icon on Left */}
+      {flavor === 'instant' && (
+        <span className={`material-symbols-rounded ${styles.searchIcon}`}>search</span>
+      )}
 
       <input
         ref={inputRef}
@@ -46,12 +58,12 @@ export const SearchInput = ({
         type="text"
         placeholder={placeholder}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onChange={(e) => onChange?.(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
 
-      {variant === 'standalone' && value && (
+      {/* Instant Flavor: Clear Button */}
+      {value && onChange && (
         <Button
           variant="quaternary"
           size="xs"
@@ -62,6 +74,23 @@ export const SearchInput = ({
         >
           <span className="material-symbols-rounded">close</span>
         </Button>
+      )}
+
+      {/* Trigger Flavor: Search Button on Right */}
+      {flavor === 'trigger' && (
+        <div className={styles.triggerButtonWrapper}>
+          <Button
+            variant="primary"
+            size="s"
+            iconOnly
+            onClick={() => onSearch?.(value)}
+            className={styles.triggerButton}
+            aria-label="Search"
+            title="Search"
+          >
+            <span className="material-symbols-rounded">search</span>
+          </Button>
+        </div>
       )}
     </div>
   );
