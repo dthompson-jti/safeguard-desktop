@@ -15,6 +15,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - **Top Nav Integration**: Implemented a centered, balanced search bar with "on-solid" color transitions.
     - **Optical Spacing**: Perfectly balanced clear buttons and search triggers using dynamic internal margins.
     - **Legibility**: Resolved faint search text issues with explicit semantic foreground tokens.
+- **Navigation Cleanup**: Streamlined the tree menu by removing "Set as my defaults", keeping the focus on layout management (Expand/Collapse).
+- **Mock Data Re-Architecture**: Implemented the "Natural Flow" model with decentralized 3-tier compliance.
+    - **Perfectly Punctual Tier**: **Delta** units are guaranteed to show 0 Overdue checks and 0 Due soon warnings (Upcoming only).
+    - **Operational Good Tier**: 75% of units (Alpha 2-3, Beta 1-3, Gamma 3) show a natural mix of Upcoming and Due states with 0 alerts.
+    - **Critical Area Tier**: Problem areas (**Alpha-1**, **Gamma-1**, **Gamma-2**) exhibit realistic operational failures and alerts.
+    - **Multi-Resident Distribution**: Rooms now support **1-2 unique residents** (assigned from an expanded 300-name roster).
+    - **Exponential Backlog Decay**: Resolved data saturation in Critical units.
+    - **Review Strategy**: Integrated age-based review aging; older missed checks are automatically "cleared" by supervisors, leaving the most recent 4 hours for active review in Critical Areas (Gamma).
 - **Legacy Cleanup**: Removed outdated `SearchInput` implementation from `NavigationPanel`, properly migrating all logic to `SideBar/SearchController`.
 
 - **Navigation Visuals**: Reached parity with high-fidelity visual design for Sidebar and Top Navigation.

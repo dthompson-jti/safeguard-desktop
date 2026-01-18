@@ -10,11 +10,66 @@ const RESIDENT_NAMES = [
     'James Wilson', 'Maria Garcia', 'Robert Taylor', 'Linda Johnson', 'Michael Brown',
     'Elizabeth Davis', 'William Miller', 'Susan Wilson', 'David Moore', 'Jessica Taylor',
     'John Anderson', 'Karen Thomas', 'Christopher Jackson', 'Nancy White', 'Matthew Harris',
-    'Sarah Martin', 'Daniel Thompson', 'Lisa Garcia', 'Anthony Martinez', 'Dorothy Robinson'
+    'Sarah Martin', 'Daniel Thompson', 'Lisa Garcia', 'Anthony Martinez', 'Dorothy Robinson',
+    'Kevin Clark', 'Sandra Rodriguez', 'Paul Lewis', 'Donna Lee', 'Mark Walker',
+    'Betty Hall', 'George Allen', 'Margaret Young', 'Kenneth Hernandez', 'Ruth King',
+    'Edward Wright', 'Sharon Lopez', 'Ronald Hill', 'Michelle Scott', 'Timothy Green',
+    'Laura Adams', 'Jason Baker', 'Sarah Gonzalez', 'Jeffrey Nelson', 'Kimberly Carter',
+    'Gary Mitchell', 'Deborah Perez', 'Nicholas Roberts', 'Jessica Turner', 'Eric Phillips',
+    'Shirley Campbell', 'Stephen Parker', 'Cynthia Evans', 'Andrew Edwards', 'Angela Collins',
+    'Raymond Stewart', 'Melissa Sanchez', 'Joshua Morris', 'Brenda Rogers', 'Dennis Reed',
+    'Amy Cook', 'Jerry Morgan', 'Anna Bell', 'Tyler Murphy', 'Rebecca Bailey',
+    'Aaron Rivera', 'Virginia Cooper', 'Henry Richardson', 'Kathleen Cox', 'Douglas Howard',
+    'Martha Ward', 'Peter Torres', 'Debra Peterson', 'Walter Gray', 'Amanda Ramirez',
+    'Harold James', 'Stephanie Watson', 'Jose Brooks', 'Carolyn Kelly', 'Adam Sanders',
+    'Christine Price', 'Nathan Bennett', 'Janet Wood', 'Lawrence Chen', 'Catherine Barnes',
+    'Arthur Ross', 'Frances Henderson', 'Ryan Coleman', 'Ann Jenkins', 'Joe Perry',
+    'Alice Powell', 'Juan Long', 'Julie Patterson', 'Jack Hughes', 'Heather Flores',
+    'Albert Washington', 'Teresa Butler', 'Jonathan Simmons', 'Doris Foster', 'Justin Gonzales',
+    'Sara Bryant', 'Terry Alexander', 'Gloria Russell', 'Gerald Griffin', 'Evelyn Diaz',
+    'Keith Hayes', 'Jean Myers', 'Samuel Ford', 'Cheryl Hamilton', 'Willie Graham',
+    'Mildred Sullivan', 'Ralph Wallace', 'Katherine Woods', 'Roy Cole', 'Joan West',
+    'Benjamin Jordan', 'Ashley Owens', 'Bruce Reynolds', 'Judith Fisher', 'Brandon Ellis',
+    'Rose Harrison', 'Harry Gibson', 'Janice Mcdonald', 'Wayne Cruz', 'Kelly Marshall',
+    'Billy Ortiz', 'Nicole Gomez', 'Steve Murray', 'Judy Freeman', 'Louis Wells',
+    'Christina Webb', 'Eugene Simpson', 'Kathy Stevens', 'Russell Tucker', 'Theresa Porter',
+    'Bobby Hunter', 'Beverly Hicks', 'Philip Crawford', 'Denise Henry', 'Johnny Boyd',
+    'Marilyn Mason', 'Christian Morales', 'Amber Kennedy', 'Isaiah Warren', 'Danielle Dixon',
+    'Frank Ramos', 'Brittany Reyes', 'Scott Burns', 'Diana Gordon', 'Eric Shaw',
+    'Jane Holmes', 'Randy Rice', 'Lori Robertson', 'Victor Hunt', 'Tiffany Black',
+    'Roy Daniels', 'Crystal Palmer', 'Willie Mills', 'Julia Nichols', 'Ray Grant',
+    'Ruby Knight', 'Bobby Ferguson', 'Paula Rose', 'Jesse Stone', 'Kelly Meyer',
+    'Lillian Watkins', 'Ernest Jenkins', 'Annie Berry', 'Phillip Barker', 'Liza Andrews',
+    'Gregory Payne', 'Irene Pearson', 'Joshua Garrett', 'Bonnie Burton', 'Sean Fuller',
+    'Alice Lynch', 'Fred Dean', 'Jeanette Gilbert', 'Bradley Soto', 'Florence Vargas',
+    'Philip Moreno', 'Nellie Jimenez', 'Eugene Franklin', 'Hazel Lawson', 'Shawn Johnston',
+    'Mabel Lane', 'Stanley Mendez', 'Eileen Harvey', 'Jacob Little', 'Gladys Burton',
+    'Clarence Stanley', 'Edna Nguyen', 'Leonard Stephens', 'Bernice George', 'Franklin Hunt',
+    'Gertrude Chapman', 'Harvey Berry', 'Beulah Howell', 'Theodore Spencer', 'Ethel Gardner',
+    'Curtis Stephens', 'Vera Payne', 'Melvin Pierce', 'Charlene Watkins', 'Mitchell Murray',
+    'Bessie Simmons', 'Clinton Lucas', 'Dora Rhodes', 'Rufus Weaver', 'Edith Wagner',
+    'Gilbert Willis', 'Verna Foster', 'Gene Arnold', 'Lois Chapman', 'Willard Elliott',
+    'Inez Duncan', 'Lester Knight', 'Lorene Bishop', 'Horace Porter', 'Mamie Hudson',
+    'Duane Snyder', 'Lydia Perkins', 'Ross Mccoy', 'Nettie Oliver', 'Ivan Montgomery',
+    'Eula Blair', 'Guy Lawson', 'Sally Coleman', 'Max Wade', 'Estella Rhodes',
+    'Floyd Jennings', 'Olive Barker', 'Hubert Garrett', 'Phoebe Franklin', 'Alvin Stevenson',
+    'Lela Weber', 'Julian Yates', 'Vesta Glover', 'Herman Mcbride', 'Wilda Huffman',
+    'Everett Mckenzie', 'Goldie Goodman', 'Sidney Massey', 'Roxie Holloway', 'Chester Hubbard',
+    'Hattie Daniel', 'Oliver Vance', 'Leila Stark', 'Wesley Preston', 'Ollie Calhoun',
+    'Claude Rowland', 'Bertie Merritt', 'Leon Hull', 'Lottie Blackwell', 'Milton Sellers',
+    'Myra Gentry', 'Irving Sexton', 'Alta Calhoun', 'Percy Browning', 'Della Whitehead',
+    'Oscar Singleton', 'Callie Mayo', 'Felix Pate', 'Eula Bullock', 'Elmer Mcknight',
+    'Leona Cherry', 'Leland Moon', 'Iva Gamble', 'Arthur Kirby', 'Nelle Mcintosh',
+    'Julius Hardin', 'Etta Carver', 'Cecil Whitehead', 'Lula Dalton', 'Marshall Maynard',
+    'Effie Mcgee', 'Salvador Burgess', 'Lilly Small', 'Freddie Branch', 'Opal Hensley',
+    'Clifford Harmon', 'Ora Best', 'Emil Merritt', 'Essie Britt', 'Cornelius Davenport',
+    'Iva Christian', 'Aubrey Bond', 'Elnora Mcpherson', 'Wallace Glass', 'Fannie Bullock',
+    'Alonzo Pruitt', 'Ollie Shepherd', 'Roderick Vinson', 'Veda Dotson', 'Emmett House',
 ];
 
 export const OFFICER_NAMES = [
-    'Brett Corbin', 'Sarah Jenkins', 'John Doe', 'Alice Miller', 'Robert Smith'
+    'Brett Corbin', 'Jeff Siemens', 'Jalpa Mazmudar',
+    'Sarah Jenkins', 'John Doe', 'Alice Miller', 'Robert Smith'
 ];
 
 const NOTE_SNIPPETS = [
@@ -22,32 +77,84 @@ const NOTE_SNIPPETS = [
     'Resident refused check.', 'Resident is in common area.', 'Checked vitals.',
 ];
 
-// 60 rooms: 4 groups × 3 units × 5 rooms
+// Room Definition
 interface RoomDef {
     id: string;
-    resident: string;
+    residents: { id: string; name: string; location: string }[];
     location: string;
     group: string;
     unit: string;
 }
 
-const ROOMS: RoomDef[] = GROUPS.flatMap((group, gIdx) =>
-    [1, 2, 3].flatMap(unitNum => {
-        const unit = `${UNIT_PREFIXES[gIdx]}${unitNum}`;
-        return Array.from({ length: 5 }, (_, i) => ({
-            id: `room-${unit}-${100 + i}`,
-            resident: RESIDENT_NAMES[(gIdx * 15 + unitNum * 5 + i) % RESIDENT_NAMES.length],
-            location: `${unit}-${100 + i}`,
-            group,
-            unit,
-        }));
-    })
-);
+// Generate rooms with 1-2 residents each
+const ROOMS: RoomDef[] = ((): RoomDef[] => {
+    const rooms: RoomDef[] = [];
+    const usedNames = new Set<string>();
+
+    // Create random but repeatable assignments
+    GROUPS.forEach((group, gIdx) => {
+        [1, 2, 3].forEach(unitNum => {
+            const unit = `${UNIT_PREFIXES[gIdx]}${unitNum}`;
+            for (let i = 0; i < 12; i++) {
+                const location = `${unit}-${100 + i}`;
+                const roomId = `room-${location}`;
+
+                // Deterministic count based on location
+                const seed = (gIdx * 100 + unitNum * 10 + i);
+                const isDouble = (seededRandom(seed) > 0.5);
+                const residentCount = isDouble ? 2 : 1;
+
+                const roomResidents: { id: string; name: string; location: string }[] = [];
+                for (let r = 0; r < residentCount; r++) {
+                    // Pick names that haven't been used
+                    let nameIdx = (seed * 7 + r) % RESIDENT_NAMES.length;
+                    while (usedNames.has(RESIDENT_NAMES[nameIdx])) {
+                        nameIdx = (nameIdx + 1) % RESIDENT_NAMES.length;
+                    }
+                    const name = RESIDENT_NAMES[nameIdx];
+                    usedNames.add(name);
+                    roomResidents.push({ id: `res-${roomId}-${r}`, name, location });
+                }
+
+                rooms.push({
+                    id: roomId,
+                    residents: roomResidents,
+                    location,
+                    group,
+                    unit
+                });
+            }
+        });
+    });
+    return rooms;
+})();
 
 // Seeded random for consistent results between refreshes
 const seededRandom = (seed: number) => {
     const x = Math.sin(seed) * 10000;
     return x - Math.floor(x);
+};
+
+interface RiskProfile {
+    missedProb: number;
+    commentFailProb: number;
+    tier: 'punctual' | 'good' | 'critical';
+}
+
+const getUnitProfile = (_group: string, unit: string): RiskProfile => {
+    // Bad units: 1 in Alpha (A1), 2 in Gamma (C1, C2)
+    const criticalUnits = ['A1', 'C1', 'C2'];
+    if (criticalUnits.includes(unit)) {
+        return { missedProb: 0.180, commentFailProb: 0.65, tier: 'critical' };
+    }
+
+    // Perfectly Punctual: Delta units only
+    if (unit.startsWith('D')) {
+        return { missedProb: 0, commentFailProb: 0, tier: 'punctual' };
+    }
+
+    // Operational Good: Everyone else (Alpha 2-3, Beta 1-3, Gamma 3)
+    return { missedProb: 0, commentFailProb: 0, tier: 'good' };
 };
 
 // Format time for display: "7:03 AM"
@@ -79,34 +186,45 @@ export const generateEnhancedData = () => {
     const now = new Date();
     const MS_PER_MINUTE = 60000;
     const CHECK_INTERVAL_MINS = 15;
-    const HISTORY_HOURS = 24;
+    const HISTORY_HOURS = 48;
 
     ROOMS.forEach((room, roomIdx) => {
-        const isPerfectRoom = room.group === 'Delta' || seededRandom(roomIdx + 1000) < 0.3;
         const officer = OFFICER_NAMES[roomIdx % OFFICER_NAMES.length];
 
-        // Create scheduled time based on room index with GUARANTEED variety:
-        // Rooms 0-9:   Overdue (20-29 mins ago)
-        // Rooms 10-19: Due (0-9 mins ago/ahead)
-        // Rooms 20-59: Upcoming (10-49 mins ahead)
-        const scheduledTime = new Date(now);
-        let offsetMinutes: number;
+        // For Live view, we want a realistic yet controlled distribution.
+        // Force states based on profile to ensure 75% are "Good"
+        const profile = getUnitProfile(room.group, room.unit);
 
-        if (roomIdx < 10) {
-            // OVERDUE: 20-29 mins in the past
-            offsetMinutes = -(20 + roomIdx);
-        } else if (roomIdx < 20) {
-            // DUE: -5 to +4 mins (around now)
-            offsetMinutes = roomIdx - 15; // -5, -4, -3, -2, -1, 0, 1, 2, 3, 4
+        let targetDelta: number;
+        const seed = roomIdx * 123 + 456;
+        const rand = seededRandom(seed);
+
+        if (profile.tier === 'punctual') {
+            // Punctual: Forced to Upcoming (-15 to -6m)
+            // NO Warning (Due soon), NO Alert (Missed)
+            targetDelta = -Math.floor(seededRandom(seed + 1) * 10 + 6);
+        } else if (profile.tier === 'good') {
+            // Good: Upcoming or Due (-10 to 4m)
+            // NO Alert (Missed)
+            targetDelta = rand < 0.6
+                ? -Math.floor(seededRandom(seed + 1) * 10 + 1) // Upcoming
+                : Math.floor(seededRandom(seed + 1) * 5);      // Due
         } else {
-            // UPCOMING: 5-44 mins in the future
-            offsetMinutes = roomIdx - 15; // 5, 6, 7, ... 44
+            // Critical: Balanced mix including alerts
+            if (rand < 0.2) {
+                targetDelta = -Math.floor(seededRandom(seed + 1) * 10 + 1); // Upcoming
+            } else if (rand < 0.5) {
+                targetDelta = Math.floor(seededRandom(seed + 1) * 5);       // Due
+            } else {
+                targetDelta = Math.floor(seededRandom(seed + 1) * 40 + 5);  // Overdue
+            }
         }
 
-        scheduledTime.setTime(now.getTime() + offsetMinutes * MS_PER_MINUTE);
+        const scheduledTime = new Date(now.getTime() - targetDelta * MS_PER_MINUTE);
+        scheduledTime.setSeconds(0, 0);
 
         // Calculate how many minutes ago (positive) or in the future (negative) this check is
-        const deltaMinutes = -offsetMinutes; // Flip sign: past is positive, future is negative
+        const deltaMinutes = Math.floor((now.getTime() - scheduledTime.getTime()) / MS_PER_MINUTE);
 
         // Determine Live status based on time difference
         let liveStatus: 'upcoming' | 'due' | 'overdue';
@@ -147,7 +265,7 @@ export const generateEnhancedData = () => {
             timerText,
             timerSeverity,
             location: room.location,
-            residents: [{ id: `res-${room.id}`, name: room.resident, location: room.location }],
+            residents: room.residents,
             hasHighRisk: roomIdx % 7 === 0,
             group: room.group,
             unit: room.unit,
@@ -157,14 +275,15 @@ export const generateEnhancedData = () => {
                 id: `check-${room.id}`,
                 type: 'scheduled',
                 status: liveStatus === 'upcoming' ? 'pending' : (liveStatus === 'due' ? 'due' : 'missed'),
-                residents: [{ id: `res-${room.id}`, name: room.resident, location: room.location }],
+                residents: room.residents,
                 dueDate: scheduledTime.toISOString(),
                 generationId: 1,
                 baseInterval: 15
             },
         });
 
-        // Generate Historical checks (past 24 hours, every 15 mins)
+        // Profile already fetched above
+        // Generate Historical checks (past 48 hours, every 15 mins)
         const historyStart = new Date(now.getTime() - HISTORY_HOURS * 60 * MS_PER_MINUTE);
         historyStart.setMinutes(scheduledTime.getMinutes(), 0, 0); // Align to this room's minute offset
 
@@ -175,28 +294,32 @@ export const generateEnhancedData = () => {
             const checkId = `hist-${room.id}-${slotIndex}`;
             const scheduledTimeISO = slotTime.toISOString();
 
-            // 85% completed, 15% missed (perfect rooms: 98% completed)
-            const isMissed = isPerfectRoom
-                ? seededRandom(slotIndex + roomIdx * 1000) < 0.02
-                : seededRandom(slotIndex + roomIdx * 1000) < 0.15;
+            // Option 1 & 6: Exponential Decay & Review Aging
+            // Probability of a missed check decreases as it gets older (TAU = 12h)
+            const checkAgeHours = (now.getTime() - slotTime.getTime()) / (60 * 60 * 1000);
+            const decayFactor = Math.exp(-checkAgeHours / 12); // TAU = 12 hours
+
+            const randomVal = seededRandom(slotIndex + roomIdx * 1000);
+            const isMissed = randomVal < (profile.missedProb * decayFactor);
 
             const status: 'completed' | 'missed' = isMissed ? 'missed' : 'completed';
             const variance = isMissed ? Infinity : Math.floor(seededRandom(slotIndex * 3 + roomIdx) * 10) - 2;
             const actualTime = isMissed ? null : new Date(slotTime.getTime() + variance * MS_PER_MINUTE).toISOString();
             const officerNote = (slotIndex % 4 === 0) ? NOTE_SNIPPETS[slotIndex % NOTE_SNIPPETS.length] : undefined;
 
-            // Auto-comment missed checks older than 8 hours
-            // Recent missed checks (within 8h) remain uncommented for supervisor review
-            const checkAgeMs = now.getTime() - slotTime.getTime();
-            const MS_PER_HOUR = 60 * 60 * 1000; // 60 mins * 60 secs * 1000 ms
-            const isOlderThan8Hours = checkAgeMs > 8 * MS_PER_HOUR;
+            // Supervisor notes: Older items are much more likely to be reviewed
+            // Recent missed checks (within 4h) remain uncommented for supervisor review
+            const commentRandomVal = seededRandom(slotIndex * 13 + roomIdx);
+            const commentThreshold = checkAgeHours < 4 ? 0.95 : (profile.commentFailProb * decayFactor);
+            const shouldHaveComment = commentRandomVal > commentThreshold;
+
             const supervisorNote = isMissed
-                ? (isOlderThan8Hours ? 'Reviewed and documented.' : undefined)
+                ? (shouldHaveComment ? 'Reviewed and documented.' : undefined)
                 : undefined;
 
             historicalData.push({
                 id: checkId,
-                residents: [{ id: `res-${room.id}`, name: room.resident, location: room.location }],
+                residents: room.residents,
                 location: room.location,
                 scheduledTime: scheduledTimeISO,
                 actualTime,
@@ -208,7 +331,7 @@ export const generateEnhancedData = () => {
                 officerNote,
                 supervisorNote,
                 reviewStatus: isMissed ? (supervisorNote ? 'verified' : 'pending') : 'verified',
-                hasHighRisk: roomIdx % 7 === 0, // Same logic as live view - resident property
+                hasHighRisk: roomIdx % 7 === 0,
             });
 
             slotTime = new Date(slotTime.getTime() + CHECK_INTERVAL_MINS * MS_PER_MINUTE);
@@ -219,7 +342,6 @@ export const generateEnhancedData = () => {
     return { liveData, historicalData };
 };
 
-// Cache the data on module load
 const cachedData = generateEnhancedData();
 export const enhancedMockData = cachedData;
 export const TOTAL_LIVE_RECORDS = cachedData.liveData.length;

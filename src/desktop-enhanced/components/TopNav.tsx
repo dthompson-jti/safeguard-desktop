@@ -7,8 +7,8 @@ import { SearchInput } from '../../components/SearchInput';
 export const TopNav = React.forwardRef<HTMLDivElement>((_, ref) => {
     const [searchValue, setSearchValue] = useState('');
 
-    const handleSearch = (val: string) => {
-        console.log('Search triggered:', val);
+    const handleSearch = () => {
+        // Search functionality to be implemented
     };
 
     return (
@@ -37,7 +37,7 @@ export const TopNav = React.forwardRef<HTMLDivElement>((_, ref) => {
                     <SearchInput
                         value={searchValue}
                         onChange={setSearchValue}
-                        onSearch={handleSearch}
+                        onSearch={() => handleSearch()}
                         placeholder="Search people and cases"
                         flavor="trigger"
                         size="sm"

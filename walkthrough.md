@@ -1,12 +1,28 @@
-# Walkthrough - UI Refinement & Design System Alignment
-**Date**: 2026-01-16
+# Walkthrough - UI Refinement & Navigation Cleanup
+**Date**: 2026-01-18
 
 ## Overview
-This session focused on aligning UI components with desktop design standards, specifically targeting button sizing, key modal interactions, and Detail Panel content presentation.
+This session focused on refining the Navigation Panel tree menu by removing redundant default-saving actions and ensuring better focus on tree management.
 
 ## Key Changes
 
-### 1. Design System Alignment (Buttons)
+### 1. Navigation Panel Cleanup
+*   **Tree Menu**: Removed the "Set as my defaults" action from the tree's context menu (the menu containing "Expand all" and "Collapse all").
+*   **Rationale**: The tree menu should focus on tree state management (expand/collapse). Filter-related persistence (Save Defaults) is centrally managed in the main application actions menu.
+*   **Code Cleanup**: Removed associated `saveFiltersAsDefaultAtom` usage and `toast` logic from `NavigationPanel.tsx`.
+
+### 2. Mock Data Re-Architecture ("Natural Flow")
+*   **Scale**: Expanded historical data range to **48 hours** with a roster of **144 rooms**.
+*   **3-Tier Compliance System**: 
+    - **Perfectly Punctual (Delta)**: Units are guaranteed to show only "Upcoming" (Green) states. No warnings or alerts.
+    - **Operational Good (Alpha/Beta)**: 75% of units show a mix of "Upcoming" and "Due soon" (Yellow) but never "Missed" (Red).
+    - **Critical Areas (A1, C1, C2)**: Decentralized "Bad" units that exhibit the full range of operational failures and red alerts.
+*   **Multi-Resident Distribution**: Rooms now support **1-2 unique residents**, assigned from an expanded **300-name roster**. This ensures zero duplicate residents across the facility while providing varied occupancy patterns for testing.
+*   **State-First Live Timing**: Logic mathematically guarantees these states, ensuring a varied yet high-quality operational picture across the facility.
+*   **Exponential Backlog Decay**: Resolved data saturation in Critical units by reducing older missed-check probabilities.
+*   **Review Aging**: Applied realistic supervisor backlog—older misses in problem areas are automatically reviewed, while the most recent 4 hours await action.
+
+### 3. Design System Alignment (Buttons)
 *   **Audit**: Identified a discrepancy where `size="m"` buttons were optimized for touch (44px) and legacy `size="s"` buttons (36px) lacked correct desktop spacing.
 *   **Update**: Redefined button sizes in `src/styles/buttons.css`:
     *   **Desktop Medium (`size="m"`)**: Height 36px, Padding 12px, Gap 4px. Now the primary standard.
