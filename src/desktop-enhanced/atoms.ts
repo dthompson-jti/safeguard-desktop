@@ -2,8 +2,6 @@ import { atom } from 'jotai';
 
 export type DesktopEnhancedView = 'live' | 'historical';
 
-export const desktopEnhancedViewAtom = atom<DesktopEnhancedView>('live');
-
 export type SelectionType = 'root' | 'group' | 'unit';
 export interface SelectionState {
     type: SelectionType;

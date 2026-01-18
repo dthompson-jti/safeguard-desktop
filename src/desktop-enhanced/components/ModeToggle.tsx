@@ -1,10 +1,10 @@
 import React from 'react';
 import { useAtom } from 'jotai';
-import { desktopEnhancedViewAtom } from '../atoms';
+import { desktopViewAtom } from '../../desktop/atoms';
 import styles from './ModeToggle.module.css';
 
 export const ModeToggle: React.FC = () => {
-    const [view, setView] = useAtom(desktopEnhancedViewAtom);
+    const [view, setView] = useAtom(desktopViewAtom);
 
     return (
         <div className={styles.toggleContainer}>

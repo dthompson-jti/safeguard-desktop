@@ -31,10 +31,10 @@ const formatDateRange = (start: string | null, end: string | null) => {
 };
 
 const LIVE_STATUS_OPTIONS = [
-    { value: 'all', label: 'All Status' },
-    { value: 'upcoming', label: 'Upcoming' },
+    { value: 'all', label: 'All' },
     { value: 'due', label: 'Due' },
     { value: 'overdue', label: 'Missed' },
+    { value: 'upcoming', label: 'Upcoming' },
 ];
 
 const HISTORICAL_STATUS_OPTIONS = [

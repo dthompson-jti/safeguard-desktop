@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
-import { desktopEnhancedSelectionAtom, desktopEnhancedExpandedNodesAtom, desktopEnhancedViewAtom, SelectionType } from '../atoms';
+import { desktopViewAtom } from '../../desktop/atoms';
+import { desktopEnhancedSelectionAtom, desktopEnhancedExpandedNodesAtom, SelectionType } from '../atoms';
 import { TreeGroup, TreeUnit, useTreeData } from '../hooks/useTreeData';
 import { Button } from '../../components/Button';
 import styles from './TreeView.module.css';
@@ -106,7 +107,7 @@ const TreeItem = React.memo<TreeItemProps & { view: string }>(({
 
 export const TreeView: React.FC = () => {
     const facilityNodes = useTreeData();
-    const view = useAtomValue(desktopEnhancedViewAtom);
+    const view = useAtomValue(desktopViewAtom);
     const [selection, setSelection] = useAtom(desktopEnhancedSelectionAtom);
     const [expanded, setExpanded] = useAtom(desktopEnhancedExpandedNodesAtom);
 

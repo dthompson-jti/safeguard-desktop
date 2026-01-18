@@ -77,6 +77,12 @@ const NOTE_SNIPPETS = [
     'Resident refused check.', 'Resident is in common area.', 'Checked vitals.',
 ];
 
+// Seeded random for consistent results between refreshes
+const seededRandom = (seed: number) => {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+};
+
 // Room Definition
 interface RoomDef {
     id: string;
@@ -128,12 +134,6 @@ const ROOMS: RoomDef[] = ((): RoomDef[] => {
     });
     return rooms;
 })();
-
-// Seeded random for consistent results between refreshes
-const seededRandom = (seed: number) => {
-    const x = Math.sin(seed) * 10000;
-    return x - Math.floor(x);
-};
 
 interface RiskProfile {
     missedProb: number;

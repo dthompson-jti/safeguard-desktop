@@ -1,5 +1,5 @@
 import { useAtomValue } from 'jotai';
-import { desktopEnhancedViewAtom } from '../atoms';
+import { desktopViewAtom } from '../../desktop/atoms';
 import { desktopFilterAtom } from '../../desktop/atoms';
 import { enhancedMockData } from '../data/mockData';
 
@@ -25,7 +25,7 @@ export interface TreeUnit {
 }
 
 export const useTreeData = () => {
-    const view = useAtomValue(desktopEnhancedViewAtom);
+    const view = useAtomValue(desktopViewAtom);
     const filter = useAtomValue(desktopFilterAtom);
 
     // 1. Build a STABLE structure from ALL known groups/units across BOTH datasets

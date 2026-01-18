@@ -12,9 +12,9 @@ import {
     selectedHistoryRowsAtom,
     selectedLiveRowsAtom,
     panelWidthAtom,
-    saveFiltersAsDefaultAtom
+    saveFiltersAsDefaultAtom,
+    desktopViewAtom
 } from '../desktop/atoms';
-import { desktopEnhancedViewAtom } from './atoms';
 import { EnhancedLiveMonitorView as LiveMonitorView } from './components/EnhancedLiveMonitorView';
 import { EnhancedHistoricalReviewView as HistoricalReviewView } from './components/EnhancedHistoricalReviewView';
 import { DesktopToolbar } from '../desktop/components/DesktopToolbar';
@@ -29,7 +29,7 @@ import styles from './DesktopEnhancedApp.module.css';
 
 export default function DesktopEnhancedApp() {
     // FIX: Use the specific enhanced view atom shared with ModeToggle
-    const view = useAtomValue(desktopEnhancedViewAtom);
+    const view = useAtomValue(desktopViewAtom);
 
     const setFilter = useSetAtom(desktopFilterAtom);
     const saveDefaults = useSetAtom(saveFiltersAsDefaultAtom);
