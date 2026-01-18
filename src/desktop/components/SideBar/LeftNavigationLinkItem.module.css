@@ -34,6 +34,8 @@
     font-weight: 600;
 }
 
+/* Architectural Invariant: Selected nav items must remain centered/on-solid (white) on hover. 
+   Background uses --nav-item-selected-hover (1-token darker than base selected). */
 .selected:hover {
     background-color: var(--nav-item-selected-hover);
     color: var(--nav-item-fg-selected);
