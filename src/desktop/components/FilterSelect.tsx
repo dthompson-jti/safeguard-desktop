@@ -46,6 +46,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
                     disabled={disabled}
                     triggerClassName={triggerClass}
                     valueLabel={triggerLabel}
+                    variant="filter"
                 >
                     {options.map((opt) => (
                         <SelectItem key={opt.value} value={opt.value}>

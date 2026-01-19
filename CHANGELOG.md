@@ -8,22 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-### Added (2026-01-18)
-- **Search Experience Refinement**: Overhauled search inputs for consistency and visual polish.
-    - **Unified Presentation**: Updated search inputs: "Find..." for Side Nav/Table, and "Search people and cases..." for Top Nav.
-    - **Visual Polish**: Removed "janky" double-focus states in Side Navigation and standardized focus rings.
-    - **Top Nav Integration**: Implemented a centered, balanced search bar with "on-solid" color transitions.
-    - **Optical Spacing**: Perfectly balanced clear buttons and search triggers using dynamic internal margins.
-    - **Legibility**: Resolved faint search text issues with explicit semantic foreground tokens.
-- **Navigation Cleanup**: Streamlined the tree menu by removing "Set as my defaults", keeping the focus on layout management (Expand/Collapse).
-- **Mock Data Re-Architecture**: Implemented the "Natural Flow" model with decentralized 3-tier compliance.
-    - **Perfectly Punctual Tier**: **Delta** units are guaranteed to show 0 Overdue checks and 0 Due soon warnings (Upcoming only).
-    - **Operational Good Tier**: 75% of units (Alpha 2-3, Beta 1-3, Gamma 3) show a natural mix of Upcoming and Due states with 0 alerts.
-    - **Critical Area Tier**: Problem areas (**Alpha-1**, **Gamma-1**, **Gamma-2**) exhibit realistic operational failures and alerts.
-    - **Multi-Resident Distribution**: Rooms now support **1-2 unique residents** (assigned from an expanded 300-name roster).
-    - **Exponential Backlog Decay**: Resolved data saturation in Critical units.
-    - **Review Strategy**: Integrated age-based review aging; older missed checks are automatically "cleared" by supervisors, leaving the most recent 4 hours for active review in Critical Areas (Gamma).
-- **Legacy Cleanup**: Removed outdated `SearchInput` implementation from `NavigationPanel`, properly migrating all logic to `SideBar/SearchController`.
+- **View State Synchronization**: Unified view state management across the application.
+    - Removed redundant `desktopEnhancedViewAtom`.
+    - Migrated all components to use the canonical `desktopViewAtom`.
+    - Ensured immediate and consistent synchronization between the sidebar tree, mode toggle, and toolbar filters.
+- **Filter Experience Refinement**: Cleaned up toolbar filters for improved operational focus.
+    - **Live View**:
+        - Updated Status dropdown options to "All", "Due", "Missed", "Upcoming".
+        - Removed irrelevant "Missed – No Comment" status option.
+        - Removed redundant Time Range dropdown.
+    - **Historical View**: Maintained full status and time range filtering capabilities.
 
 - **Navigation Visuals**: Reached parity with high-fidelity visual design for Sidebar and Top Navigation.
     - **Visual Hierarchy**: Refined Sidebar with "Quick Access", "Recent Cases", and "Notes Library" sections.
@@ -36,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - **Token Alignment**: Removed `32px`/`48px` magic numbers, replacing them with standard sizing tokens (`control-height-sm`, `avatar-size-md`).
 
 ### Fixed (2026-01-18)
+- **Mock Data Reliability**: Fixed a critical `ReferenceError` in `mockData.ts` caused by circular initialization order of `seededRandom`.
 - **Save Filters as Default**: Fixed the "Save as my defaults" action in the enhanced view which was previously non-functional.
     - Connected the action to `saveFiltersAsDefaultAtom` to properly save user preferences.
     - Added success toast notification.
@@ -50,6 +45,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - FilterSelect chevron now inherits theme color (blue) in selected state.
     - FilterSelect state changes are now instant (no transition animations).
     - Added comprehensive architectural invariant comments to prevent future regressions.
+
+### Fixed (2026-01-18) - Late Session
+- **Tree Count Logic**: Refined Historical View tree counts.
+    - Counts now strictly reflect "Missed & Un-commented" checks.
+    - **Outcome**: Counts respect the **Global Date Range** (e.g., "Last 24 Hours"), but ignore the **Status** filter.
+    - This ensures the tree serves as a stable "To-Do" list for the selected period, regardless of table view status.
+- **Search Legibility**: Fixed "Find" input text color.
+    - Applied appropriate semantic tokens to ensure search text is clearly visible against the background.
+- **Nav Item Hover**: Added hover state for selected navigation items.
+    - Implemented a 1-token darker hover effect for the currently selected nav item.
+- **Resident Distribution**: Refined mock data generation.
+    - Residents are now uniquely assigned to 1-2 per room, preventing duplicates across the facility.
 
 - **Enhanced Navigation Restructuring**: Split the navigation area into two distinct rows for better visual hierarchy.
     - Added Row 1 strictly for breadcrumbs, centered vertically in a 20px height.

@@ -1,6 +1,7 @@
 import { useAtomValue } from 'jotai';
 import { desktopViewAtom } from '../../desktop/atoms';
 import { desktopFilterAtom } from '../../desktop/atoms';
+
 import { enhancedMockData } from '../data/mockData';
 
 import { LiveCheckRow } from '../../desktop/types';
@@ -27,6 +28,7 @@ export interface TreeUnit {
 export const useTreeData = () => {
     const view = useAtomValue(desktopViewAtom);
     const filter = useAtomValue(desktopFilterAtom);
+
 
     // 1. Build a STABLE structure from ALL known groups/units across BOTH datasets
     const allGroups = new Set<string>();
@@ -64,27 +66,22 @@ export const useTreeData = () => {
             const key = getCountKey(check.group || 'Other', check.unit || 'Other');
             const current = countsMap.get(key) || { missed: 0, secondary: 0 };
 
-            // Date filtering
+            // STRICT "Missed & No Comment" Logic for Tree Counts
+            // 1. Respect Time Filter (Context)
             if (filter.dateStart || filter.dateEnd) {
                 const checkDate = check.scheduledTime.split('T')[0];
                 if (filter.dateStart && checkDate < filter.dateStart) return;
                 if (filter.dateEnd && checkDate > filter.dateEnd) return;
             }
 
-            // Combined historicalStatusFilter filtering
-            if (filter.historicalStatusFilter && filter.historicalStatusFilter !== 'all') {
-                if (filter.historicalStatusFilter === 'missed-uncommented') {
-                    if (check.status !== 'missed' || check.supervisorNote) return;
-                } else if (filter.historicalStatusFilter === 'missed-commented') {
-                    if (check.status !== 'missed' || !check.supervisorNote) return;
-                } else if (filter.historicalStatusFilter === 'completed') {
-                    if (check.status !== 'completed') return;
-                }
+            // 2. Strict Status (Actionable Items Only)
+            // We ignore the global status filter to keep the tree useful as a "To-Do" list.
+            if (check.status === 'missed' && !check.supervisorNote) {
+                current.missed++;
+                countsMap.set(key, current);
             }
 
-            // If we get here, the check passes all filters. Count it.
-            current.missed++;
-            countsMap.set(key, current);
+
         });
     }
 

@@ -33,7 +33,8 @@
 }
 
 /* === HOVER STATE: Simple border change, NO thick bottom === */
-.selectTrigger:hover:not(:disabled) {
+/* Only apply "no shadow" if it's NOT a filter (skeuomorphic) variant */
+.selectTrigger:not([data-variant='filter']):hover:not(:disabled) {
   background-color: var(--control-bg-secondary-hover);
   border-color: var(--control-border-secondary-hover);
   color: var(--surface-fg-primary);
@@ -42,8 +43,8 @@
 }
 
 /* === ACTIVE/OPEN STATE: Pressed look === */
-.selectTrigger:active:not(:disabled),
-.selectTrigger[data-state='open'] {
+.selectTrigger:not([data-variant='filter']):active:not(:disabled),
+.selectTrigger:not([data-variant='filter'])[data-state='open'] {
   background-color: var(--control-bg-secondary-pressed);
   border-color: var(--control-border-secondary-pressed);
   color: var(--surface-fg-primary);

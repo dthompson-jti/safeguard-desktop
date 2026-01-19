@@ -11,6 +11,8 @@ interface SelectProps {
   disabled?: boolean;
   triggerClassName?: string;
   valueLabel?: React.ReactNode;
+  /** Variant style of the select: 'default' (flat) or 'filter' (skeuomorphic) */
+  variant?: 'default' | 'filter';
 }
 
 interface SelectItemProps {
@@ -46,7 +48,7 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 
 SelectItem.displayName = 'SelectItem';
 
-export const Select = ({ children, value, onValueChange, placeholder, disabled, triggerClassName, valueLabel }: SelectProps) => {
+export const Select = ({ children, value, onValueChange, placeholder, disabled, triggerClassName, valueLabel, variant = 'default' }: SelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
@@ -63,6 +65,7 @@ export const Select = ({ children, value, onValueChange, placeholder, disabled, 
         ref={triggerRef}
         className={`${styles.selectTrigger} ${triggerClassName || ''}`}
         aria-label={placeholder}
+        data-variant={variant}
       >
         <RadixSelect.Value placeholder={placeholder}>
           {valueLabel}
