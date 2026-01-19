@@ -31,7 +31,7 @@ const formatDateRange = (start: string | null, end: string | null) => {
 };
 
 const LIVE_STATUS_OPTIONS = [
-    { value: 'all', label: 'All' },
+    { value: 'all', label: 'All statuses' },
     { value: 'due', label: 'Due' },
     { value: 'overdue', label: 'Missed' },
     { value: 'upcoming', label: 'Upcoming' },

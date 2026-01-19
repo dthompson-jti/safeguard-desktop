@@ -215,9 +215,9 @@ export const EnhancedLiveMonitorView = () => {
                 size: 140,
                 minSize: 120,
                 accessorKey: 'status',
-                // Custom sort: overdue (2) > due (1) > upcoming (0)
+                // Custom sort: overdue (0) > due (1) > upcoming (2)
                 sortingFn: (rowA, rowB) => {
-                    const priority: Record<string, number> = { overdue: 2, due: 1, upcoming: 0 };
+                    const priority: Record<string, number> = { overdue: 0, due: 1, upcoming: 2 };
                     const a = priority[rowA.original.status] ?? 0;
                     const b = priority[rowB.original.status] ?? 0;
                     return a - b;
@@ -275,7 +275,7 @@ export const EnhancedLiveMonitorView = () => {
             rowSelection={rowSelection}
             onRowSelectionChange={handleSelectionChange}
             onRowClick={handleRowClick}
-            initialSorting={[{ id: 'location', desc: false }]}
+            initialSorting={[{ id: 'status', desc: false }, { id: 'scheduled', desc: false }]}
         />
     );
 };
