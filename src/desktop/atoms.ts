@@ -11,7 +11,7 @@ import { enhancedMockData } from '../desktop-enhanced/data/mockData';
 // This avoids complex lookups in mock data.
 
 /** Current desktop view: 'live' or 'historical' */
-export const desktopViewAtom = atomWithStorage<DesktopView>(`${STORAGE_PREFIX}view`, 'live');
+export const desktopViewAtom = atomWithStorage<DesktopView>(`${STORAGE_PREFIX}view`, 'historical');
 
 /** Global state for advanced search panel visibility */
 export const isAdvancedSearchOpenAtom = atom(false);

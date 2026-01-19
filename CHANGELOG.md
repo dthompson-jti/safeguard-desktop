@@ -70,7 +70,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - **Tree View Hover**: Added hover state for tree items.
         - Items now display a `control-border-tertiary` left border on hover, providing a clear interactive cue.
     - **Tree View Selection**: Implemented default selection behavior.
-        - The facility (root) node is now automatically selected on load if no other node is selected, preventing an empty details panel state.,
+        - The facility (root) node is now automatically selected on load if no other node is selected, preventing an empty details panel state.
+    - **Multi-Resident Display**: Flattened mock data generation.
+        - Multi-resident rooms now display as separate rows (one per resident) in both Live and Historical views, matching the 1-check-per-resident requirement.
+    - **Table Sort Indicators**: Fixed double sort arrow.
+        - Merged scheduled time logic into the primary Status sort.
+        - Removed the explicit secondary sort from the initial table state to prevent visual clutter.
+    - **Default View**: Changed default landing view.
+        - The application now defaults to the **Historical View** instead of the Live Monitor on fresh sessions.,
 
 - **Enhanced Navigation Restructuring**: Split the navigation area into two distinct rows for better visual hierarchy.
     - Added Row 1 strictly for breadcrumbs, centered vertically in a 20px height.

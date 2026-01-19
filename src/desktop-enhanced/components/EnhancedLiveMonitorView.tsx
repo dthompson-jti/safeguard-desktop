@@ -150,7 +150,10 @@ export const EnhancedLiveMonitorView = () => {
                     const priority: Record<string, number> = { overdue: 0, due: 1, upcoming: 2 };
                     const a = priority[rowA.original.status] ?? 3;
                     const b = priority[rowB.original.status] ?? 3;
-                    return a - b;
+                    if (a !== b) return a - b;
+                    const timeA = new Date(rowA.original.originalCheck?.dueDate || 0).getTime();
+                    const timeB = new Date(rowB.original.originalCheck?.dueDate || 0).getTime();
+                    return timeA - timeB;
                 },
                 cell: ({ row }) => {
                     return (
@@ -220,7 +223,10 @@ export const EnhancedLiveMonitorView = () => {
                     const priority: Record<string, number> = { overdue: 0, due: 1, upcoming: 2 };
                     const a = priority[rowA.original.status] ?? 0;
                     const b = priority[rowB.original.status] ?? 0;
-                    return a - b;
+                    if (a !== b) return a - b;
+                    const timeA = new Date(rowA.original.originalCheck?.dueDate || 0).getTime();
+                    const timeB = new Date(rowB.original.originalCheck?.dueDate || 0).getTime();
+                    return timeA - timeB;
                 },
                 cell: ({ row }) => {
                     const status = row.original.status;
@@ -275,7 +281,7 @@ export const EnhancedLiveMonitorView = () => {
             rowSelection={rowSelection}
             onRowSelectionChange={handleSelectionChange}
             onRowClick={handleRowClick}
-            initialSorting={[{ id: 'status', desc: false }, { id: 'scheduled', desc: false }]}
+            initialSorting={[{ id: 'status', desc: false }]}
         />
     );
 };
