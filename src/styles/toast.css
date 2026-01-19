@@ -14,12 +14,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: var(--spacing-3);
 
   margin: 0;
   padding: 0;
   list-style: none;
-  z-index: 2147483647;
+  z-index: var(--z-max);
   outline: none;
 
   /* Clicks should pass through the viewport to the content underneath. */
@@ -33,9 +33,9 @@
   /* Metrics Spec */
   width: auto;
   max-width: calc(100vw - 32px);
-  padding: 16px;
+  padding: var(--spacing-4);
   border-radius: var(--radius-xl);
-  gap: 16px;
+  gap: var(--spacing-4);
 
   display: flex;
   align-items: center;
@@ -43,7 +43,7 @@
 
   /* Typography */
   font-family: var(--font-family-sans);
-  font-size: 0.9rem;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--surface-fg-secondary);
 
@@ -74,10 +74,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 12px;
+  padding: 0 var(--spacing-3);
   height: 32px;
   border-radius: var(--radius-sm);
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
 
@@ -90,8 +90,8 @@
   transition: transform 0.1s, background-color 0.2s;
 
   /* Separate from text and close button */
-  margin-left: 8px;
-  margin-right: 4px;
+  margin-left: var(--spacing-2);
+  margin-right: var(--spacing-1);
   white-space: nowrap;
 }
 

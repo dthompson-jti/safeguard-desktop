@@ -200,13 +200,19 @@ Shadows serve a critical role in establishing visual hierarchy through elevation
 
 #### The Z-Index Layering Contract
 
-To prevent visual bleeding during full-screen transitions, we adhere to a strict Z-index hierarchy:
+To prevent visual bleeding during full-screen transitions and complex stacking, we adhere to a strict Z-index hierarchy defined in `semantics.css`:
 
-1.  **Content (1):** Standard scrolling views.
-2.  **Chrome (50):** App Header, Footer, and Offline Banner.
-3.  **Navigation (100):** Side Menu and Backdrops.
-4.  **Overlays (105):** Full-screen tools (Scanner, NFC Writer, Forms) that must cover everything.
-5.  **Sheets (110+):** Bottom sheet modals (Vaul) that sit on top of full-screen overlays.
+1.  **--z-base (0):** Content, Standard scrolling views.
+2.  **--z-elevated (10):** Cards, slight elevation.
+3.  **--z-sticky (100):** Sticky headers, sidebars.
+4.  **--z-resizer (105):** Interaction handles.
+5.  **--z-actions-footer (110):** Floating action bars.
+6.  **--z-overlay (200):** Backdrops.
+7.  **--z-dropdown (1000):** Popovers, Menus, Selects.
+8.  **--z-modal (2000):** Dialogs, Alerts.
+9.  **--z-toast (9999):** Critical notifications (Always on top).
+
+Never use hardcoded values like `101`, `999`, or `2147483647`. Always use the token.
 
 #### The Layout Density Contract ("Split Density")
 

@@ -13,6 +13,7 @@ import {
     ColumnPinningState,
 } from '@tanstack/react-table';
 import { useState, useEffect, useRef } from 'react';
+import { useTableAutoFit } from '../../hooks/useTableAutoFit';
 import styles from './DataTable.module.css';
 
 interface DataTableProps<T> {
@@ -51,56 +52,8 @@ export function DataTable<T>({
         right: ['actions'],
     });
 
-    // Auto-Fit Logic
-    const handleAutoFit = (columnId: string) => {
-        const column = table.getColumn(columnId);
-        if (!column) return;
+    // Column Definitions and Hook Setup handled below
 
-        // Create temporary canvas for measurement
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        if (!context) return;
-
-        context.font = '500 0.875rem Inter, sans-serif'; // Match --font-size-sm
-
-        let maxWidth = 0;
-
-        // Measure Header
-        const headerText = typeof column.columnDef.header === 'string'
-            ? column.columnDef.header
-            : ''; // Complex headers might need manual adjustment, strict AutoFit is best for data
-
-        if (headerText) {
-            maxWidth = Math.max(maxWidth, context.measureText(headerText).width);
-        }
-
-        // Measure Visible Rows
-        const rows = table.getRowModel().rows;
-        rows.forEach(row => {
-            const cellValue = row.getValue(columnId);
-            const text = String((cellValue as string | number | null | undefined) ?? '');
-            const width = context.measureText(text).width;
-            maxWidth = Math.max(maxWidth, width);
-        });
-
-        // Add Padding (approx 16px left + 16px right + 1px border + safety buffer)
-        // Previous value 44 was insufficient for Badges? Let's try 56 to be safe.
-        // Actually, the issue might be that badged text (like Status) isn't text-only measureable.
-        // But for text columns, 44 should be fine. If status is clipping, it's because badges have padding.
-        // Let's bump to 60.
-        const padding = 60;
-        const targetWidth = maxWidth + padding;
-
-        // Clamp to min/max
-        const minSize = column.columnDef.minSize || 0;
-        const maxSize = column.columnDef.maxSize || 1000;
-        const finalWidth = Math.max(minSize, Math.min(targetWidth, maxSize));
-
-        setColumnSizing(old => ({
-            ...old,
-            [columnId]: finalWidth
-        }));
-    };
 
 
     const table = useReactTable({
@@ -124,6 +77,8 @@ export function DataTable<T>({
         enableSortingRemoval: false,
         getRowId,
     });
+
+    const { handleAutoFit } = useTableAutoFit(table, setColumnSizing);
 
     const sentinelRef = useRef<HTMLTableRowElement>(null);
     const scrollAreaRef = useRef<HTMLDivElement>(null);

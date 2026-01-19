@@ -34,9 +34,14 @@ export const SearchController: React.FC = () => {
                     />
                 </div>
             ) : (
-                <div className={styles.collapsedIcon} onClick={() => setIsExpanded(true)}>
+                <button
+                    className={styles.collapsedIcon}
+                    onClick={() => setIsExpanded(true)}
+                    aria-label="Expand search"
+                    type="button"
+                >
                     <span className="material-symbols-rounded">search</span>
-                </div>
+                </button>
             )}
 
             <button

@@ -8,26 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-- **View State Synchronization**: Unified view state management across the application.
-    - Removed redundant `desktopEnhancedViewAtom`.
-    - Migrated all components to use the canonical `desktopViewAtom`.
-    - Ensured immediate and consistent synchronization between the sidebar tree, mode toggle, and toolbar filters.
-- **Filter Experience Refinement**: Cleaned up toolbar filters for improved operational focus.
-    - **Live View**:
-        - Updated Status dropdown options to "All", "Due", "Missed", "Upcoming".
-        - Removed irrelevant "Missed – No Comment" status option.
-        - Removed redundant Time Range dropdown.
-    - **Historical View**: Maintained full status and time range filtering capabilities.
+### Added
+- **Design System Hardening**: Introduced a unified Z-Index semantic scale (`--z-overlay`, `--z-modal`, `--z-toast`) in `semantics.css` to prevent layering conflicts.
+- **Layout Stability**: Added `useTableAutoFit` hook to `DataTable` to reliably calculate column widths based on content rendering, removing fragile "magic number" logic.
 
-- **Navigation Visuals**: Reached parity with high-fidelity visual design for Sidebar and Top Navigation.
-    - **Visual Hierarchy**: Refined Sidebar with "Quick Access", "Recent Cases", and "Notes Library" sections.
-    - **Semantic Theme**: Implemented "Hybrid" theme for navigation (Dark top nav, Light sidebar) using new `nav-*` semantic tokens.
-    - **Hover States**: Added `--nav-item-selected-hover` token for selected items (1-token darker) naturally maintaining "on-solid" foreground color.
-    - **Label Renames**: Renamed "Safeguard" to "Safeguard checks" in the left navigation to match operational specifications.
-    - **3-Column Top Nav**: Overhauled header layout to support System Icons (Left), Global Search (Center), and Session Actions (Right).
-    - **Refined Avatar**: Updated user avatar to use high-contrast initials on a white background.
-    - **Unified Spacing**: Standardized left navigation item spacing to a consistent 1px gap using Flexbox.
-    - **Token Alignment**: Removed `32px`/`48px` magic numbers, replacing them with standard sizing tokens (`control-height-sm`, `avatar-size-md`).
+### Changed
+- **Component Hygiene**: Refactored `SearchController` and `TopNavMenu` to use semantic `<button>` elements instead of `div onClick` for improved accessibility and focus management.
+- **Row Context Menu**: Migrated from manual URL-based portal positioning to **Radix UI Popover**, ensuring robust positioning, collision handling, and proper focus containment.
+- **Token Adoption**: Refactored `TreeView`, `BulkActionFooter`, and `toast` CSS modules to strictly use design system tokens for spacing, typography, and z-index.
+
+### Fixed
+- **Accessibility**: Fixed inaccessible interaction patterns in key navigation components ("div buttons").
+- **Layout**: Fixed inconsistent z-index usage that could lead to stacking context warring (e.g., toasts appearing under modals).
 
 ### Fixed (2026-01-18)
 - **Mock Data Reliability**: Fixed a critical `ReferenceError` in `mockData.ts` caused by circular initialization order of `seededRandom`.
@@ -77,7 +69,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
         - Merged scheduled time logic into the primary Status sort.
         - Removed the explicit secondary sort from the initial table state to prevent visual clutter.
     - **Default View**: Changed default landing view.
-        - The application now defaults to the **Historical View** instead of the Live Monitor on fresh sessions.,
+        - The application now defaults to the **Historical View** instead of the Live Monitor on fresh sessions.
+
+- **View State Synchronization**: Unified view state management across the application.
+    - Removed redundant `desktopEnhancedViewAtom`.
+    - Migrated all components to use the canonical `desktopViewAtom`.
+    - Ensured immediate and consistent synchronization between the sidebar tree, mode toggle, and toolbar filters.
+- **Filter Experience Refinement**: Cleaned up toolbar filters for improved operational focus.
+    - **Live View**:
+        - Updated Status dropdown options to "All", "Due", "Missed", "Upcoming".
+        - Removed irrelevant "Missed – No Comment" status option.
+        - Removed redundant Time Range dropdown.
+    - **Historical View**: Maintained full status and time range filtering capabilities.
+
+- **Navigation Visuals**: Reached parity with high-fidelity visual design for Sidebar and Top Navigation.
+    - **Visual Hierarchy**: Refined Sidebar with "Quick Access", "Recent Cases", and "Notes Library" sections.
+    - **Semantic Theme**: Implemented "Hybrid" theme for navigation (Dark top nav, Light sidebar) using new `nav-*` semantic tokens.
+    - **Hover States**: Added `--nav-item-selected-hover` token for selected items (1-token darker) naturally maintaining "on-solid" foreground color.
+    - **Label Renames**: Renamed "Safeguard" to "Safeguard checks" in the left navigation to match operational specifications.
+    - **3-Column Top Nav**: Overhauled header layout to support System Icons (Left), Global Search (Center), and Session Actions (Right).
+    - **Refined Avatar**: Updated user avatar to use high-contrast initials on a white background.
+    - **Unified Spacing**: Standardized left navigation item spacing to a consistent 1px gap using Flexbox.
+    - **Token Alignment**: Removed `32px`/`48px` magic numbers, replacing them with standard sizing tokens (`control-height-sm`, `avatar-size-md`).
 
 - **Enhanced Navigation Restructuring**: Split the navigation area into two distinct rows for better visual hierarchy.
     - Added Row 1 strictly for breadcrumbs, centered vertically in a 20px height.
@@ -176,23 +189,3 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [Describe what was removed]
 
 ---
-
-## Example Entry
-
-### [2.1.0] - 2024-01-15
-
-### Added
-- New Button component with primary/secondary variants
-- Dark mode support with theme switcher
-- Accessibility audit workflow
-
-### Changed
-- Refactored spacing system to use `gap` instead of margins
-- Updated typography scale to match brand guidelines
-
-### Fixed
-- Button hover state in dark mode
-- Inconsistent spacing in sidebar navigation
-
-### Removed
-- Deprecated `LegacyButton` component

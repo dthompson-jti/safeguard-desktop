@@ -36,12 +36,12 @@
 .backdrop {
     position: fixed;
     inset: 0;
-    z-index: 105;
+    z-index: var(--z-dropdown);
 }
 
 .menu {
     /* Position set via inline styles from portal */
-    z-index: 106;
+    z-index: calc(var(--z-dropdown) + 1);
     min-width: 220px;
     background-color: var(--surface-bg-primary);
     border: 1px solid var(--surface-border-primary);

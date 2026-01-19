@@ -19,6 +19,9 @@
 
 /* Collapsed State Styles */
 .collapsedIcon {
+    background: transparent;
+    border: none;
+    padding: 0;
     width: 36px;
     height: 36px;
     display: flex;
