@@ -3,7 +3,7 @@
 
 /* --- Menu Popover Container --- */
 .menuPopover {
-  z-index: 106;
+  z-index: var(--z-dropdown);
   background-color: var(--surface-bg-primary);
   border-radius: var(--spacing-3);
   /* 12px */

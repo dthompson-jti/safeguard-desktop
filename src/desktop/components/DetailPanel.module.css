@@ -131,7 +131,31 @@
 }
 
 
+
 /* --- CONTENT AREA --- */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-1);
+    font-size: var(--font-size-sm);
+    color: var(--surface-fg-secondary);
+}
+
+.breadcrumbLink {
+    color: var(--surface-fg-link);
+    text-decoration: none;
+}
+
+.breadcrumbLink:hover {
+    text-decoration: underline;
+}
+
+.breadcrumbSeparator {
+    color: var(--surface-fg-tertiary);
+    font-size: var(--font-size-xs);
+}
+
 .content {
     flex: 1;
     overflow-y: auto;

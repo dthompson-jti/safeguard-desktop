@@ -11,7 +11,7 @@
   box-shadow: var(--surface-shadow-md);
   border: 1px solid var(--primitives-grey-800);
   user-select: none;
-  z-index: 2100;
+  z-index: var(--z-tooltip);
   /* Ensure it's above other UI */
 }
 

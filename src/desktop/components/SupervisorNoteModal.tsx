@@ -7,6 +7,8 @@ import {
     historicalChecksAtom,
     selectedHistoryRowsAtom,
     historicalRefreshAtom,
+    historicalRowUpdateAtom,
+    activeDetailRecordAtom,
 } from '../atoms';
 import { SUPERVISOR_NOTE_REASONS, SupervisorNoteReason } from '../types';
 import { addToastAtom } from '../../data/toastAtoms';
@@ -27,6 +29,7 @@ export const SupervisorNoteModal = () => {
     const [reason, setReason] = useState<SupervisorNoteReason>('Unit Lockdown');
     const [additionalNotes, setAdditionalNotes] = useState('');
     const [isSaving, setIsSaving] = useState(false);
+    const setRowUpdate = useSetAtom(historicalRowUpdateAtom);
 
     // Initial load / Edit mode logic
     const [hasExistingComment, setHasExistingComment] = useState(false);
@@ -77,6 +80,8 @@ export const SupervisorNoteModal = () => {
         setHasExistingComment(false);
     };
 
+    const [activeRecord, setActiveRecord] = useAtom(activeDetailRecordAtom);
+
     const handleSave = async () => {
         if (isSaving) return;
         setIsSaving(true);
@@ -87,7 +92,9 @@ export const SupervisorNoteModal = () => {
 
         const updates = {
             supervisorNote: note,
-            // reviewStatus removed as requested
+            supervisorName: 'Dave Thompson', // Mock logged-in user
+            reviewDate: new Date().toISOString(),
+            reviewStatus: 'verified' as const,
         };
 
         try {
@@ -97,7 +104,19 @@ export const SupervisorNoteModal = () => {
                     modalState.selectedIds.includes(check.id) ? { ...check, ...updates } : check
                 )
             );
-            setRefreshTrigger(prev => prev + 1);
+
+            // Sync active record if it's the one being edited
+            // This ensures the Detail Panel updates immediately without requiring a full re-select/refresh
+            if (activeRecord && modalState.selectedIds.includes(activeRecord.id)) {
+                setActiveRecord({ ...activeRecord, ...updates });
+            }
+
+            // Trigger local sticky update for batch
+            const batchUpdates = modalState.selectedIds.map(id => ({
+                id,
+                changes: updates
+            }));
+            setRowUpdate(batchUpdates);
 
             if (modalState.selectedIds.length > 1) {
                 setSelectedRows(new Set());
@@ -124,7 +143,9 @@ export const SupervisorNoteModal = () => {
 
         const updates = {
             supervisorNote: undefined,
-            // reviewStatus: 'pending' (optional, but effectively cleared)
+            supervisorName: undefined,
+            reviewDate: undefined,
+            reviewStatus: 'pending' as const,
         };
 
         try {
@@ -134,6 +155,12 @@ export const SupervisorNoteModal = () => {
                     modalState.selectedIds.includes(check.id) ? { ...check, ...updates } : check
                 )
             );
+
+            // Sync active record if it's the one being edited
+            if (activeRecord && modalState.selectedIds.includes(activeRecord.id)) {
+                setActiveRecord({ ...activeRecord, ...updates });
+            }
+
             setRefreshTrigger(prev => prev + 1);
 
             // Always refresh selection state

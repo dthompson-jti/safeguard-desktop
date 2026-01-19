@@ -20,6 +20,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 - **Accessibility**: Fixed inaccessible interaction patterns in key navigation components ("div buttons").
 - **Layout**: Fixed inconsistent z-index usage that could lead to stacking context warring (e.g., toasts appearing under modals).
+- **Sticky Rows**: Implemented "Sticky Rows" for Historical View.
+    - Rows now remain visible after adding a comment (even if they violate the active filter) until navigation/refresh.
+    - Fixed initial race condition in multi-select updates by implementing atomic batch updates.
+    - Significantly improved UX flow for bulk-commenting "Missed" items.
+
+### Fixed (2026-01-19) - Late Session 2
+- **Supervisor Comment Refinement**:
+    - **Visual Clarity**: Split the Supervisor Comment section in the Details Panel into distinct "Date", "Supervisor", and "Comment" fields.
+    - **Data Integrity**: Resolved an architectural issue where Supervisor Name and Review Date were not being generated or saved by the modal.
+    - **Real-time Sync**: Implemented explicit synchronization of the `activeDetailRecordAtom` to ensure the Details Panel updates immediately upon saving a comment, eliminating stale data.
+
+### Fixed (2026-01-19) - Late Session
+- **Z-Index Hierarchy Fix**:
+    - **Semantics**: Audited and updated semantic z-index scale (Modals: 2000, Dropdowns: 2100).
+    - **Visual Fix**: Resolved issue where "Reason for missed checks" dropdown rendered BEHIND the Supervisor Note modal.
+    - **Consistency**: All overlay components (`menu.css`, `modal.css`, `popover.css`, `tooltip.css`) now strictly use semantic z-index tokens.
+- **Missed Checks Logic Refinement**:
+    - **Live View Consistency**: Live "Overdue" checks (which display "Missed (N)") now generate distinct "missed" records in the Historical View for each missed interval (e.g., at 15m, 30m).
+    - **Visual Clarity**:
+        - Open checks (Upcoming/Due/Overdue) now display "—" (em dash) in the **Actual** time column of the Details Panel instead of misleading scheduled times.
+        - Checks without an assigned officer now display "—" instead of "Pending" in the Details Panel.
 
 ### Fixed (2026-01-18)
 - **Mock Data Reliability**: Fixed a critical `ReferenceError` in `mockData.ts` caused by circular initialization order of `seededRandom`.
@@ -70,6 +91,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
         - Removed the explicit secondary sort from the initial table state to prevent visual clutter.
     - **Default View**: Changed default landing view.
         - The application now defaults to the **Historical View** instead of the Live Monitor on fresh sessions.
+
+
+    - **Live View Refinements (2026-01-19)**:
+        - **Multiple Residents**: Rooms with multiple residents now stack names vertically within the "Resident" cell.
+        - **Layout Alignment**: Content now aligns to the top of the cell for multi-line rows, while centered single-resident rows are visually preserved.
+        - **Status Badges**:
+            - Added **Medical Watch (MW)** support with badges.
+            - "MW" and "SR" badges now right-aligned with specific residents.
+            - **Missed Check Counts**: Added "(N)" count to the "Missed" status badge (e.g., "Missed (3)").
+        - **Context Menu**: Removed "View resident" action.
+    - **Detail Panel**:
+        - **Typography**: `LabelValueRow` values now use **regular** font weight (was medium/bold).
+        - **Interaction**: Panel **no longer auto-opens** on row selection; manual toggle only.
+        - **Officer Details**: "Officer Log" demoted to "Officer Comments" row; empty names fallback to `—`.
+    - **Historical View**:
+        - **Columns**: Removed "Variance", moved "Comments" to end.
+        - **Export**: Removed Export button.
+
 
 - **View State Synchronization**: Unified view state management across the application.
     - Removed redundant `desktopEnhancedViewAtom`.

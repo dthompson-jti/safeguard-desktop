@@ -40,7 +40,7 @@
 .badge[data-status='overdue'] {
     background: var(--surface-bg-error-primary);
     color: var(--surface-fg-alert-primary);
-    border-color: var(--surface-border-alert);
+    border-color: var(--surface-border-alert_subtle);
 }
 
 /* Missed - Commented (semantic grey) */
@@ -54,7 +54,7 @@
 .badge[data-status='due'] {
     background: var(--surface-bg-warning-primary);
     color: var(--surface-fg-warning-primary);
-    border-color: var(--surface-border-warning);
+    border-color: var(--surface-border-warning_subtle);
 }
 
 /* Pending / Upcoming */
@@ -70,14 +70,14 @@
 .badge[data-status='verified'] {
     background: var(--surface-bg-success);
     color: var(--surface-fg-success-primary);
-    border-color: var(--surface-border-success);
+    border-color: var(--surface-border-success_subtle);
 }
 
 /* Completed (semantic green) */
 .badge[data-status='completed'] {
     background: var(--surface-bg-success);
     color: var(--surface-fg-success-primary);
-    border-color: var(--surface-border-success);
+    border-color: var(--surface-border-success_subtle);
 }
 
 /* Late */

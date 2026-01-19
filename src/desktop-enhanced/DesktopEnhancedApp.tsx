@@ -113,11 +113,7 @@ export default function DesktopEnhancedApp() {
                             </div>
                             <div className={styles.navRow2}>
                                 <div className={styles.row2Actions}>
-                                    {view === 'historical' && (
-                                        <Button variant="secondary" size="s">
-                                            Export
-                                        </Button>
-                                    )}
+
                                     <Popover
                                         open={isMoreActionsOpen}
                                         onOpenChange={setIsMoreActionsOpen}

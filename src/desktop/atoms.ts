@@ -30,11 +30,10 @@ export const FACTORY_FILTER_DEFAULTS: DesktopFilter = {
     dateStart: null,
     dateEnd: null,
     officer: '',
-    afterDate: null,
-    beforeDate: null,
-    specialStatus: 'any',
+    startDate: null,
+    endDate: null,
+    enhancedObservation: 'any',
     commentFilter: 'any',
-    commentSearch: '',
 };
 
 /** User's saved filter defaults (Persisted) */
@@ -79,11 +78,10 @@ export const isFilterCustomizedAtom = atom((get) => {
         current.timeRangePreset !== saved.timeRangePreset ||
         (current.timeRangePreset === 'custom' && (current.dateStart !== saved.dateStart || current.dateEnd !== saved.dateEnd)) ||
         current.officer !== saved.officer ||
-        current.afterDate !== saved.afterDate ||
-        current.beforeDate !== saved.beforeDate ||
-        current.specialStatus !== saved.specialStatus ||
-        current.commentFilter !== saved.commentFilter ||
-        current.commentSearch !== saved.commentSearch
+        current.startDate !== saved.startDate ||
+        current.endDate !== saved.endDate ||
+        current.enhancedObservation !== saved.enhancedObservation ||
+        current.commentFilter !== saved.commentFilter
     );
 });
 
@@ -142,6 +140,12 @@ export const historicalChecksAtom = atom<HistoricalCheck[]>(enhancedMockData.his
 /** Counter changed to trigger re-fetches in views */
 export const historicalRefreshAtom = atom(0);
 
+/** 
+ * Push granular updates to historical rows (Sticky Row support) 
+ * Payload: { id, changes }[]
+ */
+export const historicalRowUpdateAtom = atom<{ id: string; changes: Partial<HistoricalCheck> }[] | null>(null);
+
 /** Derived: filtered historical checks */
 export const filteredHistoricalChecksAtom = atom((get) => {
     const checks = get(historicalChecksAtom);
@@ -182,15 +186,15 @@ export const filteredHistoricalChecksAtom = atom((get) => {
 
         // Advanced Date filters
         const checkDate = check.scheduledTime.split('T')[0];
-        if (filter.afterDate && checkDate < filter.afterDate) return false;
-        if (filter.beforeDate && checkDate > filter.beforeDate) return false;
+        if (filter.startDate && checkDate < filter.startDate) return false;
+        if (filter.endDate && checkDate > filter.endDate) return false;
 
         // Special Status filter
-        if (filter.specialStatus !== 'any') {
+        if (filter.enhancedObservation !== 'any') {
             const hasSR = check.hasHighRisk;
             const hasMW = check.location.includes('MW'); // Mock MW logic
-            if (filter.specialStatus === 'sr' && !hasSR) return false;
-            if (filter.specialStatus === 'mw' && !hasMW) return false;
+            if (filter.enhancedObservation === 'sr' && !hasSR) return false;
+            if (filter.enhancedObservation === 'mw' && !hasMW) return false;
         }
 
         // Comment filters
@@ -198,10 +202,6 @@ export const filteredHistoricalChecksAtom = atom((get) => {
             const hasNote = !!check.supervisorNote;
             if (filter.commentFilter === 'has' && !hasNote) return false;
             if (filter.commentFilter === 'none' && hasNote) return false;
-        }
-
-        if (filter.commentSearch && check.supervisorNote) {
-            if (!check.supervisorNote.toLowerCase().includes(filter.commentSearch.toLowerCase())) return false;
         }
 
         return true;
@@ -237,6 +237,8 @@ export interface PanelData {
     officerName: string;
     officerNote?: string;
     supervisorNote?: string;
+    supervisorName?: string;
+    reviewDate?: string;
     reviewStatus?: 'pending' | 'verified';
     group?: string;
     unit?: string;

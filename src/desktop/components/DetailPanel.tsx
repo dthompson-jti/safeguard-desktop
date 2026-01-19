@@ -45,10 +45,13 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
     };
 
     const formatTime = (iso: string | null) => {
-        if (!iso) return '—';
+        if (!iso) return <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>;
         const date = new Date(iso);
-        if (isNaN(date.getTime())) return iso; // Fallback for pre-formatted strings
-        return date.toLocaleTimeString('en-US', {
+        if (isNaN(date.getTime())) return iso;
+        return date.toLocaleString('en-US', {
+            month: 'numeric',
+            day: 'numeric',
+            year: '2-digit',
             hour: 'numeric',
             minute: '2-digit',
             hour12: true,
@@ -177,8 +180,16 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                             <SidePanelHeading title="Properties" />
                             <div className={styles.metaStack}>
                                 <LabelValueRow
-                                    label="Room"
-                                    value={record.location}
+                                    label="Location"
+                                    value={
+                                        <div className={styles.breadcrumb}>
+                                            <a href="#" className={styles.breadcrumbLink}>{record.group || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}</a>
+                                            <span className={styles.breadcrumbSeparator}>›</span>
+                                            <a href="#" className={styles.breadcrumbLink}>{record.unit || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}</a>
+                                            <span className={styles.breadcrumbSeparator}>›</span>
+                                            <a href="#" className={styles.breadcrumbLink}>{record.location}</a>
+                                        </div>
+                                    }
                                 />
                                 <LabelValueRow
                                     label="Status"
@@ -190,67 +201,47 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                 />
                                 <LabelValueRow
                                     label="Actual"
-                                    value={record.timeActual ? formatTime(record.timeActual) : 'Pending'}
-                                />
-                                <LabelValueRow
-                                    label="Variance"
-                                    value={record.varianceMinutes !== undefined ? (
-                                        isFinite(record.varianceMinutes) ? `${record.varianceMinutes > 0 ? '+' : ''}${record.varianceMinutes}m` : 'Missed'
-                                    ) : 'N/A'}
-                                    variant={record.varianceMinutes && record.varianceMinutes > 2 ? 'late' : (record.varianceMinutes !== undefined ? 'onTime' : 'primary')}
-                                />
-                                <LabelValueRow
-                                    label="Group"
-                                    value={record.group || '—'}
-                                />
-                                <LabelValueRow
-                                    label="Unit"
-                                    value={record.unit || '—'}
+                                    value={record.timeActual ? formatTime(record.timeActual) : <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}
                                 />
                                 <LabelValueRow
                                     label="Officer"
-                                    value={record.officerName}
+                                    value={record.officerName || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}
+                                />
+                                <LabelValueRow
+                                    label="Officer Comments"
+                                    value={record.officerNote || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}
                                 />
                             </div>
                         </div>
 
-                        {/* SECTION 2: OFFICER LOG */}
+
+
+                        {/* SECTION 3: SUPERVISOR COMMENT */}
                         <div className={styles.section}>
-                            <SidePanelHeading title="Officer Log" />
-                            <div className={styles.quoteBlock}>
-                                {record.officerNote ? (
-                                    <>
-                                        <p className={styles.quoteContent}>{record.officerNote}</p>
-                                        <div className={styles.quoteSignature}>
-                                            {record.officerName}
-                                        </div>
-                                    </>
-                                ) : (
-                                    <span className={styles.emptyNote}>No officer notes recorded.</span>
-                                )}
+                            <SidePanelHeading title="Supervisor Comment" />
+                            <div className={styles.metaStack}>
+                                <LabelValueRow
+                                    label="Date"
+                                    value={formatTime(record.reviewDate || null)}
+                                />
+                                <LabelValueRow
+                                    label="Supervisor"
+                                    value={record.supervisorName || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}
+                                />
+                                <LabelValueRow
+                                    label="Comment"
+                                    value={record.supervisorNote || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}
+                                />
                             </div>
-                        </div>
-
-                        {/* SECTION 3: SUPERVISOR REVIEW */}
-                        <div className={styles.section}>
-                            <SidePanelHeading title="Supervisor Review" />
-                            <div className={styles.reviewSection}>
-                                {record.supervisorNote && (
-                                    <div className={styles.reviewContent}>
-                                        <p className={styles.quoteContent}>{record.supervisorNote}</p>
-                                    </div>
-                                )}
-
-                                <div className={styles.actionGroup}>
-                                    <Button
-                                        variant="secondary"
-                                        size="s"
-                                        onClick={handleOpenNoteModal}
-                                    >
-                                        <span className="material-symbols-rounded">add_comment</span>
-                                        {record.supervisorNote ? 'Edit' : 'Add Comment'}
-                                    </Button>
-                                </div>
+                            <div className={styles.actionGroup}>
+                                <Button
+                                    variant="secondary"
+                                    size="s"
+                                    onClick={handleOpenNoteModal}
+                                >
+                                    <span className="material-symbols-rounded">add_comment</span>
+                                    {record.supervisorNote ? 'Edit' : 'Add Comment'}
+                                </Button>
                             </div>
                         </div>
                     </>

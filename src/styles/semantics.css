@@ -93,6 +93,12 @@
   --surface-border-theme_alt: var(--primitives-theme-600);
   --surface-border-secondary_alt: #00000014;
 
+  /* Subtle Borders - 200 series for Light Mode */
+  --surface-border-alert_subtle: var(--primitives-red-200);
+  --surface-border-warning_subtle: var(--primitives-yellow-200);
+  --surface-border-success_subtle: var(--primitives-green-200);
+  --surface-border-info_subtle: var(--primitives-blue-200);
+
   /* Shadows */
   --surface-shadow-xs: 0 1px 2px 0 #0A0C120C;
   --surface-shadow-sm: 0 1px 2px -1px #0A0C1219, 0 1px 2px -1px #0A0C1219;
@@ -290,8 +296,9 @@
   --z-resizer: 105;
   --z-actions-footer: 110;
   --z-overlay: 200;
-  --z-dropdown: 1000;
+  --z-dropdown: 2100;
   --z-modal: 2000;
+  --z-tooltip: 2200;
   --z-toast: 9999;
   --z-max: 2147483647;
 }
@@ -371,6 +378,12 @@
   --surface-border-alert_subtle: var(--primitives-red-700);
   --surface-border-success: var(--primitives-green-600);
   --surface-border-info: var(--primitives-blue-600);
+
+  /* Subtle Borders - 800 series for Dark Mode */
+  --surface-border-alert_subtle: var(--primitives-red-800);
+  --surface-border-warning_subtle: var(--primitives-yellow-800);
+  --surface-border-success_subtle: var(--primitives-green-800);
+  --surface-border-info_subtle: var(--primitives-blue-800);
 
   /* Status Foregrounds - OKLCH high-chromacity for dark mode vibrancy */
   --surface-fg-alert-primary: #FF5C50;
@@ -568,6 +581,12 @@
   --surface-border-alert_subtle: var(--primitives-red-700);
   --surface-border-success: var(--primitives-green-600);
   --surface-border-info: var(--primitives-blue-600);
+
+  /* Subtle Borders - 800 series for Dark Mode */
+  --surface-border-alert_subtle: var(--primitives-red-800);
+  --surface-border-warning_subtle: var(--primitives-yellow-800);
+  --surface-border-success_subtle: var(--primitives-green-800);
+  --surface-border-info_subtle: var(--primitives-blue-800);
 
   /* Status Foregrounds - OKLCH high-chromacity for dark mode vibrancy */
   --surface-fg-alert-primary: #FF5C50;
@@ -774,6 +793,12 @@
   --surface-border-alert_subtle: var(--primitives-red-800);
   --surface-border-success: var(--primitives-green-700);
   --surface-border-info: var(--primitives-blue-700);
+
+  /* Subtle Borders - 800 series for Dark Mode */
+  --surface-border-alert_subtle: var(--primitives-red-800);
+  --surface-border-warning_subtle: var(--primitives-yellow-800);
+  --surface-border-success_subtle: var(--primitives-green-800);
+  --surface-border-info_subtle: var(--primitives-blue-800);
 
   /* Status Foregrounds - OKLCH high-chromacity for dark mode vibrancy */
   --surface-fg-alert-primary: #FF5C50;

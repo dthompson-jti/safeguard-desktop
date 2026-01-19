@@ -208,9 +208,10 @@ To prevent visual bleeding during full-screen transitions and complex stacking, 
 4.  **--z-resizer (105):** Interaction handles.
 5.  **--z-actions-footer (110):** Floating action bars.
 6.  **--z-overlay (200):** Backdrops.
-7.  **--z-dropdown (1000):** Popovers, Menus, Selects.
-8.  **--z-modal (2000):** Dialogs, Alerts.
-9.  **--z-toast (9999):** Critical notifications (Always on top).
+7.  **--z-modal (2000):** Dialogs, Alerts.
+8.  **--z-dropdown (2100):** Popovers, Menus, Selects.
+9.  **--z-tooltip (2200):** Tooltips.
+10. **--z-toast (9999):** Critical notifications (Always on top).
 
 Never use hardcoded values like `101`, `999`, or `2147483647`. Always use the token.
 

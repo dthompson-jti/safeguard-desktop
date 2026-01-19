@@ -86,7 +86,7 @@ const seededRandom = (seed: number) => {
 // Room Definition
 interface RoomDef {
     id: string;
-    residents: { id: string; name: string; location: string }[];
+    residents: { id: string; name: string; location: string; hasHighRisk?: boolean; hasMedicalWatch?: boolean }[];
     location: string;
     group: string;
     unit: string;
@@ -110,8 +110,19 @@ const ROOMS: RoomDef[] = ((): RoomDef[] => {
                 const isDouble = (seededRandom(seed) > 0.5);
                 const residentCount = isDouble ? 2 : 1;
 
-                const roomResidents: { id: string; name: string; location: string }[] = [];
-                for (let r = 0; r < residentCount; r++) {
+                const roomResidents: { id: string; name: string; location: string; hasHighRisk?: boolean; hasMedicalWatch?: boolean }[] = [];
+
+                // FORCE: Make rooms 2 and 5 explicitly Paired MW for visibility
+                const globalRoomIndex = rooms.length; // Approximate running index
+                const isForcedPaired = (globalRoomIndex === 2 || globalRoomIndex === 5);
+
+                // Decide if this room is a "Paired MW" room. Force it or random chance.
+                const isPairedMW = isForcedPaired || (residentCount === 2 && (seed % 10 === 0)); // Increased chance
+
+                // If forced paired, ensure count is 2
+                const finalResidentCount = isForcedPaired ? 2 : residentCount;
+
+                for (let r = 0; r < finalResidentCount; r++) {
                     // Pick names that haven't been used
                     let nameIdx = (seed * 7 + r) % RESIDENT_NAMES.length;
                     while (usedNames.has(RESIDENT_NAMES[nameIdx])) {
@@ -119,7 +130,12 @@ const ROOMS: RoomDef[] = ((): RoomDef[] => {
                     }
                     const name = RESIDENT_NAMES[nameIdx];
                     usedNames.add(name);
-                    roomResidents.push({ id: `res-${roomId}-${r}`, name, location });
+
+                    // Assign High Risk to some residents (e.g. 1 in 10), but mostly not if Paired MW (to avoid clutter)
+                    const hasHighRisk = !isPairedMW && ((seed + r) % 10 === 0);
+                    const hasMedicalWatch = isPairedMW; // Both residents get MW if paired
+
+                    roomResidents.push({ id: `res-${roomId}-${r}`, name, location, hasHighRisk, hasMedicalWatch });
                 }
 
                 rooms.push({
@@ -157,14 +173,7 @@ const getUnitProfile = (_group: string, unit: string): RiskProfile => {
     return { missedProb: 0, commentFailProb: 0, tier: 'good' };
 };
 
-// Format time for display: "7:03 AM"
-const formatTimeDisplay = (date: Date): string => {
-    const hours = date.getHours();
-    const mins = date.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const displayHour = hours % 12 || 12;
-    return `${displayHour}:${String(mins).padStart(2, '0')} ${ampm}`;
-};
+
 
 /**
  * CORE DATA GENERATOR
@@ -258,32 +267,40 @@ export const generateEnhancedData = () => {
             timerSeverity = 'neutral';
         }
 
-        // Generate rows per resident
-        room.residents.forEach((resident, resIdx) => {
-            // Add to Live data (ONE check per resident)
-            liveData.push({
-                id: `live-${room.id}-${resIdx}`,
-                status: liveStatus,
-                timerText,
-                timerSeverity,
-                location: room.location,
-                residents: [resident], // Single resident per row
-                hasHighRisk: (roomIdx + resIdx) % 7 === 0,
-                group: room.group,
-                unit: room.unit,
-                lastCheckTime: formatTimeDisplay(scheduledTime),
-                lastCheckOfficer: officer,
-                originalCheck: {
-                    id: `check-${room.id}-${resIdx}`,
-                    type: 'scheduled',
-                    status: liveStatus === 'upcoming' ? 'pending' : (liveStatus === 'due' ? 'due' : 'missed'),
-                    residents: [resident],
-                    dueDate: scheduledTime.toISOString(),
-                    generationId: 1,
-                    baseInterval: 15
-                },
-            });
+        // Calculate missed check count
+        let missedCheckCount = 0;
+        if (liveStatus === 'overdue') {
+            // 1 check is base. Additional checks every 15 mins if they are also > 5 mins overdue
+            missedCheckCount = 1 + Math.max(0, Math.floor((deltaMinutes - 6) / 15));
+        }
 
+        // Add to Live data (ONE check per room)
+        liveData.push({
+            id: `live-${room.id}`,
+            status: liveStatus,
+            timerText,
+            timerSeverity,
+            location: room.location,
+            residents: room.residents, // All residents
+            hasHighRisk: room.residents.some((_, i) => (roomIdx + i) % 7 === 0),
+            group: room.group,
+            unit: room.unit,
+            lastCheckTime: null,
+            lastCheckOfficer: null,
+            missedCheckCount,
+            originalCheck: {
+                id: `check-${room.id}`,
+                type: 'scheduled',
+                status: liveStatus === 'upcoming' ? 'pending' : (liveStatus === 'due' ? 'due' : 'missed'),
+                residents: room.residents,
+                dueDate: scheduledTime.toISOString(),
+                generationId: 1,
+                baseInterval: 15
+            },
+        });
+
+        // Generate historical rows per resident
+        room.residents.forEach((resident, resIdx) => {
             // Historical checks for this resident
             const historyStart = new Date(now.getTime() - HISTORY_HOURS * 60 * MS_PER_MINUTE);
             historyStart.setMinutes(scheduledTime.getMinutes(), 0, 0);
@@ -316,6 +333,9 @@ export const generateEnhancedData = () => {
                     ? (shouldHaveComment ? 'Reviewed and documented.' : undefined)
                     : undefined;
 
+                const supervisorName = supervisorNote ? 'Dave Thompson' : undefined;
+                const reviewDate = supervisorNote ? new Date(slotTime.getTime() + 60 * MS_PER_MINUTE).toISOString() : undefined;
+
                 historicalData.push({
                     id: checkId,
                     residents: [resident], // Single resident
@@ -329,12 +349,50 @@ export const generateEnhancedData = () => {
                     officerName: isMissed ? '' : officer,
                     officerNote,
                     supervisorNote,
+                    supervisorName,
+                    reviewDate,
                     reviewStatus: isMissed ? (supervisorNote ? 'verified' : 'pending') : 'verified',
                     hasHighRisk: (roomIdx + resIdx) % 7 === 0,
                 });
 
                 slotTime = new Date(slotTime.getTime() + CHECK_INTERVAL_MINS * MS_PER_MINUTE);
                 slotIndex++;
+            }
+
+            // INJECT: If the current live status is 'overdue', we must add the "missed" checks to history.
+            // The Live View aggregates these into "Missed (N)", but History needs individual rows.
+            if (missedCheckCount > 0) {
+                for (let m = 0; m < missedCheckCount; m++) {
+                    // Calculate time for this specific missed check
+                    // The first one (m=0) is at scheduledTime. Subsequent ones are +15m, +30m, etc.
+                    const missedTime = new Date(scheduledTime.getTime() + m * CHECK_INTERVAL_MINS * MS_PER_MINUTE);
+                    const checkId = `hist-${room.id}-${resIdx}-missed-${m}`; // Distinct ID
+
+                    // These are RECENT missed checks, so they are likely unreviewed (pending).
+                    // But to match the mock vibe, we'll leave them mostly unreviewed.
+                    const supervisorNote = undefined;
+                    const supervisorName = undefined;
+                    const reviewDate = undefined;
+
+                    historicalData.push({
+                        id: checkId,
+                        residents: [resident],
+                        location: room.location,
+                        scheduledTime: missedTime.toISOString(),
+                        actualTime: null,
+                        status: 'missed',
+                        varianceMinutes: Infinity,
+                        group: room.group,
+                        unit: room.unit,
+                        officerName: '', // Blank for missed
+                        officerNote: undefined,
+                        supervisorNote,
+                        supervisorName,
+                        reviewDate,
+                        reviewStatus: 'pending',
+                        hasHighRisk: (roomIdx + resIdx) % 7 === 0,
+                    });
+                }
             }
         });
     });
@@ -404,16 +462,16 @@ export const loadEnhancedHistoricalPage = (
                         filtered = filtered.filter(r => r.status === 'completed');
                     }
                 }
-                if (filter.dateStart || filter.dateEnd) {
+                if (filter.startDate || filter.endDate) {
                     const checkDate = (iso: string) => iso.split('T')[0];
                     filtered = filtered.filter(r => {
-                        if (filter.dateStart) {
+                        if (filter.startDate) {
                             const date = checkDate(r.scheduledTime);
-                            if (date < filter.dateStart) return false;
+                            if (date < filter.startDate) return false;
                         }
-                        if (filter.dateEnd) {
+                        if (filter.endDate) {
                             const date = checkDate(r.scheduledTime);
-                            if (date > filter.dateEnd) return false;
+                            if (date > filter.endDate) return false;
                         }
                         return true;
                     });
@@ -425,16 +483,16 @@ export const loadEnhancedHistoricalPage = (
                         r.officerName.toLowerCase().includes(filter.officer.toLowerCase())
                     );
                 }
-                if (filter.afterDate) {
-                    filtered = filtered.filter(r => r.scheduledTime.split('T')[0] >= filter.afterDate!);
+                if (filter.startDate) {
+                    filtered = filtered.filter(r => r.scheduledTime.split('T')[0] >= filter.startDate!);
                 }
-                if (filter.beforeDate) {
-                    filtered = filtered.filter(r => r.scheduledTime.split('T')[0] <= filter.beforeDate!);
+                if (filter.endDate) {
+                    filtered = filtered.filter(r => r.scheduledTime.split('T')[0] <= filter.endDate!);
                 }
-                if (filter.specialStatus && filter.specialStatus !== 'any') {
+                if (filter.enhancedObservation && filter.enhancedObservation !== 'any') {
                     filtered = filtered.filter(r => {
-                        if (filter.specialStatus === 'sr') return !!r.hasHighRisk;
-                        if (filter.specialStatus === 'mw') return r.location.includes('MW'); // Mock logic
+                        if (filter.enhancedObservation === 'sr') return !!r.hasHighRisk;
+                        if (filter.enhancedObservation === 'mw') return r.location.includes('MW'); // Mock logic
                         return true;
                     });
                 }
@@ -444,11 +502,6 @@ export const loadEnhancedHistoricalPage = (
                         if (filter.commentFilter === 'none') return !r.supervisorNote;
                         return true;
                     });
-                }
-                if (filter.commentSearch) {
-                    filtered = filtered.filter(r =>
-                        r.supervisorNote?.toLowerCase().includes(filter.commentSearch.toLowerCase())
-                    );
                 }
             }
             const data = filtered.slice(cursor, cursor + pageSize);

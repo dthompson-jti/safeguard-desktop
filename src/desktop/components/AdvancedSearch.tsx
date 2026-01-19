@@ -23,11 +23,7 @@ const SPECIAL_STATUS_OPTIONS = [
     { value: 'mw', label: 'Medical Watch (MW)' },
 ];
 
-const COMMENT_OPTIONS = [
-    { value: 'any', label: 'Any' },
-    { value: 'has', label: 'Has comment' },
-    { value: 'none', label: 'No comment' },
-];
+
 
 export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
     const filter = useAtomValue(desktopFilterAtom);
@@ -39,11 +35,10 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
         search: filter.search,
         officer: filter.officer || 'any',
         historicalStatusFilter: filter.historicalStatusFilter,
-        specialStatus: filter.specialStatus,
-        afterDate: filter.afterDate || '',
-        beforeDate: filter.beforeDate || '',
+        enhancedObservation: filter.enhancedObservation,
+        startDate: filter.startDate || '',
+        endDate: filter.endDate || '',
         commentFilter: filter.commentFilter,
-        commentSearch: filter.commentSearch,
     });
 
     const handleChange = useCallback((key: keyof typeof localFilter, value: string) => {
@@ -55,11 +50,10 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
             search: localFilter.search,
             officer: localFilter.officer === 'any' ? '' : localFilter.officer,
             historicalStatusFilter: localFilter.historicalStatusFilter,
-            specialStatus: localFilter.specialStatus,
-            afterDate: localFilter.afterDate || null,
-            beforeDate: localFilter.beforeDate || null,
+            enhancedObservation: localFilter.enhancedObservation,
+            startDate: localFilter.startDate || null,
+            endDate: localFilter.endDate || null,
             commentFilter: localFilter.commentFilter,
-            commentSearch: localFilter.commentSearch,
         });
         onClose();
     };
@@ -125,10 +119,10 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
                     </Select>
                 </div>
                 <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Special status</label>
+                    <label className={styles.label}>Enhanced observation</label>
                     <Select
-                        value={localFilter.specialStatus}
-                        onValueChange={(val) => handleChange('specialStatus', val)}
+                        value={localFilter.enhancedObservation}
+                        onValueChange={(val) => handleChange('enhancedObservation', val)}
                         triggerClassName={styles.selectTrigger}
                     >
                         {SPECIAL_STATUS_OPTIONS.map(opt => (
@@ -139,48 +133,25 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
 
                 {/* Row 3 */}
                 <div className={styles.fieldGroup}>
-                    <label className={styles.label}>After date</label>
+                    <label className={styles.label}>Start date</label>
                     <input
                         type="date"
                         className={styles.input}
-                        value={localFilter.afterDate}
-                        onChange={(e) => handleChange('afterDate', e.target.value)}
+                        value={localFilter.startDate}
+                        onChange={(e) => handleChange('startDate', e.target.value)}
                     />
                 </div>
                 <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Before date</label>
+                    <label className={styles.label}>End date</label>
                     <input
                         type="date"
                         className={styles.input}
-                        value={localFilter.beforeDate}
-                        onChange={(e) => handleChange('beforeDate', e.target.value)}
+                        value={localFilter.endDate}
+                        onChange={(e) => handleChange('endDate', e.target.value)}
                     />
                 </div>
 
-                {/* Row 4 */}
-                <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Comments</label>
-                    <Select
-                        value={localFilter.commentFilter}
-                        onValueChange={(val) => handleChange('commentFilter', val)}
-                        triggerClassName={styles.selectTrigger}
-                    >
-                        {COMMENT_OPTIONS.map(opt => (
-                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                        ))}
-                    </Select>
-                </div>
-                <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Comment text</label>
-                    <input
-                        type="text"
-                        className={styles.input}
-                        placeholder="Search within comments..."
-                        value={localFilter.commentSearch}
-                        onChange={(e) => handleChange('commentSearch', e.target.value)}
-                        disabled={localFilter.commentFilter === 'none'}
-                    />
-                </div>
+                {/* Row 4 (Removed Comments) */}
             </div>
 
             <div className={styles.footer}>

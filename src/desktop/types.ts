@@ -20,6 +20,8 @@ export interface HistoricalCheck {
     officerNote?: string;
     supervisorNote?: string;
     reviewStatus: 'pending' | 'verified';
+    supervisorName?: string;
+    reviewDate?: string;        // ISO string
     hasHighRisk?: boolean;      // Resident has special risk classification
 }
 
@@ -46,11 +48,10 @@ export interface DesktopFilter {
     dateEnd: string | null;   // ISO Date string (YYYY-MM-DD)
     // Advanced Search Fields
     officer: string;
-    afterDate: string | null;
-    beforeDate: string | null;
-    specialStatus: 'any' | 'sr' | 'mw';
+    startDate: string | null;
+    endDate: string | null;
+    enhancedObservation: 'any' | 'sr' | 'mw';
     commentFilter: 'any' | 'has' | 'none';
-    commentSearch: string;
 }
 
 /** Derived live check for table display */
@@ -68,6 +69,7 @@ export interface LiveCheckRow {
     lastCheckTime: string | null;
     lastCheckOfficer: string | null;
     supervisorNote?: string;
+    missedCheckCount?: number;
     originalCheck: SafetyCheck;
 }
 

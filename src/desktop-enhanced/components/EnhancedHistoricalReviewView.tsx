@@ -9,6 +9,7 @@ import {
     desktopFilterAtom,
     supervisorNoteModalAtom,
     historicalRefreshAtom,
+    historicalRowUpdateAtom,
     PanelData,
 } from '../../desktop/atoms';
 import { HistoricalCheck } from '../../desktop/types';
@@ -48,6 +49,9 @@ export const EnhancedHistoricalReviewView = () => {
     const refreshCount = useAtomValue(historicalRefreshAtom);
 
     // Initial load & Re-fetch on refreshCount change
+    const rowUpdate = useAtomValue(historicalRowUpdateAtom);
+
+    // Initial load & Re-fetch on refreshCount change
     useEffect(() => {
         setIsLoading(true);
         void loadEnhancedHistoricalPage(0, 50, filter).then(({ data, nextCursor, totalCount }) => {
@@ -58,6 +62,21 @@ export const EnhancedHistoricalReviewView = () => {
             setIsLoading(false);
         });
     }, [filter, refreshCount]);
+
+    // Sticky Row Update Listener
+    useEffect(() => {
+        if (!rowUpdate) return;
+
+        setLoadedData((prev) =>
+            prev.map(row => {
+                const update = rowUpdate.find(u => u.id === row.id);
+                if (update) {
+                    return { ...row, ...update.changes };
+                }
+                return row;
+            })
+        );
+    }, [rowUpdate]);
 
     const handleLoadMore = useCallback(() => {
         if (isLoading || !hasMore) return;
@@ -111,6 +130,8 @@ export const EnhancedHistoricalReviewView = () => {
                     unit: row.unit,
                     officerNote: row.officerNote,
                     supervisorNote: row.supervisorNote,
+                    supervisorName: row.supervisorName,
+                    reviewDate: row.reviewDate,
                     reviewStatus: row.reviewStatus,
                 };
                 setDetailRecord(panelData);
@@ -119,15 +140,11 @@ export const EnhancedHistoricalReviewView = () => {
                 // Row not found in loaded data (e.g. filtered out after update)
                 // If we have a single selection that isn't in the data, clear it to avoid stale view
                 setDetailRecord(null);
-                setPanelOpen(false);
                 // Also clear selection since it's no longer visible/valid
                 setSelectedRows(new Set());
             }
         } else {
             setDetailRecord(null);
-            if (selectedRows.size === 0) {
-                setPanelOpen(false);
-            }
         }
     }, [selectedRows, loadedData, setDetailRecord, setPanelOpen, setSelectedRows]);
 
@@ -200,13 +217,13 @@ export const EnhancedHistoricalReviewView = () => {
                 enableResizing: false,
             },
             {
-                id: 'statusIcon',
+                id: 'status',
                 header: 'Status',
                 accessorFn: (row) => row.status,
-                size: 100,
+                size: 200,
                 minSize: 100,
-                maxSize: 100,
-                enableResizing: false,
+                maxSize: 300,
+                enableResizing: true,
                 enableSorting: true,
                 sortingFn: (rowA, rowB) => {
                     const getPriority = (row: typeof rowA) => {
@@ -231,7 +248,7 @@ export const EnhancedHistoricalReviewView = () => {
                     }
                     return (
                         <div style={{ marginLeft: 'calc(var(--spacing-0p5) * -1)' }}>
-                            <StatusBadge status={displayStatus} iconOnly />
+                            <StatusBadge status={displayStatus} iconOnly={false} />
                         </div>
                     );
                 },
@@ -248,7 +265,7 @@ export const EnhancedHistoricalReviewView = () => {
                             {row.original.residents.map((r) => r.name).join(', ')}
                         </a>
                         {row.original.hasHighRisk && (
-                            <StatusBadge status="special" label="SR" fill tooltip="Special Risk (High Risk Resident)" />
+                            <StatusBadge status="special" label="SR" fill tooltip="Suicide Risk" />
                         )}
                     </div>
                 ),
@@ -297,7 +314,7 @@ export const EnhancedHistoricalReviewView = () => {
                 ...COLUMN_WIDTHS.TIMESTAMP,
                 accessorFn: (row) => row.actualTime || '—',
                 cell: ({ row }) => {
-                    if (!row.original.actualTime) return <span className={styles.secondaryText}>—</span>;
+                    if (!row.original.actualTime) return <span className={styles.secondaryText} style={{ color: 'var(--control-fg-placeholder)' }}>—</span>;
                     const dateObj = new Date(row.original.actualTime);
                     const dateStr = dateObj.toLocaleDateString('en-US', {
                         month: '2-digit',
@@ -314,6 +331,14 @@ export const EnhancedHistoricalReviewView = () => {
                     );
                 }
             },
+
+            {
+                id: 'officer',
+                header: 'Officer',
+                ...COLUMN_WIDTHS.OFFICER,
+                accessorKey: 'officerName',
+                cell: ({ row }) => row.original.officerName || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>,
+            },
             {
                 id: 'supervisorNote',
                 header: 'Comments',
@@ -322,10 +347,15 @@ export const EnhancedHistoricalReviewView = () => {
                 accessorKey: 'supervisorNote',
                 cell: ({ row }) => {
                     const note = row.original.supervisorNote;
+                    const meta = row.original.supervisorName
+                        ? `${row.original.supervisorName} • ${new Date(row.original.reviewDate!).toLocaleString()}`
+                        : '';
+                    const tooltip = note ? `${note}\n\n${meta}` : null;
+
                     return (
                         <div className={styles.commentCell}>
                             {note ? (
-                                <Tooltip content={note} align="start">
+                                <Tooltip content={tooltip} align="start">
                                     <span className={styles.truncatedNote}>{note}</span>
                                 </Tooltip>
                             ) : (
@@ -343,22 +373,6 @@ export const EnhancedHistoricalReviewView = () => {
                             )}
                         </div>
                     );
-                },
-            },
-            {
-                id: 'officer',
-                header: 'Officer',
-                ...COLUMN_WIDTHS.OFFICER,
-                accessorKey: 'officerName',
-            },
-            {
-                id: 'status',
-                header: 'Check Status',
-                size: 140,
-                minSize: 120,
-                accessorKey: 'status',
-                cell: ({ row }) => {
-                    return <span style={{ textTransform: 'capitalize', fontWeight: 600 }}>{row.original.status}</span>;
                 },
             },
             {

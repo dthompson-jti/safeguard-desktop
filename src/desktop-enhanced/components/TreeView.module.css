@@ -155,11 +155,11 @@
 .danger {
     background-color: var(--surface-bg-error-primary);
     color: var(--surface-fg-alert-primary);
-    border: 1px solid var(--surface-border-alert);
+    border: 1px solid var(--surface-border-alert_subtle);
 }
 
 .warning {
     background-color: var(--surface-bg-warning-primary);
     color: var(--surface-fg-warning-primary);
-    border: 1px solid var(--surface-border-warning);
+    border: 1px solid var(--surface-border-warning_subtle);
 }

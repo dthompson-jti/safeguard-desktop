@@ -93,7 +93,7 @@ export const EnhancedLiveMonitorView = () => {
                     status: row.status,
                     timeScheduled: row.originalCheck?.dueDate || new Date().toISOString(),
                     timeActual: row.lastCheckTime,
-                    officerName: row.lastCheckOfficer || 'Pending',
+                    officerName: row.lastCheckOfficer || '—',
                     group: row.group,
                     unit: row.unit,
                     hasHighRisk: row.hasHighRisk,
@@ -104,10 +104,6 @@ export const EnhancedLiveMonitorView = () => {
             }
         } else {
             setActiveRecord(null);
-            // Don't auto-close panel if multi-selecting, as we want to see the multi-select empty state
-            if (selectedRows.size === 0) {
-                setPanelOpen(false);
-            }
         }
     }, [selectedRows, loadedData, setActiveRecord, setPanelOpen]);
 
@@ -138,13 +134,13 @@ export const EnhancedLiveMonitorView = () => {
     const columns: ColumnDef<LiveCheckRow>[] = useMemo(
         () => [
             {
-                id: 'statusIcon',
+                id: 'status',
                 header: 'Status',
                 accessorFn: (row) => row.status,
-                size: 100,
+                size: 200,
                 minSize: 100,
-                maxSize: 100,
-                enableResizing: false,
+                maxSize: 300,
+                enableResizing: true,
                 enableSorting: true,
                 sortingFn: (rowA, rowB) => {
                     const priority: Record<string, number> = { overdue: 0, due: 1, upcoming: 2 };
@@ -156,9 +152,23 @@ export const EnhancedLiveMonitorView = () => {
                     return timeA - timeB;
                 },
                 cell: ({ row }) => {
+                    const count = row.original.missedCheckCount;
+                    const label = (count && count > 1) ? `Missed (${count})` : undefined;
+                    // Top align with margin for single resident centering effect
+                    const isSingle = row.original.residents.length === 1;
                     return (
-                        <div style={{ marginLeft: 'calc(var(--spacing-0p5) * -1)' }}>
-                            <StatusBadge status={row.original.status as StatusBadgeType} iconOnly />
+                        <div style={{
+                            marginLeft: 'calc(var(--spacing-0p5) * -1)',
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            height: '100%',
+                            paddingTop: isSingle ? '0' : 'var(--spacing-1)'
+                        }}>
+                            <StatusBadge
+                                status={row.original.status as StatusBadgeType}
+                                label={label}
+                                iconOnly={false}
+                            />
                         </div>
                     );
                 },
@@ -170,13 +180,24 @@ export const EnhancedLiveMonitorView = () => {
                 minSize: 240,
                 accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
                 cell: ({ row }) => (
-                    <div className={styles.residentCell}>
-                        <a href="#" className={styles.linkText} onClick={(e) => e.preventDefault()}>
-                            {row.original.residents.map((r) => r.name).join(', ')}
-                        </a>
-                        {row.original.hasHighRisk && (
-                            <StatusBadge status="special" label="SR" fill tooltip="Special Risk (High Risk Resident)" />
-                        )}
+                    <div className={styles.residentCell} style={{ alignItems: 'flex-start' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-1)', width: '100%' }}>
+                            {row.original.residents.map((r, i) => (
+                                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--spacing-2)', height: '24px', width: '100%' }}>
+                                    <a href="#" className={styles.linkText} onClick={(e) => e.preventDefault()}>
+                                        {r.name}
+                                    </a>
+                                    <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
+                                        {r.hasHighRisk && (
+                                            <StatusBadge status="special" label="SR" fill tooltip="Suicide Risk" />
+                                        )}
+                                        {r.hasMedicalWatch && (
+                                            <StatusBadge status="special" label="MW" fill tooltip="Medical Watch" />
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 ),
             },
@@ -190,15 +211,18 @@ export const EnhancedLiveMonitorView = () => {
                     const b = `${rowB.original.group} ${rowB.original.unit} ${rowB.original.location}`;
                     return a.localeCompare(b);
                 },
-                cell: ({ row }) => (
-                    <div className={styles.locationCell}>
-                        <span className={styles.locationSecondary}>{row.original.group}</span>
-                        <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
-                        <span className={styles.locationSecondary}>{row.original.unit}</span>
-                        <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
-                        <span>{row.original.location}</span>
-                    </div>
-                ),
+                cell: ({ row }) => {
+                    const isSingle = row.original.residents.length === 1;
+                    return (
+                        <div className={styles.locationCell} style={{ alignItems: 'flex-start', paddingTop: isSingle ? '0' : 'var(--spacing-1.5)' }}>
+                            <span className={styles.locationSecondary}>{row.original.group}</span>
+                            <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
+                            <span className={styles.locationSecondary}>{row.original.unit}</span>
+                            <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
+                            <span>{row.original.location}</span>
+                        </div>
+                    );
+                },
             },
             {
                 id: 'scheduled',
@@ -208,31 +232,18 @@ export const EnhancedLiveMonitorView = () => {
                 accessorFn: (row) => row.originalCheck?.dueDate || '',
                 cell: ({ row }) => {
                     const dueDate = row.original.originalCheck?.dueDate;
-                    if (!dueDate) return '—';
-                    return new Date(dueDate).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+                    if (!dueDate) return <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>;
+                    const date = new Date(dueDate);
+                    const isSingle = row.original.residents.length === 1;
+                    return (
+                        <div className={styles.singleRowCell} style={{ alignItems: 'flex-start', paddingTop: isSingle ? '0' : 'var(--spacing-1.5)' }}>
+                            <span className={styles.primaryText}>{date.toLocaleDateString()}</span>
+                            <span className={styles.secondaryText}>{date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}</span>
+                        </div>
+                    );
                 },
             },
-            {
-                id: 'status',
-                header: 'Status',
-                size: 140,
-                minSize: 120,
-                accessorKey: 'status',
-                // Custom sort: overdue (0) > due (1) > upcoming (2)
-                sortingFn: (rowA, rowB) => {
-                    const priority: Record<string, number> = { overdue: 0, due: 1, upcoming: 2 };
-                    const a = priority[rowA.original.status] ?? 0;
-                    const b = priority[rowB.original.status] ?? 0;
-                    if (a !== b) return a - b;
-                    const timeA = new Date(rowA.original.originalCheck?.dueDate || 0).getTime();
-                    const timeB = new Date(rowB.original.originalCheck?.dueDate || 0).getTime();
-                    return timeA - timeB;
-                },
-                cell: ({ row }) => {
-                    const status = row.original.status;
-                    return <span style={{ textTransform: 'capitalize', fontWeight: 600 }}>{status}</span>;
-                },
-            },
+
             {
                 id: 'spacer',
                 size: 0,
@@ -258,7 +269,6 @@ export const EnhancedLiveMonitorView = () => {
                 cell: () => (
                     <RowContextMenu
                         actions={[
-                            { label: 'View resident', icon: 'person', onClick: () => { } },
                             { label: 'Facility management', icon: 'door_front', onClick: () => { } }
                         ]}
                     />

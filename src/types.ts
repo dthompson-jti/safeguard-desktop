@@ -21,6 +21,8 @@ export interface Resident {
   id: string;
   name: string;
   location: string;
+  hasHighRisk?: boolean; // Added for per-resident risk display
+  hasMedicalWatch?: boolean; // Added for per-resident MW display
 }
 
 export interface SafetyCheck {
