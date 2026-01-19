@@ -1,34 +1,42 @@
-// src/components/Tooltip.tsx
-import React from 'react';
-import * as RadixTooltip from '@radix-ui/react-tooltip';
+import * as React from 'react';
+import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+import styles from './Tooltip.module.css';
 
 interface TooltipProps {
-  children: React.ReactElement;
+  children: React.ReactNode;
   content: React.ReactNode;
-  delay?: number;
   side?: 'top' | 'right' | 'bottom' | 'left';
+  align?: 'start' | 'center' | 'end';
+  delayDuration?: number;
 }
 
-/**
- * A reusable, accessible, and high-craft tooltip component
- * built on top of Radix UI.
- */
-export const Tooltip = ({ children, content, delay = 300, side = 'top' }: TooltipProps) => {
-  if (!content) {
-    return children;
-  }
+export const Tooltip = ({
+  children,
+  content,
+  side = 'top',
+  align = 'center',
+  delayDuration = 200
+}: TooltipProps) => {
+  if (!content) return <>{children}</>;
 
   return (
-    <RadixTooltip.Provider>
-      <RadixTooltip.Root delayDuration={delay}>
-        <RadixTooltip.Trigger asChild>{children}</RadixTooltip.Trigger>
-        <RadixTooltip.Portal>
-          <RadixTooltip.Content className="tooltip-content" side={side} sideOffset={5}>
+    <TooltipPrimitive.Provider>
+      <TooltipPrimitive.Root delayDuration={delayDuration}>
+        <TooltipPrimitive.Trigger asChild>
+          {children}
+        </TooltipPrimitive.Trigger>
+        <TooltipPrimitive.Portal>
+          <TooltipPrimitive.Content
+            className={styles.TooltipContent}
+            side={side}
+            align={align}
+            sideOffset={5}
+          >
             {content}
-            <RadixTooltip.Arrow className="tooltip-arrow" />
-          </RadixTooltip.Content>
-        </RadixTooltip.Portal>
-      </RadixTooltip.Root>
-    </RadixTooltip.Provider>
+            <TooltipPrimitive.Arrow className={styles.TooltipArrow} width={11} height={5} />
+          </TooltipPrimitive.Content>
+        </TooltipPrimitive.Portal>
+      </TooltipPrimitive.Root>
+    </TooltipPrimitive.Provider>
   );
 };

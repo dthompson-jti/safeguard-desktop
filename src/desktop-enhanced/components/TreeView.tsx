@@ -4,6 +4,7 @@ import { desktopViewAtom } from '../../desktop/atoms';
 import { desktopEnhancedSelectionAtom, desktopEnhancedExpandedNodesAtom, SelectionType } from '../atoms';
 import { TreeGroup, TreeUnit, useTreeData } from '../hooks/useTreeData';
 import { Button } from '../../components/Button';
+import { Tooltip } from '../../components/Tooltip';
 import styles from './TreeView.module.css';
 
 interface TreeItemProps {
@@ -77,18 +78,22 @@ const TreeItem = React.memo<TreeItemProps & { view: string }>(({
                 <div className={styles.badges} data-view-mode={view}>
                     <div className={styles.badgeSlot}>
                         {missed > 0 ? (
-                            <span className={`${styles.badge} ${styles.danger}`}>
-                                {missed}
-                            </span>
+                            <Tooltip content={view === 'live' ? 'Overdue' : 'Missed – No Comment'}>
+                                <span className={`${styles.badge} ${styles.danger}`}>
+                                    {missed}
+                                </span>
+                            </Tooltip>
                         ) : (
                             <span className={styles.badgePlaceholder} />
                         )}
                     </div>
                     <div className={styles.badgeSlot}>
                         {secondary > 0 ? (
-                            <span className={`${styles.badge} ${styles.warning}`}>
-                                {secondary}
-                            </span>
+                            <Tooltip content="Due">
+                                <span className={`${styles.badge} ${styles.warning}`}>
+                                    {secondary}
+                                </span>
+                            </Tooltip>
                         ) : (
                             <span className={styles.badgePlaceholder} />
                         )}
@@ -111,12 +116,22 @@ export const TreeView: React.FC = () => {
     const [selection, setSelection] = useAtom(desktopEnhancedSelectionAtom);
     const [expanded, setExpanded] = useAtom(desktopEnhancedExpandedNodesAtom);
 
-    // Auto-expand facility root on load
+    // Auto-expand and select facility root on load
     useEffect(() => {
-        if (expanded.size === 0 && facilityNodes.length > 0) {
-            setExpanded(new Set([facilityNodes[0].id]));
+        if (facilityNodes.length > 0) {
+            const rootId = facilityNodes[0].id;
+
+            // Auto-expand if nothing expanded
+            if (expanded.size === 0) {
+                setExpanded(new Set([rootId]));
+            }
+
+            // Auto-select if nothing selected
+            if (!selection.id) {
+                setSelection({ type: 'root', id: rootId });
+            }
         }
-    }, [facilityNodes, expanded.size, setExpanded]);
+    }, [facilityNodes, expanded.size, setExpanded, selection.id, setSelection]);
 
     const toggleExpand = useCallback((id: string) => {
         setExpanded(prev => {

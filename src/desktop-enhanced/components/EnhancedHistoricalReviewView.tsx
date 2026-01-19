@@ -16,6 +16,7 @@ import { DataTable } from '../../desktop/components/DataTable';
 import { BulkActionFooter } from '../../desktop/components/BulkActionFooter';
 import { RowContextMenu } from '../../desktop/components/RowContextMenu';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
+import { Tooltip } from '../../components/Tooltip';
 import { Button } from '../../components/Button';
 import { loadEnhancedHistoricalPage } from '../data/mockData';
 import { COLUMN_WIDTHS } from '../../desktop/components/tableConstants';
@@ -247,7 +248,7 @@ export const EnhancedHistoricalReviewView = () => {
                             {row.original.residents.map((r) => r.name).join(', ')}
                         </a>
                         {row.original.hasHighRisk && (
-                            <StatusBadge status="special" label="SR" fill />
+                            <StatusBadge status="special" label="SR" fill tooltip="Special Risk (High Risk Resident)" />
                         )}
                     </div>
                 ),
@@ -324,7 +325,9 @@ export const EnhancedHistoricalReviewView = () => {
                     return (
                         <div className={styles.commentCell}>
                             {note ? (
-                                <span className={styles.truncatedNote}>{note}</span>
+                                <Tooltip content={note} align="start">
+                                    <span className={styles.truncatedNote}>{note}</span>
+                                </Tooltip>
                             ) : (
                                 <Button
                                     variant="tertiary"

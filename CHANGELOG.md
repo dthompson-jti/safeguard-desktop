@@ -57,6 +57,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - Implemented a 1-token darker hover effect for the currently selected nav item.
 - **Resident Distribution**: Refined mock data generation.
     - Residents are now uniquely assigned to 1-2 per room, preventing duplicates across the facility.
+- **Live View Order**: Updated default sort to Status (Missed First) -> Scheduled Time.
+    - Fixed sorting priority so "Overdue" correctly appears before "Upcoming".
+    - Automatically sorts oldest missed items to the top.
+- **Micro-Interactions (Tooltips)**: Implemented comprehensive tooltip support using Radix UI.
+    - Added meaningful tooltips to **Status Chips** ("Missed – No Comment", etc.).
+    - Added stats tooltips to the **Global Status Widget** ("Overdue: 5", "Due: 2").
+    - Added tooltips to sidebar badges for context-aware counts (e.g., "Missed – No Comment" in Historical vs. "Overdue" in Live).
+    - Added full-text tooltips for truncated **Supervisor Comments** in the Historical View.
+    - Implemented consistent "Special Risk (High Risk Resident)" tooltip for all "SR" badges.
+    - **Visuals**: Styled tooltips with regular borders (`--surface-border-primary`) instead of theme colors for a clean, neutral look in both light and dark modes.
+    - **Tree View Hover**: Added hover state for tree items.
+        - Items now display a `control-border-tertiary` left border on hover, providing a clear interactive cue.
+    - **Tree View Selection**: Implemented default selection behavior.
+        - The facility (root) node is now automatically selected on load if no other node is selected, preventing an empty details panel state.,
 
 - **Enhanced Navigation Restructuring**: Split the navigation area into two distinct rows for better visual hierarchy.
     - Added Row 1 strictly for breadcrumbs, centered vertically in a 20px height.

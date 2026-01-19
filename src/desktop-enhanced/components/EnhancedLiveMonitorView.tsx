@@ -172,7 +172,7 @@ export const EnhancedLiveMonitorView = () => {
                             {row.original.residents.map((r) => r.name).join(', ')}
                         </a>
                         {row.original.hasHighRisk && (
-                            <StatusBadge status="special" label="SR" fill />
+                            <StatusBadge status="special" label="SR" fill tooltip="Special Risk (High Risk Resident)" />
                         )}
                     </div>
                 ),

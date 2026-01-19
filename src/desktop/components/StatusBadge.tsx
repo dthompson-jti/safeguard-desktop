@@ -1,6 +1,7 @@
 // src/desktop/components/StatusBadge.tsx
 import React from 'react';
 import styles from './StatusBadge.module.css';
+import { Tooltip } from '../../components/Tooltip';
 
 export type StatusBadgeType = 'missed' | 'missed-uncommented' | 'missed-commented' | 'due' | 'complete' | 'verified' | 'upcoming' | 'overdue' | 'completed' | 'special';
 
@@ -9,6 +10,7 @@ interface StatusBadgeProps {
     label?: string;
     fill?: boolean;
     iconOnly?: boolean;
+    tooltip?: string;
 }
 
 const getStatusConfig = (status: StatusBadgeType): { label: string; icon: string | null } => {
@@ -35,15 +37,15 @@ const getStatusConfig = (status: StatusBadgeType): { label: string; icon: string
     }
 };
 
-export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label: customLabel, fill = false, iconOnly = false }) => {
+export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label: customLabel, fill = false, iconOnly = false, tooltip }) => {
     const config = getStatusConfig(status);
     const label = customLabel || config.label;
+    const tooltipContent = tooltip || (iconOnly ? label : undefined);
 
-    return (
+    const badge = (
         <div
             className={`${styles.badge} ${iconOnly ? styles.iconOnly : ''}`}
             data-status={status}
-            title={iconOnly ? label : undefined}
         >
             {config.icon && (
                 <span
@@ -55,4 +57,14 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label: customL
             {!iconOnly && <span className={styles.label}>{label}</span>}
         </div>
     );
+
+    if (tooltipContent) {
+        return (
+            <Tooltip content={tooltipContent}>
+                {badge}
+            </Tooltip>
+        );
+    }
+
+    return badge;
 };

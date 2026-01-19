@@ -258,85 +258,85 @@ export const generateEnhancedData = () => {
             timerSeverity = 'neutral';
         }
 
-        // Add to Live data (ONE check per room)
-        liveData.push({
-            id: `live-${room.id}`,
-            status: liveStatus,
-            timerText,
-            timerSeverity,
-            location: room.location,
-            residents: room.residents,
-            hasHighRisk: roomIdx % 7 === 0,
-            group: room.group,
-            unit: room.unit,
-            lastCheckTime: formatTimeDisplay(scheduledTime), // This is what LiveMonitorView displays
-            lastCheckOfficer: officer,
-            originalCheck: {
-                id: `check-${room.id}`,
-                type: 'scheduled',
-                status: liveStatus === 'upcoming' ? 'pending' : (liveStatus === 'due' ? 'due' : 'missed'),
-                residents: room.residents,
-                dueDate: scheduledTime.toISOString(),
-                generationId: 1,
-                baseInterval: 15
-            },
-        });
-
-        // Profile already fetched above
-        // Generate Historical checks (past 48 hours, every 15 mins)
-        const historyStart = new Date(now.getTime() - HISTORY_HOURS * 60 * MS_PER_MINUTE);
-        historyStart.setMinutes(scheduledTime.getMinutes(), 0, 0); // Align to this room's minute offset
-
-        let slotTime = new Date(historyStart);
-        let slotIndex = 0;
-
-        while (slotTime < scheduledTime) {
-            const checkId = `hist-${room.id}-${slotIndex}`;
-            const scheduledTimeISO = slotTime.toISOString();
-
-            // Option 1 & 6: Exponential Decay & Review Aging
-            // Probability of a missed check decreases as it gets older (TAU = 12h)
-            const checkAgeHours = (now.getTime() - slotTime.getTime()) / (60 * 60 * 1000);
-            const decayFactor = Math.exp(-checkAgeHours / 12); // TAU = 12 hours
-
-            const randomVal = seededRandom(slotIndex + roomIdx * 1000);
-            const isMissed = randomVal < (profile.missedProb * decayFactor);
-
-            const status: 'completed' | 'missed' = isMissed ? 'missed' : 'completed';
-            const variance = isMissed ? Infinity : Math.floor(seededRandom(slotIndex * 3 + roomIdx) * 10) - 2;
-            const actualTime = isMissed ? null : new Date(slotTime.getTime() + variance * MS_PER_MINUTE).toISOString();
-            const officerNote = (slotIndex % 4 === 0) ? NOTE_SNIPPETS[slotIndex % NOTE_SNIPPETS.length] : undefined;
-
-            // Supervisor notes: Older items are much more likely to be reviewed
-            // Recent missed checks (within 4h) remain uncommented for supervisor review
-            const commentRandomVal = seededRandom(slotIndex * 13 + roomIdx);
-            const commentThreshold = checkAgeHours < 4 ? 0.95 : (profile.commentFailProb * decayFactor);
-            const shouldHaveComment = commentRandomVal > commentThreshold;
-
-            const supervisorNote = isMissed
-                ? (shouldHaveComment ? 'Reviewed and documented.' : undefined)
-                : undefined;
-
-            historicalData.push({
-                id: checkId,
-                residents: room.residents,
+        // Generate rows per resident
+        room.residents.forEach((resident, resIdx) => {
+            // Add to Live data (ONE check per resident)
+            liveData.push({
+                id: `live-${room.id}-${resIdx}`,
+                status: liveStatus,
+                timerText,
+                timerSeverity,
                 location: room.location,
-                scheduledTime: scheduledTimeISO,
-                actualTime,
-                status,
-                varianceMinutes: variance,
+                residents: [resident], // Single resident per row
+                hasHighRisk: (roomIdx + resIdx) % 7 === 0,
                 group: room.group,
                 unit: room.unit,
-                officerName: isMissed ? '' : officer,
-                officerNote,
-                supervisorNote,
-                reviewStatus: isMissed ? (supervisorNote ? 'verified' : 'pending') : 'verified',
-                hasHighRisk: roomIdx % 7 === 0,
+                lastCheckTime: formatTimeDisplay(scheduledTime),
+                lastCheckOfficer: officer,
+                originalCheck: {
+                    id: `check-${room.id}-${resIdx}`,
+                    type: 'scheduled',
+                    status: liveStatus === 'upcoming' ? 'pending' : (liveStatus === 'due' ? 'due' : 'missed'),
+                    residents: [resident],
+                    dueDate: scheduledTime.toISOString(),
+                    generationId: 1,
+                    baseInterval: 15
+                },
             });
 
-            slotTime = new Date(slotTime.getTime() + CHECK_INTERVAL_MINS * MS_PER_MINUTE);
-            slotIndex++;
-        }
+            // Historical checks for this resident
+            const historyStart = new Date(now.getTime() - HISTORY_HOURS * 60 * MS_PER_MINUTE);
+            historyStart.setMinutes(scheduledTime.getMinutes(), 0, 0);
+
+            let slotTime = new Date(historyStart);
+            let slotIndex = 0;
+
+            while (slotTime < scheduledTime) {
+                const checkId = `hist-${room.id}-${resIdx}-${slotIndex}`;
+                const scheduledTimeISO = slotTime.toISOString();
+
+                const checkAgeHours = (now.getTime() - slotTime.getTime()) / (60 * 60 * 1000);
+                const decayFactor = Math.exp(-checkAgeHours / 12);
+
+                // Use resident specific seed
+                const resSeed = slotIndex + roomIdx * 1000 + resIdx * 50;
+                const randomVal = seededRandom(resSeed);
+                const isMissed = randomVal < (profile.missedProb * decayFactor);
+
+                const status: 'completed' | 'missed' = isMissed ? 'missed' : 'completed';
+                const variance = isMissed ? Infinity : Math.floor(seededRandom(resSeed + 1) * 10) - 2;
+                const actualTime = isMissed ? null : new Date(slotTime.getTime() + variance * MS_PER_MINUTE).toISOString();
+                const officerNote = (slotIndex % 4 === 0) ? NOTE_SNIPPETS[slotIndex % NOTE_SNIPPETS.length] : undefined;
+
+                const commentRandomVal = seededRandom(resSeed + 2);
+                const commentThreshold = checkAgeHours < 4 ? 0.95 : (profile.commentFailProb * decayFactor);
+                const shouldHaveComment = commentRandomVal > commentThreshold;
+
+                const supervisorNote = isMissed
+                    ? (shouldHaveComment ? 'Reviewed and documented.' : undefined)
+                    : undefined;
+
+                historicalData.push({
+                    id: checkId,
+                    residents: [resident], // Single resident
+                    location: room.location,
+                    scheduledTime: scheduledTimeISO,
+                    actualTime,
+                    status,
+                    varianceMinutes: variance,
+                    group: room.group,
+                    unit: room.unit,
+                    officerName: isMissed ? '' : officer,
+                    officerNote,
+                    supervisorNote,
+                    reviewStatus: isMissed ? (supervisorNote ? 'verified' : 'pending') : 'verified',
+                    hasHighRisk: (roomIdx + resIdx) % 7 === 0,
+                });
+
+                slotTime = new Date(slotTime.getTime() + CHECK_INTERVAL_MINS * MS_PER_MINUTE);
+                slotIndex++;
+            }
+        });
     });
 
     return { liveData, historicalData };

@@ -36,9 +36,13 @@
     top: 0;
     bottom: 0;
     width: 4px;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: transparent;
     border-radius: 0;
     transition: background-color 0.15s ease;
+}
+
+.row:hover::before {
+    background-color: var(--control-border-tertiary);
 }
 
 .row.selected::before {
