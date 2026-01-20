@@ -187,11 +187,11 @@ export const SupervisorNoteModal = () => {
         <Modal
             isOpen={modalState.isOpen}
             onClose={handleClose}
-            title={hasExistingComment ? "Edit Supervisor Comment" : "Add Supervisor Comment"}
+            title={hasExistingComment ? "Edit supervisor comment" : "Add supervisor comment"}
             width="440px"
         >
             <Modal.Header>
-                <span className={styles.title}>{hasExistingComment ? "Edit Supervisor Comment" : "Add Supervisor Comment"}</span>
+                <span className={styles.title}>{hasExistingComment ? "Edit supervisor comment" : "Add supervisor comment"}</span>
                 <Button variant="tertiary" size="s" iconOnly aria-label="Close" onClick={handleClose} disabled={isSaving}>
                     <span className="material-symbols-rounded">close</span>
                 </Button>
@@ -239,7 +239,7 @@ export const SupervisorNoteModal = () => {
                                 onClick={() => { void handleDelete(); }}
                                 disabled={isSaving}
                             >
-                                Remove Comment
+                                Remove comment
                             </Button>
                         </div>
                     )}

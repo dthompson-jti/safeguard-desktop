@@ -1,6 +1,7 @@
 // src/desktop/components/RowContextMenu.tsx
 
 import * as Popover from '@radix-ui/react-popover';
+import { Button } from '../../components/Button';
 import styles from './RowContextMenu.module.css';
 
 interface RowAction {
@@ -19,9 +20,9 @@ export const RowContextMenu = ({ actions }: RowContextMenuProps) => {
         <div className={styles.container}>
             <Popover.Root>
                 <Popover.Trigger asChild>
-                    <button className={styles.trigger} aria-label="Row actions">
+                    <Button variant="tertiary" size="s" iconOnly aria-label="Row actions">
                         <span className="material-symbols-rounded">more_vert</span>
-                    </button>
+                    </Button>
                 </Popover.Trigger>
 
                 <Popover.Portal>

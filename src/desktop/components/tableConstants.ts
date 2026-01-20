@@ -48,8 +48,8 @@ export const COLUMN_WIDTHS = {
         minSize: 70,
     },
     MERGED_LOCATION: {
-        size: 180,
-        minSize: 150,
+        size: 220,
+        minSize: 180,
     },
     VARIANCE: {
         size: 120,

@@ -3,27 +3,86 @@
 .link {
     display: inline-flex;
     align-items: center;
-    gap: var(--spacing-1, 4px);
+    position: relative;
     background: none;
     border: none;
     padding: 0;
     margin: 0;
-    color: var(--surface-fg-theme-primary, #276fe3);
     font-family: var(--font-family-body, Inter), sans-serif;
     font-size: var(--font-size-sm, 14px);
-    font-weight: var(--font-weight-bold, 700);
     line-height: var(--line-height-text-sm, 20px);
     letter-spacing: -0.015em;
     cursor: pointer;
     text-align: left;
-    transition: color 0.15s ease;
+    transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none !important;
+    /* Reserved space for 16px icon + centering gaps (6px each side) = 28px total gap. 
+       This provides 'more spacing' than default but less than the previous 'too much' 36px. */
+    padding-right: 28px;
 }
 
-.link:hover {
-    color: var(--surface-fg-theme-secondary, #1e5ab8);
-    text-decoration: underline;
+.primary {
+    color: var(--surface-fg-theme-strong, #276fe3);
+    font-weight: var(--font-weight-bold, 700);
 }
 
-.link .material-symbols-rounded {
+.ghost {
+    color: var(--surface-fg-secondary, #414651);
+    font-weight: var(--font-weight-medium, 500);
+}
+
+.label {
+    transition: all 0.15s ease;
+    text-decoration: underline solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+}
+
+.primary .label {
+    text-decoration-color: currentColor;
+}
+
+.ghost .label {
+    text-decoration-color: transparent;
+}
+
+.link:hover .label {
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 2.8px;
+    /* 20% weight */
+}
+
+.externalIcon {
+    position: absolute;
+    /* Width matches the 28px padding to ensure perfect centering */
+    width: 28px;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) scale(0.8);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--icon-size-sm, 16px) !important;
+    opacity: 0;
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none !important;
+    pointer-events: none;
+}
+
+.link:hover .externalIcon {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+
+.primary:hover {
+    color: var(--surface-fg-theme-strong, #276fe3);
+}
+
+.ghost:hover {
+    color: var(--surface-fg-secondary, #414651);
+}
+
+.link .material-symbols-rounded:not(.externalIcon) {
     font-size: var(--icon-size-sm, 16px);
 }

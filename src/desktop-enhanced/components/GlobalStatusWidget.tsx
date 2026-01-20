@@ -40,7 +40,7 @@ export const GlobalStatusWidget: React.FC = () => {
 
             <div className={styles.divider} />
 
-            <Tooltip content="Need Comment">
+            <Tooltip content="Need comment">
                 <div className={styles.item}>
                     <span className="material-symbols-rounded" style={{
                         fontSize: 20,

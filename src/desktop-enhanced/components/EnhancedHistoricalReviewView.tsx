@@ -5,7 +5,6 @@ import { ColumnDef, RowSelectionState } from '@tanstack/react-table';
 import {
     selectedHistoryRowsAtom,
     activeDetailRecordAtom,
-    isDetailPanelOpenAtom,
     desktopFilterAtom,
     supervisorNoteModalAtom,
     historicalRefreshAtom,
@@ -17,6 +16,7 @@ import { DataTable } from '../../desktop/components/DataTable';
 import { BulkActionFooter } from '../../desktop/components/BulkActionFooter';
 import { RowContextMenu } from '../../desktop/components/RowContextMenu';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
+import { LinkButton } from '../../components/LinkButton';
 import { Tooltip } from '../../components/Tooltip';
 import { Button } from '../../components/Button';
 import { loadEnhancedHistoricalPage } from '../data/mockData';
@@ -35,7 +35,6 @@ const formatTime = (isoString: string): string => {
 export const EnhancedHistoricalReviewView = () => {
     const [selectedRows, setSelectedRows] = useAtom(selectedHistoryRowsAtom);
     const setDetailRecord = useSetAtom(activeDetailRecordAtom);
-    const setPanelOpen = useSetAtom(isDetailPanelOpenAtom);
 
     // Pagination State
     const [loadedData, setLoadedData] = useState<HistoricalCheck[]>([]);
@@ -119,6 +118,7 @@ export const EnhancedHistoricalReviewView = () => {
                 const panelData: PanelData = {
                     id: row.id,
                     source: 'historical',
+                    residents: row.residents,
                     residentName: row.residents.map(r => r.name).join(', '),
                     location: row.location,
                     status: row.status,
@@ -135,7 +135,6 @@ export const EnhancedHistoricalReviewView = () => {
                     reviewStatus: row.reviewStatus,
                 };
                 setDetailRecord(panelData);
-                setPanelOpen(true);
             } else {
                 // Row not found in loaded data (e.g. filtered out after update)
                 // If we have a single selection that isn't in the data, clear it to avoid stale view
@@ -146,7 +145,7 @@ export const EnhancedHistoricalReviewView = () => {
         } else {
             setDetailRecord(null);
         }
-    }, [selectedRows, loadedData, setDetailRecord, setPanelOpen, setSelectedRows]);
+    }, [selectedRows, loadedData, setDetailRecord, setSelectedRows]);
 
     const handleRowClick = useCallback((row: HistoricalCheck, event: React.MouseEvent) => {
         const isMeta = event.ctrlKey || event.metaKey;
@@ -216,6 +215,44 @@ export const EnhancedHistoricalReviewView = () => {
                 maxSize: 44,
                 enableResizing: false,
             },
+
+            {
+                id: 'resident',
+                header: 'Resident',
+                size: 300,
+                minSize: 240,
+                accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
+                cell: ({ row }) => (
+                    <div className={styles.residentCell}>
+                        <LinkButton
+                            label={row.original.residents.map((r) => r.name).join(', ')}
+                            external
+                            onClick={() => { }}
+                        />
+                        <StatusBadge status="special" label="SR" fill tooltip="Suicide risk" />
+                    </div>
+                ),
+            },
+            {
+                id: 'location',
+                header: 'Location',
+                ...COLUMN_WIDTHS.MERGED_LOCATION,
+                accessorFn: (row) => `${row.group} ${row.unit} ${row.location}`,
+                sortingFn: (rowA, rowB) => {
+                    const a = `${rowA.original.group} ${rowA.original.unit} ${rowA.original.location}`;
+                    const b = `${rowB.original.group} ${rowB.original.unit} ${rowB.original.location}`;
+                    return a.localeCompare(b);
+                },
+                cell: ({ row }) => (
+                    <div className={styles.locationCell}>
+                        <LinkButton variant="ghost" label={row.original.group} external onClick={() => { }} />
+                        <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
+                        <LinkButton variant="ghost" label={row.original.unit} external onClick={() => { }} />
+                        <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
+                        <LinkButton variant="ghost" label={row.original.location} external onClick={() => { }} />
+                    </div>
+                ),
+            },
             {
                 id: 'status',
                 header: 'Status',
@@ -252,43 +289,6 @@ export const EnhancedHistoricalReviewView = () => {
                         </div>
                     );
                 },
-            },
-            {
-                id: 'resident',
-                header: 'Resident',
-                size: 300,
-                minSize: 240,
-                accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
-                cell: ({ row }) => (
-                    <div className={styles.residentCell}>
-                        <a href="#" className={styles.linkText} onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleRowClick(row.original, e); }}>
-                            {row.original.residents.map((r) => r.name).join(', ')}
-                        </a>
-                        {row.original.hasHighRisk && (
-                            <StatusBadge status="special" label="SR" fill tooltip="Suicide Risk" />
-                        )}
-                    </div>
-                ),
-            },
-            {
-                id: 'location',
-                header: 'Location',
-                ...COLUMN_WIDTHS.MERGED_LOCATION,
-                accessorFn: (row) => `${row.group} ${row.unit} ${row.location}`,
-                sortingFn: (rowA, rowB) => {
-                    const a = `${rowA.original.group} ${rowA.original.unit} ${rowA.original.location}`;
-                    const b = `${rowB.original.group} ${rowB.original.unit} ${rowB.original.location}`;
-                    return a.localeCompare(b);
-                },
-                cell: ({ row }) => (
-                    <div className={styles.locationCell}>
-                        <span className={styles.locationSecondary}>{row.original.group}</span>
-                        <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
-                        <span className={styles.locationSecondary}>{row.original.unit}</span>
-                        <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
-                        <span>{row.original.location}</span>
-                    </div>
-                ),
             },
             {
                 id: 'scheduled',
@@ -339,6 +339,7 @@ export const EnhancedHistoricalReviewView = () => {
                 accessorKey: 'officerName',
                 cell: ({ row }) => row.original.officerName || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>,
             },
+
             {
                 id: 'supervisorNote',
                 header: 'Comments',
@@ -395,22 +396,17 @@ export const EnhancedHistoricalReviewView = () => {
                     <RowContextMenu
                         actions={[
                             {
-                                label: 'View Resident',
-                                icon: 'person',
-                                onClick: () => { /* Navigate to resident */ },
-                            },
-                            {
                                 label: 'Facility management',
                                 icon: 'door_front',
                                 onClick: () => { /* Open room management */ },
                             },
                             {
-                                label: row.original.supervisorNote ? 'Edit Comment' : 'Add Comment',
+                                label: row.original.supervisorNote ? 'Edit comment' : 'Add comment',
                                 icon: 'add_comment',
                                 onClick: () => handleOpenNoteModal(row.original.id),
                             },
                             ...(row.original.supervisorNote ? [{
-                                label: 'Delete Comment',
+                                label: 'Delete comment',
                                 icon: 'delete',
                                 onClick: () => { /* Delete note */ },
                                 destructive: true,

@@ -24,11 +24,11 @@ export const TopNavMenu = () => {
                 <Popover.Content className={styles.popoverContent} align="start" sideOffset={8}>
                     <button className={styles.menuItem} onClick={() => handleSwitch('/')} data-active={isPrimary} type="button">
                         <span className="material-symbols-rounded">analytics</span>
-                        <span>Enhanced View</span>
+                        <span>Enhanced view</span>
                     </button>
                     <button className={styles.menuItem} onClick={() => handleSwitch('/alternate')} data-active={isAlternate} type="button">
                         <span className="material-symbols-rounded">dashboard</span>
-                        <span>Alternate Option</span>
+                        <span>Alternate option</span>
                     </button>
                 </Popover.Content>
             </Popover.Portal>

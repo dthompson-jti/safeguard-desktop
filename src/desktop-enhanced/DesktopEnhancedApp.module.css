@@ -36,7 +36,16 @@
 
 .navRow2 {
     min-height: 32px;
-    justify-content: flex-end;
+    justify-content: space-between;
+}
+
+.pageTitle {
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--surface-fg-secondary);
+    text-align: left;
+    margin: 0;
+    font-weight: 600;
 }
 
 .row2Actions {

@@ -78,7 +78,7 @@ const TreeItem = React.memo<TreeItemProps & { view: string }>(({
                 <div className={styles.badges} data-view-mode={view}>
                     <div className={styles.badgeSlot}>
                         {missed > 0 ? (
-                            <Tooltip content={view === 'live' ? 'Overdue' : 'Missed – No Comment'}>
+                            <Tooltip content={view === 'live' ? 'Overdue' : 'Missed – no comment'}>
                                 <span className={`${styles.badge} ${styles.danger}`}>
                                     {missed}
                                 </span>

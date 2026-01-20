@@ -40,7 +40,7 @@ export const NavigationPanel: React.FC = () => {
     return (
         <div className={styles.navPanel}>
             <div className={styles.header}>
-                <h2>Safeguard Checks</h2>
+                <h2>Facility</h2>
                 <div className={styles.headerActions}>
                     <Popover
                         open={isActionsOpen}

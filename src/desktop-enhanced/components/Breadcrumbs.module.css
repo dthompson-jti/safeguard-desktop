@@ -38,7 +38,7 @@
 }
 
 .part:last-child .text {
-    color: var(--control-fg-secondary);
+    color: var(--control-fg-selected);
     cursor: default;
     pointer-events: none;
     font-weight: var(--font-weight-bold);

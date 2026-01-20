@@ -135,24 +135,22 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
             <div className={styles.header}>
                 <div className={styles.titleGroup}>
                     {record ? (
-                        <LinkButton
-                            label={record.residentName}
-                            onClick={() => { /* Navigate to resident */ }}
-                            className={styles.residentLink}
-                        />
+                        <h3 className={styles.residentName}>
+                            {record.residents.length > 1 ? `${record.residents.length} residents` : record.residentName}
+                        </h3>
                     ) : (
                         <h3 className={styles.residentName}>
-                            {selectedCount > 1 ? `${selectedCount} Selected` : 'No selection'}
+                            {selectedCount > 1 ? `${selectedCount} selected` : 'No selection'}
                         </h3>
                     )}
                 </div>
                 <div className={styles.headerActions}>
-                    <Tooltip content="Close Panel">
+                    <Tooltip content="Close panel">
                         <Button
                             variant="tertiary"
                             size="s"
                             iconOnly
-                            aria-label="Close Panel"
+                            aria-label="Close panel"
                             onClick={handleClose}
                         >
                             <span className="material-symbols-rounded">close</span>
@@ -175,19 +173,43 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                     </div>
                 ) : (
                     <>
-                        {/* SECTION 1: PROPERTIES */}
+                        {/* SECTION 1: DETAILS */}
                         <div className={styles.section}>
-                            <SidePanelHeading title="Properties" />
+                            <SidePanelHeading title="Details" />
                             <div className={styles.metaStack}>
+                                <LabelValueRow
+                                    label="Resident"
+                                    value={
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-1.5)', width: '100%' }}>
+                                            {record.residents.map((r, i) => (
+                                                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--spacing-2)', width: '100%' }}>
+                                                    <LinkButton
+                                                        label={r.name}
+                                                        external
+                                                        onClick={() => { }}
+                                                    />
+                                                    <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
+                                                        {r.hasHighRisk && (
+                                                            <StatusBadge status="special" label="SR" fill tooltip="Suicide risk" />
+                                                        )}
+                                                        {r.hasMedicalWatch && (
+                                                            <StatusBadge status="special" label="MW" fill tooltip="Medical watch" />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    }
+                                />
                                 <LabelValueRow
                                     label="Location"
                                     value={
                                         <div className={styles.breadcrumb}>
-                                            <a href="#" className={styles.breadcrumbLink}>{record.group || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}</a>
-                                            <span className={styles.breadcrumbSeparator}>›</span>
-                                            <a href="#" className={styles.breadcrumbLink}>{record.unit || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}</a>
-                                            <span className={styles.breadcrumbSeparator}>›</span>
-                                            <a href="#" className={styles.breadcrumbLink}>{record.location}</a>
+                                            <LinkButton variant="ghost" label={record.group || '—'} external onClick={() => { }} />
+                                            <span className={`material-symbols-rounded ${styles.breadcrumbIcon}`}>navigate_next</span>
+                                            <LinkButton variant="ghost" label={record.unit || '—'} external onClick={() => { }} />
+                                            <span className={`material-symbols-rounded ${styles.breadcrumbIcon}`}>navigate_next</span>
+                                            <LinkButton variant="ghost" label={record.location} external onClick={() => { }} />
                                         </div>
                                     }
                                 />
@@ -208,7 +230,7 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                     value={record.officerName || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}
                                 />
                                 <LabelValueRow
-                                    label="Officer Comments"
+                                    label="Officer comments"
                                     value={record.officerNote || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}
                                 />
                             </div>
@@ -218,7 +240,7 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
 
                         {/* SECTION 3: SUPERVISOR COMMENT */}
                         <div className={styles.section}>
-                            <SidePanelHeading title="Supervisor Comment" />
+                            <SidePanelHeading title="Supervisor comment" />
                             <div className={styles.metaStack}>
                                 <LabelValueRow
                                     label="Date"
@@ -240,7 +262,7 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                     onClick={handleOpenNoteModal}
                                 >
                                     <span className="material-symbols-rounded">add_comment</span>
-                                    {record.supervisorNote ? 'Edit' : 'Add Comment'}
+                                    {record.supervisorNote ? 'Edit' : 'Add comment'}
                                 </Button>
                             </div>
                         </div>

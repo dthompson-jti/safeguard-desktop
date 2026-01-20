@@ -116,15 +116,6 @@
     color: var(--surface-fg-secondary);
 }
 
-.residentLink {
-    margin: 0;
-    color: var(--surface-fg-primary) !important;
-}
-
-.residentLink:hover {
-    color: var(--surface-fg-primary) !important;
-    text-decoration: none;
-}
 
 .locationLink {
     margin-right: var(--spacing-4);
@@ -137,24 +128,30 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--spacing-1);
+    gap: 0;
     font-size: var(--font-size-sm);
     color: var(--surface-fg-secondary);
 }
 
-.breadcrumbLink {
-    color: var(--surface-fg-link);
-    text-decoration: none;
+.breadcrumbIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 24px;
+    font-size: var(--icon-size-sm) !important;
+    color: var(--surface-fg-quaternary);
+    margin-left: -28px;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
 }
 
-.breadcrumbLink:hover {
-    text-decoration: underline;
+/* Hide separator when the preceding link is hovered to avoid overlap with its external icon */
+.breadcrumb button:hover+.breadcrumbIcon {
+    opacity: 0;
 }
 
-.breadcrumbSeparator {
-    color: var(--surface-fg-tertiary);
-    font-size: var(--font-size-xs);
-}
+/* breadcrumbLink removed - now using LinkButton */
 
 .content {
     flex: 1;

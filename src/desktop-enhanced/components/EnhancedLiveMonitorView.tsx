@@ -2,11 +2,11 @@
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { ColumnDef, RowSelectionState } from '@tanstack/react-table';
-import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom, isDetailPanelOpenAtom, PanelData } from '../../desktop/atoms';
+import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom, PanelData } from '../../desktop/atoms';
 import { LiveCheckRow } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
-import { RowContextMenu } from '../../desktop/components/RowContextMenu';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
+import { LinkButton } from '../../components/LinkButton';
 import { loadEnhancedLivePage } from '../data/mockData';
 import { COLUMN_WIDTHS } from '../../desktop/components/tableConstants';
 import styles from '../../desktop/components/DataTable.module.css';
@@ -15,7 +15,6 @@ export const EnhancedLiveMonitorView = () => {
     const filter = useAtomValue(desktopFilterAtom);
     const [selectedRows, setSelectedRows] = useAtom(selectedLiveRowsAtom);
     const setActiveRecord = useSetAtom(activeDetailRecordAtom);
-    const setPanelOpen = useSetAtom(isDetailPanelOpenAtom);
 
     // Convert Set<string> to TanStack RowSelectionState
     const rowSelection: RowSelectionState = useMemo(() => {
@@ -88,6 +87,7 @@ export const EnhancedLiveMonitorView = () => {
                 const panelData: PanelData = {
                     id: row.id,
                     source: 'live',
+                    residents: row.residents,
                     residentName: row.residents.map(r => r.name).join(', '),
                     location: row.location,
                     status: row.status,
@@ -100,12 +100,11 @@ export const EnhancedLiveMonitorView = () => {
                     riskType: row.riskType,
                 };
                 setActiveRecord(panelData);
-                setPanelOpen(true);
             }
         } else {
             setActiveRecord(null);
         }
-    }, [selectedRows, loadedData, setActiveRecord, setPanelOpen]);
+    }, [selectedRows, loadedData, setActiveRecord]);
 
     // Initial load and filter reset
     useEffect(() => {
@@ -133,6 +132,60 @@ export const EnhancedLiveMonitorView = () => {
 
     const columns: ColumnDef<LiveCheckRow>[] = useMemo(
         () => [
+
+            {
+                id: 'resident',
+                header: 'Resident',
+                size: 300,
+                minSize: 240,
+                accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
+                cell: ({ row }) => (
+                    <div className={styles.residentCell} style={{ alignItems: 'flex-start' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-1)', width: '100%' }}>
+                            {row.original.residents.map((r, i) => (
+                                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--spacing-2)', height: '24px', width: '100%' }}>
+                                    <LinkButton
+                                        label={r.name}
+                                        external
+                                        onClick={() => { }}
+                                    />
+                                    <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
+                                        {r.hasHighRisk && (
+                                            <StatusBadge status="special" label="SR" fill tooltip="Suicide risk" />
+                                        )}
+                                        {r.hasMedicalWatch && (
+                                            <StatusBadge status="special" label="MW" fill tooltip="Medical watch" />
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ),
+            },
+            {
+                id: 'location',
+                header: 'Location',
+                ...COLUMN_WIDTHS.MERGED_LOCATION,
+                accessorFn: (row) => `${row.group} ${row.unit} ${row.location}`,
+                sortingFn: (rowA, rowB) => {
+                    const a = `${rowA.original.group} ${rowA.original.unit} ${rowA.original.location}`;
+                    const b = `${rowB.original.group} ${rowB.original.unit} ${rowB.original.location}`;
+                    return a.localeCompare(b);
+                },
+                cell: ({ row }) => {
+                    const isSingle = row.original.residents.length === 1;
+                    return (
+                        <div className={styles.locationCell} style={{ alignItems: 'center', paddingTop: isSingle ? '0' : 'var(--spacing-1.5)' }}>
+                            <LinkButton variant="ghost" label={row.original.group} external onClick={() => { }} />
+                            <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
+                            <LinkButton variant="ghost" label={row.original.unit} external onClick={() => { }} />
+                            <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
+                            <LinkButton variant="ghost" label={row.original.location} external onClick={() => { }} />
+                        </div>
+                    );
+                },
+            },
             {
                 id: 'status',
                 header: 'Status',
@@ -174,57 +227,6 @@ export const EnhancedLiveMonitorView = () => {
                 },
             },
             {
-                id: 'resident',
-                header: 'Resident',
-                size: 300,
-                minSize: 240,
-                accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
-                cell: ({ row }) => (
-                    <div className={styles.residentCell} style={{ alignItems: 'flex-start' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-1)', width: '100%' }}>
-                            {row.original.residents.map((r, i) => (
-                                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--spacing-2)', height: '24px', width: '100%' }}>
-                                    <a href="#" className={styles.linkText} onClick={(e) => e.preventDefault()}>
-                                        {r.name}
-                                    </a>
-                                    <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
-                                        {r.hasHighRisk && (
-                                            <StatusBadge status="special" label="SR" fill tooltip="Suicide Risk" />
-                                        )}
-                                        {r.hasMedicalWatch && (
-                                            <StatusBadge status="special" label="MW" fill tooltip="Medical Watch" />
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ),
-            },
-            {
-                id: 'location',
-                header: 'Location',
-                ...COLUMN_WIDTHS.MERGED_LOCATION,
-                accessorFn: (row) => `${row.group} ${row.unit} ${row.location}`,
-                sortingFn: (rowA, rowB) => {
-                    const a = `${rowA.original.group} ${rowA.original.unit} ${rowA.original.location}`;
-                    const b = `${rowB.original.group} ${rowB.original.unit} ${rowB.original.location}`;
-                    return a.localeCompare(b);
-                },
-                cell: ({ row }) => {
-                    const isSingle = row.original.residents.length === 1;
-                    return (
-                        <div className={styles.locationCell} style={{ alignItems: 'flex-start', paddingTop: isSingle ? '0' : 'var(--spacing-1.5)' }}>
-                            <span className={styles.locationSecondary}>{row.original.group}</span>
-                            <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
-                            <span className={styles.locationSecondary}>{row.original.unit}</span>
-                            <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
-                            <span>{row.original.location}</span>
-                        </div>
-                    );
-                },
-            },
-            {
                 id: 'scheduled',
                 header: 'Scheduled',
                 size: 180,
@@ -251,28 +253,6 @@ export const EnhancedLiveMonitorView = () => {
                 enableResizing: false,
                 header: () => null,
                 cell: () => null,
-            },
-            {
-                id: 'actions',
-                header: () => (
-                    <div className={styles.checkboxCell}>
-                        <span className={`material-symbols-rounded ${styles.actionHeaderIcon}`}>
-                            more_vert
-                        </span>
-                    </div>
-                ),
-                size: 48,
-                minSize: 48,
-                maxSize: 48,
-                enableResizing: false,
-                enableSorting: false,
-                cell: () => (
-                    <RowContextMenu
-                        actions={[
-                            { label: 'Facility management', icon: 'door_front', onClick: () => { } }
-                        ]}
-                    />
-                ),
             },
         ],
         []

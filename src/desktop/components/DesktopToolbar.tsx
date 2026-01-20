@@ -38,26 +38,26 @@ const LIVE_STATUS_OPTIONS = [
 ];
 
 const HISTORICAL_STATUS_OPTIONS = [
-    { value: 'all', label: 'All Status' },
-    { value: 'missed-uncommented', label: 'Missed – No Comment' },
-    { value: 'missed-commented', label: 'Missed – Commented' },
+    { value: 'all', label: 'All statuses' },
+    { value: 'missed-uncommented', label: 'Missed – no comment' },
+    { value: 'missed-commented', label: 'Missed – commented' },
     { value: 'completed', label: 'Completed' },
 ];
 
 const TIME_RANGE_OPTIONS = [
     { value: 'today', label: 'Today' },
-    { value: 'last-24h', label: 'Last 24 Hours' },
-    { value: 'last-8h', label: 'Last 8 Hours' },
-    { value: 'last-7d', label: 'Last 7 Days' },
-    { value: 'custom', label: 'Custom Range...' },
+    { value: 'last-24h', label: 'Last 24 hours' },
+    { value: 'last-8h', label: 'Last 8 hours' },
+    { value: 'last-7d', label: 'Last 7 days' },
+    { value: 'custom', label: 'Custom range...' },
 ];
 
 const AREA_OPTIONS = [
-    { value: 'all', label: 'All Facility Areas' },
-    { value: 'area-a', label: 'Facility Area Alpha' },
-    { value: 'area-b', label: 'Facility Area Bravo' },
-    { value: 'area-c', label: 'Facility Area Charlie' },
-    { value: 'area-d', label: 'Facility Area Delta' },
+    { value: 'all', label: 'All facility areas' },
+    { value: 'area-a', label: 'Facility area Alpha' },
+    { value: 'area-b', label: 'Facility area Bravo' },
+    { value: 'area-c', label: 'Facility area Charlie' },
+    { value: 'area-d', label: 'Facility area Delta' },
 ];
 
 interface DesktopToolbarProps {
@@ -170,7 +170,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                 <SearchInput
                     value={filter.search}
                     onChange={handleSearchChange}
-                    placeholder="Find"
+                    placeholder="Find checks"
                     flavor="instant"
                     size="md"
                 />
@@ -197,7 +197,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                         size="m"
                         onClick={handleReset}
                     >
-                        Reset Filters
+                        Reset filters
                     </Button>
                 )}
 
@@ -230,7 +230,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                             isCustomized={modifiedKeys.includes('timeRangePreset')}
                             onValueChange={handleTimeRangeChange}
                             onClear={() => clearFilter('timeRangePreset')}
-                            placeholder="Time Range"
+                            placeholder="Time range"
                             options={TIME_RANGE_OPTIONS}
                             displayLabel={dateRangeLabel}
                         />
@@ -312,7 +312,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                             isCustomized={modifiedKeys.includes('facility')}
                             onValueChange={handleAreaFilterChange}
                             onClear={() => clearFilter('facility')}
-                            placeholder="Facility Area"
+                            placeholder="Facility area"
                             options={AREA_OPTIONS}
                         />
                     </div>

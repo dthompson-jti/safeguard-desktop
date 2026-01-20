@@ -131,6 +131,7 @@ export const HistoricalReviewView = () => {
         const panelData: PanelData = {
             id: row.id,
             source: 'historical',
+            residents: row.residents,
             residentName: row.residents.map(r => r.name).join(', '),
             location: row.location,
             status: row.status,

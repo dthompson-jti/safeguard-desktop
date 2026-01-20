@@ -8,6 +8,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Changed (2026-01-20)
+- **Side Panel Refinement**: Implemented "Pinned" vs "Transient" visibility modes for the Details Panel.
+    - **Transient Mode**: Panel automatically shows when exactly one record is selected and hides when selection is cleared or multiple items are selected.
+    - **Pinned Mode**: Panel remains open regardless of selection when explicitly toggled via the header button.
+    - **Universal Support**: Enabled the side panel and its toggle button for both Live Monitor and Historical Review views.
+    - **UI Standardisation**: Standardized the panel toggle button with proper tooltips, icons, and consistent pinning behavior.
+- **UI Content Audit**: Standardized and enforced **Sentence case** across the entire application interface.
+    - Updated over 50+ strings including tooltips, button labels, dropdown options, and selection indicators.
+    - Standardized interactive cues like "Add comment", "View resident", and "Reset filters".
+- **Enhanced Breadcrumbs**:
+    - Ancestor path levels and chevrons now use subtle `var(--surface-fg-quaternary)` to reduce visual noise.
+    - Active location (the final item) now uses `var(--control-fg-selected)` (Blue) for clear orientation.
+- **View Title Refinement**: Standardized the main content area title ("Safeguard checks – Live view/Historical view") to use `var(--surface-fg-secondary)` with 18px font-weight at a left-aligned position.
+- **Sidebar Search Placeholder**: Updated to "Find nav items".
+- **Toolbar Search Placeholder**: Updated to "Find checks".
+- **Table Action Menu**: Refined the table row action menu visibility and styling.
+    - **Live View**: Removed the rightmost action column entirely to maximize horizontal space for live metrics.
+    - **Historical View**: Retained the action column for administrative tasks (Add/Edit comments, etc.).
+    - **Uniform Styling**: Updated the `...` menu trigger to use the standard **Tertiary** button variant, replacing the previous non-standard style.
+
+### Removed (2026-01-20)
+- **Technical Debt Cleanup**: 
+    - Removed unused "More Actions" popover from the Enhanced UI.
+    - Cleaned up unused variables and imports (`isMoreActionsOpen`, `Popover`, `useState`) in `DesktopEnhancedApp.tsx`.
+    - Renamed Navigation Panel header from "Safeguard Checks" to "Facility".
+
+
 ### Added
 - **Design System Hardening**: Introduced a unified Z-Index semantic scale (`--z-overlay`, `--z-modal`, `--z-toast`) in `semantics.css` to prevent layering conflicts.
 - **Layout Stability**: Added `useTableAutoFit` hook to `DataTable` to reliably calculate column widths based on content rendering, removing fragile "magic number" logic.
@@ -41,6 +68,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - **Visual Clarity**:
         - Open checks (Upcoming/Due/Overdue) now display "—" (em dash) in the **Actual** time column of the Details Panel instead of misleading scheduled times.
         - Checks without an assigned officer now display "—" instead of "Pending" in the Details Panel.
+
+### Removed (2026-01-19)
+- **Save Default Filter**: Removed the ability for users to save their own default filters.
+    - Simplified the reset logic to always revert to factory defaults.
+    - Removed the "Save as my defaults" action from the More Actions menu.
 
 ### Fixed (2026-01-18)
 - **Mock Data Reliability**: Fixed a critical `ReferenceError` in `mockData.ts` caused by circular initialization order of `seededRandom`.

@@ -106,6 +106,13 @@
     outline-offset: -2px;
 }
 
+.residentCell {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+
 .thContent {
     display: flex;
     align-items: center;
@@ -231,12 +238,25 @@
 .locationCell {
     display: flex;
     align-items: center;
-    gap: var(--spacing-1);
+    gap: 0;
 }
 
+/* locationSecondary handled via LinkButton and nextIcon */
 .nextIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 24px;
     font-size: var(--icon-size-sm) !important;
     color: var(--surface-fg-quaternary);
+    margin-left: -28px;
+    transition: opacity 0.15s ease;
+}
+
+/* Hide separator when the preceding link is hovered to avoid overlap with its external icon */
+.locationCell button:hover+.nextIcon {
+    opacity: 0;
 }
 
 .actionHeaderIcon {

@@ -13,7 +13,7 @@ export const BulkActionFooter = ({
     selectedCount,
     onAction,
     onClear,
-    actionLabel = 'Add Comment',
+    actionLabel = 'Add comment',
     actionIcon = 'add_comment',
 }: BulkActionFooterProps) => {
 
@@ -31,7 +31,7 @@ export const BulkActionFooter = ({
                     <span className="material-symbols-rounded">close</span>
                 </Button>
                 <span className={styles.count}>
-                    {selectedCount} Selected
+                    {selectedCount} selected
                 </span>
             </div>
 

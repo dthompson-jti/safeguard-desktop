@@ -4,6 +4,7 @@ import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { STORAGE_PREFIX } from '../config';
 import { DesktopView, DesktopFilter, HistoricalCheck } from './types';
+import { Resident } from '../types';
 import { enhancedMockData } from '../desktop-enhanced/data/mockData';
 // We'll need access to live data for the polymorphic resolver. 
 // Ideally this should be exported from real stores, but for now we might need to rely on the view pushing data or a shared store.
@@ -36,11 +37,7 @@ export const FACTORY_FILTER_DEFAULTS: DesktopFilter = {
     commentFilter: 'any',
 };
 
-/** User's saved filter defaults (Persisted) */
-export const savedFilterDefaultsAtom = atomWithStorage<DesktopFilter>(
-    `${STORAGE_PREFIX}filter_defaults`,
-    FACTORY_FILTER_DEFAULTS
-);
+
 
 /** Desktop filter state (Session - Persisted) */
 export const desktopFilterAtom = atomWithStorage<DesktopFilter>(
@@ -55,12 +52,12 @@ export const modifiedFiltersAtom = atomWithStorage<string[]>(
 );
 
 /** 
- * Derived: returns true if current filters differ from saved defaults 
+ * Derived: returns true if current filters differ from factory defaults 
  * OR if the filter has been explicitly modified (stickiness)
  */
 export const isFilterCustomizedAtom = atom((get) => {
     const current = get(desktopFilterAtom);
-    const saved = get(savedFilterDefaultsAtom);
+    const saved = FACTORY_FILTER_DEFAULTS;
     const modified = get(modifiedFiltersAtom);
 
     // If any filter is in the modified set, the global "Reset" should be visible
@@ -99,7 +96,7 @@ export const updateFilterAtom = atom(null, (get, set, update: Partial<DesktopFil
 /** Write-only: Clear a specific filter's modification state and revert to default */
 export const clearFilterForKeyAtom = atom(null, (get, set, key: keyof DesktopFilter) => {
     const current = get(desktopFilterAtom);
-    const saved = get(savedFilterDefaultsAtom);
+    const saved = FACTORY_FILTER_DEFAULTS;
     const modified = new Set(get(modifiedFiltersAtom));
 
     modified.delete(key);
@@ -114,17 +111,9 @@ export const clearFilterForKeyAtom = atom(null, (get, set, key: keyof DesktopFil
     set(modifiedFiltersAtom, Array.from(modified));
 });
 
-/** Write-only: Save current filters as user defaults */
-export const saveFiltersAsDefaultAtom = atom(null, (get, set) => {
-    const current = get(desktopFilterAtom);
-    set(savedFilterDefaultsAtom, current);
-    set(modifiedFiltersAtom, []); // Reset modification state as this is now the baseline
-});
-
-/** Write-only: Reset current filters to saved defaults */
-export const resetFiltersAtom = atom(null, (get, set) => {
-    const saved = get(savedFilterDefaultsAtom);
-    set(desktopFilterAtom, { ...saved });
+/** Write-only: Reset current filters to factory defaults */
+export const resetFiltersAtom = atom(null, (_get, set) => {
+    set(desktopFilterAtom, { ...FACTORY_FILTER_DEFAULTS });
     set(modifiedFiltersAtom, []); // Clear all modification markers
 });
 
@@ -228,6 +217,7 @@ export const supervisorNoteModalAtom = atom<{
 export interface PanelData {
     id: string;
     source: 'live' | 'historical';
+    residents: Resident[];
     residentName: string;
     location: string;
     status: 'missed' | 'due' | 'pending' | 'done' | 'late' | 'completing' | 'complete' | 'queued' | 'upcoming' | 'overdue' | 'completed';

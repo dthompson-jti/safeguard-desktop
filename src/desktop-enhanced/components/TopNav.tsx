@@ -23,7 +23,7 @@ export const TopNav = React.forwardRef<HTMLDivElement>((_, ref) => {
                 <button className={styles.iconButton} title="Favorites">
                     <span className="material-symbols-rounded">star_border</span>
                 </button>
-                <button className={styles.iconButton} title="My Team">
+                <button className={styles.iconButton} title="My team">
                     <span className="material-symbols-rounded">group</span>
                 </button>
                 <button className={styles.iconButton} title="Calendar">
@@ -48,23 +48,23 @@ export const TopNav = React.forwardRef<HTMLDivElement>((_, ref) => {
             {/* RIGHT GROUP: Settings & Session */}
             <div className={styles.rightSection}>
                 {/* Language Dropdown Mock */}
-                <button className={styles.actionLink} title="Select Region">
+                <button className={styles.actionLink} title="Select region">
                     <span>En (AU)</span>
                     <span className={`material-symbols-rounded ${styles.iconSm}`}>expand_more</span>
                 </button>
 
                 {/* POS Action */}
-                <button className={styles.actionLink} title="Open Till">
+                <button className={styles.actionLink} title="Open till">
                     <span className="material-symbols-rounded">point_of_sale</span>
-                    <span>Open Till</span>
+                    <span>Open till</span>
                 </button>
 
                 <div className={styles.verticalDivider} />
 
-                <button className={styles.iconButton} title="Help Center">
+                <button className={styles.iconButton} title="Help center">
                     <span className="material-symbols-rounded">help_outline</span>
                 </button>
-                <button className={styles.iconButton} title="Log Out">
+                <button className={styles.iconButton} title="Log out">
                     <span className="material-symbols-rounded">logout</span>
                 </button>
 

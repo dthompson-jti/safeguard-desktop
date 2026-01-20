@@ -75,7 +75,7 @@ export const TopNavAvatar = () => {
                         <ColorSlider
                             value={hue}
                             onChange={handleHueChange}
-                            label="Avatar Color"
+                            label="Avatar color"
                         />
                     </div>
                 </Popover.Content>

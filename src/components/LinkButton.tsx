@@ -5,23 +5,27 @@ import styles from './LinkButton.module.css';
 interface LinkButtonProps {
     label: string;
     icon?: string;
+    external?: boolean;
+    variant?: 'primary' | 'ghost';
     onClick?: () => void;
     className?: string;
 }
 
 /**
- * A bold, clickable text component matching Figma's "Links/Link sm" style.
- * Used for Resident and Location names in the Info Panel.
+ * A clickable text component matching Figma's "Links" style.
+ * Enhanced with fade-in external icon support and ghost variants.
  */
 export const LinkButton: React.FC<LinkButtonProps> = ({
     label,
     icon,
+    external,
+    variant = 'primary',
     onClick,
     className = '',
 }) => {
     return (
         <button
-            className={`${styles.link} ${className}`}
+            className={`${styles.link} ${styles[variant]} ${className}`}
             onClick={(e) => {
                 e.stopPropagation();
                 onClick?.();
@@ -30,7 +34,12 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
             {icon && (
                 <span className="material-symbols-rounded">{icon}</span>
             )}
-            {label}
+            <span className={styles.label}>{label}</span>
+            {external && (
+                <span className={`material-symbols-rounded ${styles.externalIcon}`}>
+                    open_in_new
+                </span>
+            )}
         </button>
     );
 };
