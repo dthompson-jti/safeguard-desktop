@@ -15,7 +15,8 @@ export const TopNavAvatar = () => {
 
     if (!session.user) return null;
 
-    const { initials, username } = session.user;
+    const { username } = session.user;
+    const initials = "JB"; // Hardcoded validation initials
     const customHue = userPreferences[username]?.avatarHue;
     const hue = customHue !== undefined ? customHue : generateAvatarHue(username);
 

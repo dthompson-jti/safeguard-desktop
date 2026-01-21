@@ -25,7 +25,7 @@ export default function App() {
     const view = useAtomValue(desktopViewAtom);
     const toasts = useAtomValue(toastsAtom);
     const activeRecord = useAtomValue(activeDetailRecordAtom);
-    const [isPanelOpen, setIsPanelOpen] = useAtom(isDetailPanelOpenAtom);
+    const [isPanelOpen, setPanelOpen] = useAtom(isDetailPanelOpenAtom);
 
     // Selection counts to handle "Select single record" state in panel
     const selectedLive = useAtomValue(selectedLiveRowsAtom);
@@ -48,7 +48,7 @@ export default function App() {
                 >
                     <div className={styles.mainWrapper}>
                         <DesktopHeader
-                            onTogglePanel={() => setIsPanelOpen(!isPanelOpen)}
+                            onTogglePanel={() => setPanelOpen(!isPanelOpen)}
                             isPanelOpen={isPanelOpen}
                         />
                         <DesktopToolbar />

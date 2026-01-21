@@ -1,7 +1,7 @@
 import * as Popover from '@radix-ui/react-popover';
 import { useAtom } from 'jotai';
 import { desktopEnhancedTreeLayoutAtom } from '../atoms';
-import { residentDisplayModeAtom, residentBadgeTextAtom } from '../../desktop/atoms';
+import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom } from '../../desktop/atoms';
 
 import { Switch } from '../../components/Switch';
 import styles from './TopNavMenu.module.css';
@@ -10,6 +10,7 @@ export const TopNavMenu = () => {
     const [treeLayout, setTreeLayout] = useAtom(desktopEnhancedTreeLayoutAtom);
     const [residentDisplayMode, setResidentDisplayMode] = useAtom(residentDisplayModeAtom);
     const [residentBadgeText, setResidentBadgeText] = useAtom(residentBadgeTextAtom);
+    const [autoOpenPanel, setAutoOpenPanel] = useAtom(autoOpenDetailPanelAtom);
 
     return (
         <Popover.Root>
@@ -69,6 +70,19 @@ export const TopNavMenu = () => {
                             checked={residentBadgeText === 'full'}
                             onCheckedChange={(checked) => setResidentBadgeText(checked ? 'full' : 'short')}
                             id="badge-text-toggle"
+                        />
+                    </div>
+
+                    <div className={styles.divider} />
+
+                    <div className={styles.menuRow}>
+                        <div className={styles.menuRowText}>
+                            <span className={styles.label}>Auto-open side panel</span>
+                        </div>
+                        <Switch
+                            checked={autoOpenPanel}
+                            onCheckedChange={setAutoOpenPanel}
+                            id="auto-open-toggle"
                         />
                     </div>
 

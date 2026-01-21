@@ -1,65 +1,46 @@
 # Side Panel Behavior Options
 
 ## Problem Space
-The current side panel implementation creates ambiguity between "Transient" (auto-open on selection) and "Pinned" (manually open) states. The "Toggle" button currently only toggles the "Pinned" state, leading to confusing interactions (e.g., clicking the button when transiently open "Pins" it instead of closing it).
+The current side panel implementation creates ambiguity between "Transient" and "Pinned". Users feel a lack of control, specifically asking: **"Can I keep it closed even when I select something?"** (Answer currently: No).
+The previous "Split Control" attempt (Toolbar + Pin) added complexity without solving this core desire for a "Quiet Mode".
 
-## Option 1: Explicit 3-State Segmented Control
-**Concept**: A visible control (Segmented Button or Dropdown) in the toolbar explicitly sets the mode.
-- **States**:
-    1.  **Auto (Default)**: Opens on single selection, closes on deselect/multi-select.
-    2.  **Always Open**: Panel stays open. Empty state if no selection.
-    3.  **Always Closed**: Panel never auto-opens.
-- **Pros**: Zero ambiguity. User sees exactly what mode they are in.
-- **Cons**: Takes up toolbar space. "Always Closed" might feel like a broken feature if user selects things and nothing happens.
+## Analysis: First Principles
+We need to decouple **Selection** (Data State) from **Visibility** (Layout State).
+- **Selection**: "I am focusing on this item (for operations, highlighting, or details)."
+- **Visibility**: "I want to see the Detailed View right now."
 
-## Option 2: The "Pin" Interaction (Slack-style)
-**Concept**: The panel is Transient by default. A specific "Pin" action locks it open.
-- **Behavior**:
-    - **Single Select**: Panel opens (Transient). Header shows a "Pin" icon.
-    - **Click Pin**: Panel enters "Pinned" state. Stays open even if selection clears.
-    - **Click Close (X)**:
-        - If Transient: Clears selection AND closes panel.
-        - If Pinned: Unpins AND closes panel.
-- **Pros**: Familiar pattern (Slack threads). "Close" always means "Close".
-- **Cons**: Requires two clicks to go from "Transient" to "Closed without clearing selection" (if that's a desired state).
+## The "Preview Pane" Paradigm (Finder / Explorer Style)
+**Concept**: Treat the Side Panel like the "Preview Pane" in Mac Finder or Windows Explorer. It is a **Layout Preference**, not a reaction to clicking.
 
-## Option 3: "Close" Means "Hide" (Override)
-**Concept**: The Toggle Button acts as a master override.
-- **Behavior**:
-    - **Default**: Auto-open on selection.
-    - **User Clicks Close**: Panel hides. System remembers "User specifically hid the panel". Selection remains active.
-    - **User Clicks Open**: Panel opens. System forgets "User hid panel".
-    - **New Selection**: Resets the "Hidden" override? (Debatable).
-- **Pros**: Intuitive "Close" action prevents panel from annoying user.
-- **Cons**: Complex logic for when to reset the "Hide" override. Does selecting a *new* row re-open it? (Likely yes).
+### Core Rules
+1.  **Strict Mode Control**: The user explicitly toggles the Panel ON or OFF via the Toolbar.
+2.  **Decoupled Selection**:
+    - **If Panel is OFF**: Selecting rows **does nothing** to the layout. The panel stays closed. (Solves the "Quiet Mode" request).
+    - **If Panel is ON**: Selecting rows **updates** the panel content immediately.
+3.  **Explicit Intent (The "Open" Action)**:
+    - If the Panel is OFF, and the user Double-Clicks a row (or hits "Space"), the Panel turns **ON**.
 
-## Option 4: Selection is King (No Manual Toggle)
-**Concept**: Remove the manual interaction entirely for opening/closing empty panels.
-- **Behavior**:
-    - Panel ONLY opens when a record is selected.
-    - "Close" button on panel deselects the record.
-    - To keep panel open while browsing, user must change selection directly.
-- **Pros**: Extremely simple mental model.
-- **Cons**: Cannot view panel for "no selection" (e.g. aggregate stats?). Cannot hide panel if I want to see full table width while keeping selection.
+### Interaction Matrix
 
-## Option 5: The "Dock" Button
-**Concept**: Side panel is an overlay by default (or pushes content), but has a "Dock" button to make it permanent.
-- **Behavior**:
-    - **Selection**: Panel slides in.
-    - **Dock Button**: Locks the panel in place.
-    - **Un-Dock**: Panel becomes transient again.
-- **Pros**: Distinguishes between "glancing" and "working".
-- **Cons**: Similar to Pin, but implies layout changes (overlay vs push).
+| Panel State | User Action | Result | Why? |
+| :--- | :--- | :--- | :--- |
+| **OFF** | Select Row | **Row Highlighted. Panel stays OFF.** | User is in "Scan/Manage" mode. No distractions. |
+| **OFF** | Click Toolbar Toggle | **Panel turns ON.** (Show Empty or Selection) | User switches to "Review" mode. |
+| **OFF** | Double-Click Row | **Panel turns ON.** | Explicit intent to see details. |
+| **ON** | Select Row | **Panel Updates** to show record. | Standard functionality. |
+| **ON** | Deselect Row | **Panel clears** (Empty State). Stays ON. | View preference remains "I want to see details". |
+| **ON** | Click Toolbar Toggle | **Panel turns OFF.** | User switches back to "Scan/Manage" mode. |
+| **ON** | Click "X" in Panel | **Panel turns OFF.** | Equivalent to untoggling. |
 
-## Option 6: Settings-Based Preference
-**Concept**: Move the behavior choice to "View Settings" dropdown, keep the UI simple.
-- **Behavior**:
-    - Toggle Button strictly shows/hides panel.
-    - New Setting: "Auto-open panel on selection" (Checkbox, checked by default).
-    - If Checked: Selection triggers "Open" state.
-    - If Unchecked: Selection does nothing to panel visibility.
-- **Pros**: Cleanest UI. Power users can disable auto-open.
-- **Cons**: Functionality is hidden. Changing modes requires clicks.
+### Pros
+- **Solves the Core Complaint**: "Can I keep it closed?" **YES.** Just turn it off.
+- **Simplicity**: ONE button. ONE concept (On/Off).
+- **Predictability**: The panel never "pops up" unless you asked for it (by being in "ON" mode or double-clicking).
+- **Familiarity**: Matches OS file explorers.
 
-## Recommendation
-**Option 2 (Pin)** is the strongest contender for a rich desktop application. It explicitly models the user's intent ("I want to keep this reference open while I work") vs the system's convenience ("Here is the detail for what you just clicked").
+### Cons
+- **Discovery**: Users used to "Click to open" might wonder why nothing happens initially (if default is OFF).
+    - *Mitigation*: Default to ON for new users? Or use an "Empty State" hint?
+
+## Recommendation: Adopt "Preview Pane" Model
+This removes the "Pin" concept entirely. The panel doesn't need to be "Pinned" because "Open" *is* "Pinned". It stays open until you close it. Selection just feeds it.

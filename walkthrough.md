@@ -1,30 +1,45 @@
-# Walkthrough – Remove Live View Details Panel
+# Walkthrough – Side Panel Interaction Model
 
 ## Overview
-As requested, the Details Panel and its associated toggle button have been removed from the **Live Monitor View**. The panel remains fully functional in the **Historical Review View** for administrative tasks like auditing and commenting.
+We have implemented a **Split Control Model** for the side panel to resolve ambiguity between "Transient" (auto-open) and "Pinned" states. Visibility and Persistence are now controlled by separate UI elements.
 
 ## Changes
 
-### 1. `DesktopEnhancedApp.tsx`
-*   **Conditional Visibility**: Updated the `showPanel` logic to force the panel closed when in Live View (`view !== 'live'`).
-*   **Toggle Button**: Wrapped the panel toggle button in a conditional check so it is hidden in Live View.
+### 1. Interaction Logic
+*   **Toolbar Button ("Open Panel")**: Strictly controls **Visibility**.
+    *   Clicking this ALWAYS toggles the panel on/off.
+    *   **Closing**: If you close the panel, it will **Unpin** it. If it was only open due to a single selection, it will also **Clear Selection**.
+*   **Panel Header Button ("Pin/Unpin")**: Strictly controls **Persistence**.
+    *   **Pin**: Keeps the panel open even if you change selection or deselect rows.
+    *   **Unpin**: Reverts to "Transient" mode (closes if you deselect).
 
-### 2. `EnhancedLiveMonitorView.tsx`
-*   **Interaction Cleanup**: Disabled row selection entirely for the Live View.
-    *   Removed `enableRowSelection={true}` prop from `DataTable`.
-    *   Removed `activeDetailRecordAtom` synchronization logic.
-    *   Removed all unused selection state variables and handlers to keep the component clean.
+### 2. UI Updates
+*   **Toolbar**: The button icon is always `right_panel_open` / `right_panel_close` to indicate simple visibility toggling.
+*   **Panel Header**: Added a new **Pin** (`keep` / `keep_off`) button next to the Close button.
+*   **Atoms**: Refactored `isDetailPanelOpenAtom` to `isDetailPanelPinnedAtom` to reflect accurate state semantics.
 
 ## Verification
-*   **Live View**:
-    *   Confirmed panel is not visible.
-    *   Confirmed the toggle button in the header is gone.
-    *   Confirmed clicking rows does not highlight them or trigger any selection state.
-*   **Historical View**:
-    *   Confirmed panel still operates as "Pinned" or "Transient".
-    *   Confirmed toggle button is present and functional.
-    *   Confirmed row selection and bulk actions work as expected.
-*   **Code Quality**:
-    *   Ran `npm run lint` – Passed.
-    *   Ran `npm run build` – Passed.
-    *   Verified no unused imports or dead code remained in `EnhancedLiveMonitorView.tsx`.
+
+### Automated
+*   `npm run lint` – **Passed** (Legacy usage updated).
+*   `npm run build` – **Passed**.
+
+### Manual User Flows
+
+#### Flow A: Transient (Default)
+1.  **Select a row**: Panel opens automatically.
+2.  **Select another row**: Panel updates to new resident.
+3.  **Click "X" (Close)** OR **Click Toolbar Close**: Panel closes AND selection is cleared.
+
+#### Flow B: Pinning
+1.  **Select a row**: Panel opens.
+2.  **Click "Pin" (Panel Header)**: Icon changes to filled/active.
+3.  **Deselect row (Ctrl+Click)**: Panel **STAYS OPEN** (shows empty state).
+4.  **Click "Unpin"**: Panel closes (since no selection).
+
+#### Flow C: Toolbar Override
+1.  **Pin the panel**.
+2.  **Click Toolbar "Close"**:
+    *   Panel disappears.
+    *   Pin state is reset to `false`.
+    *   Selection is preserved (if >1 item) or cleared (if 1 item) – *intelligent closing*.

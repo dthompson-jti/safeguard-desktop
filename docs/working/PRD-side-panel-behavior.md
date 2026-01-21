@@ -13,40 +13,42 @@ The current side panel implementation conflates "Transient" (auto-open on select
 ## 3. Proposed Solution: The "Pin" Interaction Model
 We will adopt a "Transient by Default, Pin to Persist" model, similar to patterns found in Slack threads or VS Code sidebars.
 
-### 3.1 Core States
+### 3.1 Core States (Refined)
 
 | State | Visibility | Trigger | Description |
 | :--- | :--- | :--- | :--- |
-| **Closed** | Hidden | Default on load / Explicit Close | Panel is hidden. Logic: `!selected` AND `!pinned`. |
-| **Transient** | Visible | Single Row Selection | Panel opens automatically. Logic: `selected` AND `!pinned`. Header shows "Pin" icon. |
-| **Pinned** | Visible | User clicks "Pin" / Toggle Button | Panel stays open regardless of selection. Logic: `pinned = true`. Header shows "Unpin" icon. |
+| **Closed** | Hidden | Default on load / Explicit Close | Panel is hidden. |
+| **Transient** | Visible | Single Row Selection | Panel opens automatically to show context. Closes if selection clears. |
+| **Pinned** | Visible | User clicks "Open" or "Pin" | Panel stays open regardless of selection. Shows empty state if nothing selected. |
 
-### 3.2 Interaction Matrix
+### 3.2 Interaction Matrix (Split Control Model)
 
-| Current State | User Action | Resulting State | Effect on Selection |
+| Current State | User Action | Resulting State | Selection Impact |
 | :--- | :--- | :--- | :--- |
-| **Closed** | Select Row | **Transient** | Selection updates. Panel opens. |
-| **Closed** | Click Toggle | **Pinned** | Panel opens (empty state or last selection). |
-| **Transient** | Select Another Row | **Transient** | Selection updates. Panel content updates. |
-| **Transient** | Deselect / Click Other | **Closed** | Selection clears. Panel closes. |
-| **Transient** | Click "Pin" Icon | **Pinned** | Panel stays open. UI changes to "Unpin". |
-| **Transient** | Click "Close" (X) | **Closed** | **Selection Clears.** (Primary Action) |
-| **Pinned** | Select Row | **Pinned** | Selection updates. Panel updates. |
-| **Pinned** | Deselect | **Pinned** | Selection clears. Panel shows "Empty" state. |
-| **Pinned** | Click "Unpin" | **Transient** | If selected: becomes Transient. If not selected: Closes. |
-| **Pinned** | Click "Close" (X) | **Closed** | **Pin State set to False.** Selection Clears. |
+| **Closed** | Select Row | **Transient** | Updates |
+| **Closed** | Click Toolbar "Open" | **Pinned** | none (Empty State) |
+| **Transient** | Select Another Row | **Transient** | Updates |
+| **Transient** | Click Toolbar "Close" | **Closed** | **Clears Selection** (Primary hide action) |
+| **Transient** | Click Panel "Pin" Btn | **Pinned** | none |
+| **Transient** | Click Panel "Close" (X) | **Closed** | **Clears Selection** |
+| **Pinned** | Select Row | **Pinned** | Updates |
+| **Pinned** | Click Toolbar "Close" | **Closed** | **Preserves Selection** (just hides panel) |
+| **Pinned** | Click Panel "Unpin" Btn | **Transient** | none |
+| **Pinned** | Click Panel "Close" (X) | **Closed** | **Preserves Selection** |
 
 ### 3.3 UI Changes
 
-#### Toolbar / Header
-- **Toggle Button**:
-    - If Closed: Icon `right_panel_open` (Action: Open & Pin).
-    - If Transient: Icon `keep` (Pin) or `right_panel_open` (Pin).
-    - If Pinned: Icon `right_panel_close` (Action: Unpin & Close).
+#### Toolbar (Above Table)
+- **Button**: Standard "Right Panel" toggle icon (`right_panel_open` / `right_panel_close`).
+- **Behavior**: STRICTLY Open/Close.
+    - **Crucial Fix**: If the panel is open (even transiently), this button should look "Active/Navigated" and clicking it should Close the panel.
 
 #### Panel Header
-- **Pin Action**: Explicit "Pin" icon button in the panel header (top right).
-- **Close Action**: Explicit "X" icon button.
+- **Actions**:
+    1.  **Pin/Unpin**: New icon button.
+        - Icon: `keep` (Pin) vs `keep_off` (Unpin) or Outline/Filled variants.
+        - Tooltip: "Keep panel open".
+    2.  **Close**: Standard `close` (X) icon.
 
 ## 4. Technical Requirements
 - **State Migration**: Refactor `isPanelOpen` to `isPanelPinned`.

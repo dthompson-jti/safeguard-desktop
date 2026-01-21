@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import { motion } from 'framer-motion';
-import { supervisorNoteModalAtom, isDetailPanelOpenAtom, PanelData, panelWidthAtom, selectedHistoryRowsAtom, selectedLiveRowsAtom } from '../atoms';
+import { supervisorNoteModalAtom, isDetailPanelOpenAtom, PanelData, panelWidthAtom } from '../atoms';
 import { StatusBadge, StatusBadgeType } from './StatusBadge';
 
 import { Button } from '../../components/Button';
@@ -27,13 +27,12 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
     const panelRef = useRef<HTMLDivElement>(null);
     const widthRef = useRef(panelWidth);
 
-    const setSelectedLive = useSetAtom(selectedLiveRowsAtom);
-    const setSelectedHistory = useSetAtom(selectedHistoryRowsAtom);
+
 
     const handleClose = () => {
         setPanelOpen(false);
-        setSelectedLive(new Set());
-        setSelectedHistory(new Set());
+        // In Preview Pane model, closing the panel DOES NOT clear selection.
+        // It just hides the preview.
     };
 
     const handleOpenNoteModal = () => {
@@ -151,6 +150,7 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                     )}
                 </div>
                 <div className={styles.headerActions}>
+
                     <Tooltip content="Close panel">
                         <Button
                             variant="tertiary"

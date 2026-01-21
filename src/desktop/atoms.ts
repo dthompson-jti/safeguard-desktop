@@ -249,8 +249,11 @@ export interface PanelData {
  */
 export const activeDetailRecordAtom = atom<PanelData | null>(null);
 
-/** Visibility state for the detail panel (independent of data) */
+/** Panel Visibility Atom (Preview Pane Mode / Manual Override) */
 export const isDetailPanelOpenAtom = atom<boolean>(false);
+
+/** Configuration: Auto-open panel on transient selection? (Default: false) */
+export const autoOpenDetailPanelAtom = atomWithStorage<boolean>(`${STORAGE_PREFIX}auto_open_panel`, false);
 
 /** Panel width for resize functionality (min: 320, max: 600) */
 export const panelWidthAtom = atomWithStorage<number>(`${STORAGE_PREFIX}panel_width`, 400);
@@ -337,7 +340,7 @@ export type ResidentDisplayMode = 'left-badge' | 'chip' | 'right-badge';
  */
 export const residentDisplayModeAtom = atomWithStorage<ResidentDisplayMode>(
     `${STORAGE_PREFIX}resident_display_mode`,
-    'chip'
+    'right-badge'
 );
 
 export type ResidentBadgeTextMode = 'full' | 'short';
@@ -346,5 +349,5 @@ export type ResidentBadgeTextMode = 'full' | 'short';
  */
 export const residentBadgeTextAtom = atomWithStorage<ResidentBadgeTextMode>(
     `${STORAGE_PREFIX}resident_badge_text`,
-    'short'
+    'full'
 );

@@ -9,6 +9,7 @@ import {
     desktopFilterAtom,
     activeDetailRecordAtom,
     isDetailPanelOpenAtom,
+    autoOpenDetailPanelAtom,
     selectedHistoryRowsAtom,
     selectedLiveRowsAtom,
     panelWidthAtom,
@@ -35,6 +36,7 @@ export default function DesktopEnhancedApp() {
 
     const activeRecord = useAtomValue(activeDetailRecordAtom);
     const [isPanelOpen, setIsPanelOpen] = useAtom(isDetailPanelOpenAtom);
+    const autoOpenPanel = useAtomValue(autoOpenDetailPanelAtom);
     const panelWidth = useAtomValue(panelWidthAtom);
 
     const toasts = useAtomValue(toastsAtom);
@@ -82,10 +84,10 @@ export default function DesktopEnhancedApp() {
     /**
      * ARCHITECTURAL INVARIANT: Side Panel Visibility
      * The panel is visible if:
-     * 1. It is explicitly "Pinned" by the user (isPanelOpen === true)
-     * 2. It is in "Transient" mode (a single record is selected)
+     * 1. It is explicitly "Open" (Preview Mode) (isPanelOpen === true)
+     * 2. Auto-open is ENABLED AND exactly one record is selected (Transient Mode)
      */
-    const showPanel = (isPanelOpen || totalSelected === 1);
+    const showPanel = isPanelOpen || (autoOpenPanel && totalSelected === 1);
 
     const mainContainerStyle = useMemo(() => ({
         gridTemplateColumns: showPanel ? `1fr ${panelWidth}px` : '1fr',
@@ -110,17 +112,18 @@ export default function DesktopEnhancedApp() {
                                 <h2 className={styles.pageTitle}>
                                     Safeguard checks – {view === 'live' ? 'Live view' : 'Historical view'}
                                 </h2>
+
                                 <div className={styles.row2Actions}>
-                                    <Tooltip content={isPanelOpen ? "Close panel" : "Open panel"}>
+                                    <Tooltip content={showPanel ? "Close panel" : "Open panel"}>
                                         <Button
                                             variant="secondary"
                                             size="s"
                                             iconOnly
-                                            active={isPanelOpen}
+                                            active={showPanel}
                                             onClick={() => setIsPanelOpen(!isPanelOpen)}
                                         >
                                             <span className="material-symbols-rounded">
-                                                {isPanelOpen ? 'right_panel_close' : 'right_panel_open'}
+                                                {showPanel ? 'right_panel_close' : 'right_panel_open'}
                                             </span>
                                         </Button>
                                     </Tooltip>

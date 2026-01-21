@@ -67,7 +67,7 @@
 .menuRow {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: var(--spacing-3);
     padding: var(--spacing-2) var(--spacing-3);
     padding-left: var(--spacing-2);

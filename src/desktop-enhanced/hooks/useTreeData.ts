@@ -92,7 +92,7 @@ export const useTreeData = () => {
             const c = countsMap.get(getCountKey(groupId, unitId)) || { missed: 0, secondary: 0 };
             return {
                 id: unitId,
-                name: unitId.includes('Unit') ? unitId : `Unit ${unitId}`,
+                name: unitId,
                 type: 'unit',
                 parentId: groupId,
                 missed: c.missed,
@@ -117,7 +117,7 @@ export const useTreeData = () => {
     // Wrap in Facility ABCD root
     const facilityRoot: TreeGroup = {
         id: 'facility-root',
-        name: 'Facility ABCD',
+        name: 'Northwood JDC',
         type: 'root',
         missed: groups.reduce((acc, g) => acc + g.missed, 0),
         secondary: groups.reduce((acc, g) => acc + g.secondary, 0),

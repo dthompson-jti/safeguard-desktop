@@ -3,8 +3,24 @@
 
 import { LiveCheckRow, HistoricalCheck, DesktopFilter } from '../../desktop/types';
 
-const GROUPS = ['Alpha', 'Beta', 'Gamma', 'Delta'];
-const UNIT_PREFIXES = ['A', 'B', 'C', 'D'];
+const FACILITY_CONFIG = [
+    {
+        group: 'Cedar',
+        units: ['Cedar Intake', 'Cedar Assessment']
+    },
+    {
+        group: 'Oak',
+        units: ['Oak Integrated', 'Oak Enhanced', 'Oak Secure']
+    },
+    {
+        group: 'Maple',
+        units: ['Maple General', 'Maple Transitional']
+    },
+    {
+        group: 'Pine',
+        units: ['Pine Honors', 'Pine Re-entry']
+    }
+];
 
 const RESIDENT_NAMES = [
     'James Wilson', 'Maria Garcia', 'Robert Taylor', 'Linda Johnson', 'Michael Brown',
@@ -97,27 +113,32 @@ const ROOMS: RoomDef[] = ((): RoomDef[] => {
     const rooms: RoomDef[] = [];
     const usedNames = new Set<string>();
 
-    // Create random but repeatable assignments
-    GROUPS.forEach((group, gIdx) => {
-        [1, 2, 3].forEach(unitNum => {
-            const unit = `${UNIT_PREFIXES[gIdx]}${unitNum}`;
-            for (let i = 0; i < 12; i++) {
-                const location = `${unit}-${100 + i}`;
-                const roomId = `room-${location}`;
+    let globalSeed = 0;
 
-                // Deterministic count based on location
-                const seed = (gIdx * 100 + unitNum * 10 + i);
-                const isDouble = (seededRandom(seed) > 0.5);
+    // Create random but repeatable assignments
+    FACILITY_CONFIG.forEach((config) => {
+        config.units.forEach((unitName) => {
+            // ~6-8 rooms per unit
+            const numRooms = 6 + Math.floor(seededRandom(globalSeed++) * 3);
+
+            for (let i = 0; i < numRooms; i++) {
+                const roomNum = 100 + i;
+                const locationDisplay = `${roomNum}`; // Hotel style: just "100"
+                const roomId = `room-${unitName.replace(/\s+/g, '-')}-${roomNum}`;
+
+                // Deterministic count based on loop
+                const seed = globalSeed * 100 + i;
+                const isDouble = (seededRandom(seed) > 0.6); // 40% doubles
                 const residentCount = isDouble ? 2 : 1;
 
                 const roomResidents: { id: string; name: string; location: string; hasHighRisk?: boolean; hasMedicalWatch?: boolean }[] = [];
 
-                // FORCE: Make rooms 2 and 5 explicitly Paired MW for visibility
-                const globalRoomIndex = rooms.length; // Approximate running index
+                // FORCE: Make rooms 2 and 5 explicitly Paired MW for visibility (using approximate index)
+                const globalRoomIndex = rooms.length;
                 const isForcedPaired = (globalRoomIndex === 2 || globalRoomIndex === 5);
 
                 // Decide if this room is a "Paired MW" room. Force it or random chance.
-                const isPairedMW = isForcedPaired || (residentCount === 2 && (seed % 10 === 0)); // Increased chance
+                const isPairedMW = isForcedPaired || (residentCount === 2 && (seed % 10 === 0));
 
                 // If forced paired, ensure count is 2
                 const finalResidentCount = isForcedPaired ? 2 : residentCount;
@@ -131,19 +152,25 @@ const ROOMS: RoomDef[] = ((): RoomDef[] => {
                     const name = RESIDENT_NAMES[nameIdx];
                     usedNames.add(name);
 
-                    // Assign High Risk to some residents (e.g. 1 in 10), but mostly not if Paired MW (to avoid clutter)
-                    const hasHighRisk = !isPairedMW && ((seed + r) % 10 === 0);
-                    const hasMedicalWatch = isPairedMW; // Both residents get MW if paired
+                    // Assign High Risk
+                    const hasHighRisk = !isPairedMW && ((seed + r) % 8 === 0);
+                    const hasMedicalWatch = isPairedMW;
 
-                    roomResidents.push({ id: `res-${roomId}-${r}`, name, location, hasHighRisk, hasMedicalWatch });
+                    roomResidents.push({
+                        id: `res-${roomId}-${r}`,
+                        name,
+                        location: locationDisplay, // "100"
+                        hasHighRisk,
+                        hasMedicalWatch
+                    });
                 }
 
                 rooms.push({
                     id: roomId,
                     residents: roomResidents,
-                    location,
-                    group,
-                    unit
+                    location: locationDisplay,
+                    group: config.group,
+                    unit: unitName
                 });
             }
         });
@@ -157,20 +184,19 @@ interface RiskProfile {
     tier: 'punctual' | 'good' | 'critical';
 }
 
-const getUnitProfile = (_group: string, unit: string): RiskProfile => {
-    // Bad units: 1 in Alpha (A1), 2 in Gamma (C1, C2)
-    const criticalUnits = ['A1', 'C1', 'C2'];
-    if (criticalUnits.includes(unit)) {
+const getUnitProfile = (group: string, unit: string): RiskProfile => {
+    // Critical: Cedar Intake (High volatility)
+    if (unit.includes('Intake')) {
         return { missedProb: 0.180, commentFailProb: 0.65, tier: 'critical' };
     }
 
-    // Perfectly Punctual: Delta units only
-    if (unit.startsWith('D')) {
+    // Punctual: Pine Honors (Best behavior)
+    if (group === 'Pine') {
         return { missedProb: 0, commentFailProb: 0, tier: 'punctual' };
     }
 
-    // Operational Good: Everyone else (Alpha 2-3, Beta 1-3, Gamma 3)
-    return { missedProb: 0, commentFailProb: 0, tier: 'good' };
+    // Good: Everyone else
+    return { missedProb: 0.02, commentFailProb: 0.1, tier: 'good' };
 };
 
 

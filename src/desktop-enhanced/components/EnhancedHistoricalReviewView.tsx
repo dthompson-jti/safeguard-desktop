@@ -10,6 +10,7 @@ import {
     historicalRefreshAtom,
     historicalRowUpdateAtom,
     PanelData,
+    isDetailPanelOpenAtom
 } from '../../desktop/atoms';
 import { HistoricalCheck } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
@@ -34,6 +35,7 @@ const formatTime = (isoString: string): string => {
 export const EnhancedHistoricalReviewView = () => {
     const [selectedRows, setSelectedRows] = useAtom(selectedHistoryRowsAtom);
     const setDetailRecord = useSetAtom(activeDetailRecordAtom);
+    const setPanelOpen = useSetAtom(isDetailPanelOpenAtom);
 
     // Pagination State
     const [loadedData, setLoadedData] = useState<HistoricalCheck[]>([]);
@@ -177,6 +179,16 @@ export const EnhancedHistoricalReviewView = () => {
             return next;
         });
     }, [loadedData, setSelectedRows]);
+
+    // Determine if we are in "Edit" mode (any selected item has a comment)
+    const isEditMode = useMemo(() => {
+        if (selectedRows.size === 0) return false;
+        for (const id of selectedRows) {
+            const row = loadedData.find(r => r.id === id);
+            if (row?.supervisorNote) return true;
+        }
+        return false;
+    }, [selectedRows, loadedData]);
 
     const handleOpenNoteModal = useCallback((checkId: string) => {
         setModalState({
@@ -441,11 +453,14 @@ export const EnhancedHistoricalReviewView = () => {
                 hasMore={hasMore}
                 onLoadMore={handleLoadMore}
                 onRowClick={handleRowClick}
+                onRowDoubleClick={() => setPanelOpen(true)}
                 initialSorting={[{ id: 'scheduled', desc: true }]}
             />
             {selectedRows.size > 0 && (
                 <BulkActionFooter
                     selectedCount={selectedRows.size}
+                    actionLabel={isEditMode ? 'Edit comments' : 'Add comment'}
+                    actionIcon={isEditMode ? 'edit_note' : 'add_comment'}
                     onAction={() => {
                         setModalState({
                             isOpen: true,

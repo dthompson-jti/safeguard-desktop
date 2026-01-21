@@ -17,6 +17,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - **Cell Refinement**: Removed manual padding-top "hacks" and fixed-top alignments in both Live Monitor and Historical Review views.
     - **Location Cell**: Added dedicated `.locationCell` styling to the shared design system to ensure consistent vertical centering of breadcrumb paths.
 
+### Changed (2026-01-21) - Late Session
+- **Mock Data Overhaul**:
+    - **Northwood JDC**: Replaced generic Facility/Alpha/Beta names with a realistic "Northwood JDC" structure using "Nature" styled groups (Cedar, Oak, Maple, Pine) and descriptive unit names (e.g., "Cedar Intake").
+    - **Hotel-Style Rooms**: Room locations now display as simple numbers ("100", "101") without redundant unit prefixes.
+    - **Tree View**: Updated `NavigationPanel` and `useTreeData` to reflect the new facility name and cleaner unit display.
+- **Table Layout**:
+    - **Column Widths**: Adjusted default widths to accommodate longer descriptive unit names. Increased Location (260px), Officer (160px), and Group (110px) columns.
+
+### Changed (2026-01-21) - Late Session 2
+- **Default User Settings**:
+    - **Resident Display**: Defaults to `Right` (Badges).
+    - **Warning Text**: Defaults to `Show full text` (e.g., "Suicide risk") instead of abbreviation.
+- **Side Panel Experience**:
+    - **Preview Pane Model**: Moved to a strict "Preview Pane" paradigm (finder-style).
+        - **Quiet Mode (Default)**: Selecting rows does NOT open the panel.
+        - **Preview Mode**: Toggling the panel ON keeps it open; selection updates content live.
+        - **Auto-Open**: Added a configuration setting in the Main Menu to opt-in to "Auto-open panel on select".
+- **Bulk Action Logic**:
+    - **Context Aware**: The footer action now intelligently switches between "Add comment" and "Edit comments".
+        - **Add**: Shown when selecting items with NO comments.
+        - **Edit**: Shown when any selected item already has a comment (including mixed selection).
+- **Navigation**:
+    - **Menu Polish**: Refined the Main Menu popover layout for better alignment and clarity.
+    - **Avatar**: Updated session display to 'JB'.
+
 ### Changed (2026-01-21)
 - **Live View - Resident Badges Toggle**:
     - **Toggle**: Added a main menu toggle "Show resident chips" to enable an alternate high-visibility display mode for residents.

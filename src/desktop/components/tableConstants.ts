@@ -48,28 +48,28 @@ export const COLUMN_WIDTHS = {
         minSize: 70,
     },
     MERGED_LOCATION: {
-        size: 220,
-        minSize: 180,
+        size: 260,
+        minSize: 220,
     },
     VARIANCE: {
         size: 120,
         minSize: 100,
     },
     OFFICER: {
-        size: 130,
-        minSize: 100,
+        size: 160,
+        minSize: 130,
     },
     NOTES: {
         size: 300,
         minSize: 200,
     },
     GROUP: {
-        size: 100,
-        minSize: 80,
+        size: 110,
+        minSize: 90,
     },
     UNIT: {
-        size: 80,
-        minSize: 60,
+        size: 140,
+        minSize: 100,
     },
     ALERT_ICON: {
         size: 40,

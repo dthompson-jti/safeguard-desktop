@@ -2,7 +2,7 @@
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { ColumnDef } from '@tanstack/react-table';
-import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom, residentDisplayModeAtom, residentBadgeTextAtom } from '../../desktop/atoms';
+import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom, residentDisplayModeAtom, residentBadgeTextAtom, isDetailPanelOpenAtom } from '../../desktop/atoms';
 import { LiveCheckRow } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
@@ -196,6 +196,7 @@ export const EnhancedLiveMonitorView = () => {
 
     const [selectedRows, setSelectedRows] = useAtom(selectedLiveRowsAtom);
     const setDetailRecord = useSetAtom(activeDetailRecordAtom);
+    const setPanelOpen = useSetAtom(isDetailPanelOpenAtom);
 
     const rowSelection = useMemo(() => {
         const selection: Record<string, boolean> = {};
@@ -266,6 +267,7 @@ export const EnhancedLiveMonitorView = () => {
             rowSelection={rowSelection}
             onRowSelectionChange={handleRowSelectionChange}
             onRowClick={handleRowClick}
+            onRowDoubleClick={() => setPanelOpen(true)}
             initialSorting={[{ id: 'status', desc: false }]}
         />
     );

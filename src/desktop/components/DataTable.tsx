@@ -28,6 +28,7 @@ interface DataTableProps<T> {
     hasMore?: boolean;
     onLoadMore?: () => void;
     onRowClick?: (row: T, event: React.MouseEvent) => void;
+    onRowDoubleClick?: (row: T, event: React.MouseEvent) => void;
     initialSorting?: SortingState;
 }
 
@@ -43,6 +44,7 @@ export function DataTable<T>({
     hasMore = false,
     onLoadMore,
     onRowClick,
+    onRowDoubleClick,
     initialSorting = [],
 }: DataTableProps<T>) {
     const [sorting, setSorting] = useState<SortingState>(initialSorting);
@@ -312,6 +314,7 @@ export function DataTable<T>({
                                 className={styles.tr}
                                 data-state={row.getIsSelected() ? 'checked' : 'unchecked'}
                                 onClick={(e) => onRowClick?.(row.original, e)}
+                                onDoubleClick={(e) => onRowDoubleClick?.(row.original, e)}
                             >
                                 {row.getVisibleCells().map((cell, cellIndex) => {
                                     const isPinned = cell.column.getIsPinned();
