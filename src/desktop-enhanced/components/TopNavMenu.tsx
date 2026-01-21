@@ -1,16 +1,13 @@
 import * as Popover from '@radix-ui/react-popover';
+import { useAtom } from 'jotai';
+import { desktopEnhancedTreeLayoutAtom } from '../atoms';
+import { Switch } from '../../components/Switch';
 import styles from './TopNavMenu.module.css';
 
-export const TopNavMenu = () => {
-    const isAlternate = window.location.pathname.includes('/alternate');
-    const isPrimary = !isAlternate;
 
-    const handleSwitch = (path: string) => {
-        const base = import.meta.env.BASE_URL; // e.g. '/safeguard-desktop/'
-        // Clean base and path to avoid double slashes, but ensure root works
-        const target = `${base.replace(/\/$/, '')}${path}`;
-        window.location.href = target;
-    };
+
+export const TopNavMenu = () => {
+    const [treeLayout, setTreeLayout] = useAtom(desktopEnhancedTreeLayoutAtom);
 
     return (
         <Popover.Root>
@@ -22,14 +19,20 @@ export const TopNavMenu = () => {
 
             <Popover.Portal>
                 <Popover.Content className={styles.popoverContent} align="start" sideOffset={8}>
-                    <button className={styles.menuItem} onClick={() => handleSwitch('/')} data-active={isPrimary} type="button">
-                        <span className="material-symbols-rounded">analytics</span>
-                        <span>Enhanced view</span>
-                    </button>
-                    <button className={styles.menuItem} onClick={() => handleSwitch('/alternate')} data-active={isAlternate} type="button">
-                        <span className="material-symbols-rounded">dashboard</span>
-                        <span>Alternate option</span>
-                    </button>
+
+
+                    <div className={styles.menuRow}>
+                        <div className={styles.menuRowText}>
+                            <span className="material-symbols-rounded">format_indent_increase</span>
+                            <span>Show indentation lines</span>
+                        </div>
+                        <Switch
+                            checked={treeLayout === 'indented'}
+                            onCheckedChange={(checked) => setTreeLayout(checked ? 'indented' : 'full-width')}
+                            id="indent-toggle"
+                        />
+                    </div>
+
                 </Popover.Content>
             </Popover.Portal>
         </Popover.Root>

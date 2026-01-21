@@ -56,3 +56,32 @@
 .menuItem .material-symbols-rounded {
     font-size: 1.25rem;
 }
+
+.divider {
+    height: 1px;
+    background-color: var(--surface-border-secondary);
+    margin: var(--spacing-1) 0;
+}
+
+.menuRow {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--spacing-3);
+    padding: var(--spacing-2) var(--spacing-3);
+    padding-left: var(--spacing-2);
+    width: 100%;
+    color: var(--surface-fg-primary);
+    font-size: 0.9375rem;
+}
+
+.menuRowText {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.menuRowText .material-symbols-rounded {
+    font-size: 1.25rem;
+    color: var(--surface-fg-secondary);
+}

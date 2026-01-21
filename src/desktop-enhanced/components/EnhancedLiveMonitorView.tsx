@@ -1,8 +1,8 @@
 // src/desktop-enhanced/components/EnhancedLiveMonitorView.tsx
 import { useMemo, useCallback, useState, useEffect } from 'react';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { ColumnDef, RowSelectionState } from '@tanstack/react-table';
-import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom, PanelData } from '../../desktop/atoms';
+import { useAtomValue } from 'jotai';
+import { ColumnDef } from '@tanstack/react-table';
+import { desktopFilterAtom } from '../../desktop/atoms';
 import { LiveCheckRow } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
@@ -13,98 +13,12 @@ import styles from '../../desktop/components/DataTable.module.css';
 
 export const EnhancedLiveMonitorView = () => {
     const filter = useAtomValue(desktopFilterAtom);
-    const [selectedRows, setSelectedRows] = useAtom(selectedLiveRowsAtom);
-    const setActiveRecord = useSetAtom(activeDetailRecordAtom);
-
-    // Convert Set<string> to TanStack RowSelectionState
-    const rowSelection: RowSelectionState = useMemo(() => {
-        const selection: RowSelectionState = {};
-        selectedRows.forEach(id => {
-            selection[id] = true;
-        });
-        return selection;
-    }, [selectedRows]);
-
-    const handleSelectionChange = useCallback((updater: RowSelectionState | ((prev: RowSelectionState) => RowSelectionState)) => {
-        const nextSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
-        const nextSet = new Set<string>();
-        Object.keys(nextSelection).forEach(id => {
-            if (nextSelection[id]) nextSet.add(id);
-        });
-        setSelectedRows(nextSet);
-
-        // If selection becomes empty or multiple, clear active single record
-        if (nextSet.size !== 1) {
-            setActiveRecord(null);
-        }
-    }, [rowSelection, setSelectedRows, setActiveRecord]);
-
-
     // Pagination State
     const [loadedData, setLoadedData] = useState<LiveCheckRow[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [cursor, setCursor] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
-
-    const handleRowClick = useCallback((row: LiveCheckRow, event: React.MouseEvent) => {
-        const isMeta = event.ctrlKey || event.metaKey;
-        const isShift = event.shiftKey;
-
-        setSelectedRows((prev: Set<string>) => {
-            const next = new Set(prev);
-            if (isMeta) {
-                if (next.has(row.id)) next.delete(row.id);
-                else next.add(row.id);
-            } else if (isShift && prev.size > 0) {
-                const lastId = Array.from(prev).pop();
-                if (lastId) {
-                    const allIds = loadedData.map((r) => r.id);
-                    const startIdx = allIds.indexOf(lastId);
-                    const endIdx = allIds.indexOf(row.id);
-                    const range = allIds.slice(Math.min(startIdx, endIdx), Math.max(startIdx, endIdx) + 1);
-                    range.forEach((id) => next.add(id));
-                }
-            } else {
-                // Toggle behavior: if clicking the only selected row, clear it
-                if (next.has(row.id) && next.size === 1) {
-                    next.delete(row.id);
-                } else {
-                    next.clear();
-                    next.add(row.id);
-                }
-            }
-            return next;
-        });
-    }, [loadedData, setSelectedRows]);
-
-    // Sync active record and panel state with selection
-    useEffect(() => {
-        if (selectedRows.size === 1) {
-            const id = Array.from(selectedRows)[0];
-            const row = loadedData.find(r => r.id === id);
-            if (row) {
-                const panelData: PanelData = {
-                    id: row.id,
-                    source: 'live',
-                    residents: row.residents,
-                    residentName: row.residents.map(r => r.name).join(', '),
-                    location: row.location,
-                    status: row.status,
-                    timeScheduled: row.originalCheck?.dueDate || new Date().toISOString(),
-                    timeActual: row.lastCheckTime,
-                    officerName: row.lastCheckOfficer || '—',
-                    group: row.group,
-                    unit: row.unit,
-                    hasHighRisk: row.hasHighRisk,
-                    riskType: row.riskType,
-                };
-                setActiveRecord(panelData);
-            }
-        } else {
-            setActiveRecord(null);
-        }
-    }, [selectedRows, loadedData, setActiveRecord]);
 
     // Initial load and filter reset
     useEffect(() => {
@@ -267,10 +181,7 @@ export const EnhancedLiveMonitorView = () => {
             isLoading={isLoading}
             hasMore={hasMore}
             onLoadMore={handleLoadMore}
-            enableRowSelection={true}
-            rowSelection={rowSelection}
-            onRowSelectionChange={handleSelectionChange}
-            onRowClick={handleRowClick}
+            enableRowSelection={false}
             initialSorting={[{ id: 'status', desc: false }]}
         />
     );

@@ -1,8 +1,9 @@
 import React, { useEffect, useCallback } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import { desktopViewAtom } from '../../desktop/atoms';
-import { desktopEnhancedSelectionAtom, desktopEnhancedExpandedNodesAtom, SelectionType } from '../atoms';
+import { desktopEnhancedSelectionAtom, desktopEnhancedExpandedNodesAtom, desktopEnhancedTreeLayoutAtom, SelectionType } from '../atoms';
 import { TreeGroup, TreeUnit, useTreeData } from '../hooks/useTreeData';
+
 import { Button } from '../../components/Button';
 import { Tooltip } from '../../components/Tooltip';
 import styles from './TreeView.module.css';
@@ -17,6 +18,8 @@ interface TreeItemProps {
     isSelected: boolean;
     onToggle?: (e: React.MouseEvent) => void;
     onSelect: () => void;
+    depth: number;
+    layout: 'indented' | 'full-width';
     children?: React.ReactNode;
 }
 
@@ -30,16 +33,26 @@ const TreeItem = React.memo<TreeItemProps & { view: string }>(({
     onToggle,
     onSelect,
     view,
+    depth,
+    layout,
     children
 }) => {
     const isExpandable = type === 'root' || type === 'group';
 
+    // In full-width mode, we apply padding to the inner content using CSS variable
+    // In indented mode, we rely on the nested structure (padding-left on children container)
+    const rowStyle = layout === 'full-width'
+        ? { '--depth': depth } as React.CSSProperties
+        : undefined;
+
     return (
-        <div className={styles.nodeWrapper}>
+        <div className={styles.nodeWrapper} data-layout={layout}>
             <div
                 className={`${styles.row} ${isSelected ? styles.selected : ''}`}
                 onClick={() => onSelect()}
+                style={rowStyle}
             >
+
                 {/* Icon Section - Always 24px for alignment */}
                 {isExpandable ? (
                     <Button
@@ -113,8 +126,10 @@ const TreeItem = React.memo<TreeItemProps & { view: string }>(({
 export const TreeView: React.FC = () => {
     const facilityNodes = useTreeData();
     const view = useAtomValue(desktopViewAtom);
+    const layout = useAtomValue(desktopEnhancedTreeLayoutAtom);
     const [selection, setSelection] = useAtom(desktopEnhancedSelectionAtom);
     const [expanded, setExpanded] = useAtom(desktopEnhancedExpandedNodesAtom);
+
 
     // Auto-expand and select facility root on load
     useEffect(() => {
@@ -146,8 +161,9 @@ export const TreeView: React.FC = () => {
         setSelection({ type, id, parentId });
     }, [setSelection]);
 
-    const renderNode = (node: TreeGroup | TreeUnit) => {
+    const renderNode = (node: TreeGroup | TreeUnit, depth: number = 0) => {
         const isSelected = selection.id === node.id;
+
         const isExpanded = expanded.has(node.id);
 
         return (
@@ -163,15 +179,18 @@ export const TreeView: React.FC = () => {
                 view={view}
                 onToggle={() => toggleExpand(node.id)}
                 onSelect={() => selectNode(node.type, node.id, 'parentId' in node ? node.parentId : undefined)}
+                depth={depth}
+                layout={layout}
             >
-                {'children' in node && node.children?.map((child) => renderNode(child))}
+                {'children' in node && node.children?.map((child) => renderNode(child, depth + 1))}
             </TreeItem>
         );
     };
 
     return (
-        <div className={styles.tree}>
-            {facilityNodes.map(node => renderNode(node))}
+        <div className={styles.tree} data-layout={layout}>
+            {facilityNodes.map(node => renderNode(node, 0))}
         </div>
     );
 };
+

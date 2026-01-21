@@ -52,15 +52,32 @@
 /* Children Indentation & Guide Line */
 .children {
     padding-left: var(--tree-indent-step);
+    /* Default indented mode lines */
     border-left: 1px solid var(--surface-border-tertiary);
-    /* margin-left: calc(18px + 1px); /* Icon width (24) / 2 + margin (4) + adjustment */
-    /* Centered under parent icon: 24px icon + 4px margin. Center is 12px + 4px = 16px?
-       Actually, icon is 24px wide. Center is 12px. Chevron also 24px.
-       Current margin-left 19px seems to work, but let's make it more robust.
-    */
     margin-left: calc(12px + 4px - 1px);
     /* Chevron center (12px) + margin (4px) - border (1px) */
 }
+
+/* Full Width Layout Overrides */
+/* 1. Remove recursive structure indentation */
+.tree[data-layout="full-width"] .children {
+    padding-left: 0;
+    border-left: none;
+    margin-left: 0;
+}
+
+/* 2. Remove default border radius for rows to handle full width look better */
+.tree[data-layout="full-width"] .row {
+    border-radius: 4px;
+    margin-left: 8px;
+    margin-right: 8px;
+    /* We use padding-left based on depth */
+    padding-left: calc(var(--spacing-2) + (var(--depth) * 16px));
+}
+
+
+/* 3. Hide root icon logic if needed or keep consistent */
+
 
 .iconSpacer {
     width: 12px;
