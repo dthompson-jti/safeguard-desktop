@@ -195,10 +195,10 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                                     />
                                                     <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
                                                         {r.hasHighRisk && (
-                                                            <StatusBadge status="special" label="SR" fill tooltip="Suicide risk" />
+                                                            <StatusBadge status="special" label="Suicide risk" fill tooltip="Suicide risk" />
                                                         )}
                                                         {r.hasMedicalWatch && (
-                                                            <StatusBadge status="special" label="MW" fill tooltip="Medical watch" />
+                                                            <StatusBadge status="special" label="Medical watch" fill tooltip="Medical watch" />
                                                         )}
                                                     </div>
                                                 </div>

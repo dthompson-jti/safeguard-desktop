@@ -14,8 +14,12 @@ import { enhancedMockData } from '../desktop-enhanced/data/mockData';
 /** Current desktop view: 'live' or 'historical' */
 export const desktopViewAtom = atomWithStorage<DesktopView>(`${STORAGE_PREFIX}view`, 'historical');
 
+
 /** Global state for advanced search panel visibility */
 export const isAdvancedSearchOpenAtom = atom(false);
+
+/** Toggle for showing residents in badges (chips) */
+export const showResidentBadgesAtom = atomWithStorage<boolean>(`${STORAGE_PREFIX}show_resident_badges`, false);
 
 
 
@@ -319,3 +323,28 @@ export const sidebarExpandedAtom = atomWithStorage<boolean>('sidebar-expanded', 
  * Tracks the current input in the sidebar search box.
  */
 export const sidebarSearchQueryAtom = atom<string>('');
+
+// ============================================================================
+// RESIDENT DISPLAY SETTINGS
+// ============================================================================
+
+export type ResidentDisplayMode = 'left-badge' | 'chip' | 'right-badge';
+/**
+ * Controls how the resident name and status badges are rendered in the table.
+ * - 'left-badge': Badges on the left, name on the right.
+ * - 'chip': Name and badges combined in a rounded chip.
+ * - 'right-badge': Name on the left, badges on the right.
+ */
+export const residentDisplayModeAtom = atomWithStorage<ResidentDisplayMode>(
+    `${STORAGE_PREFIX}resident_display_mode`,
+    'chip'
+);
+
+export type ResidentBadgeTextMode = 'full' | 'short';
+/**
+ * Controls the text length of warning badges (e.g. "SR" vs "Suicide risk").
+ */
+export const residentBadgeTextAtom = atomWithStorage<ResidentBadgeTextMode>(
+    `${STORAGE_PREFIX}resident_badge_text`,
+    'short'
+);

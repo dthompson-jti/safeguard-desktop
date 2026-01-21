@@ -1,13 +1,15 @@
 import * as Popover from '@radix-ui/react-popover';
 import { useAtom } from 'jotai';
 import { desktopEnhancedTreeLayoutAtom } from '../atoms';
+import { residentDisplayModeAtom, residentBadgeTextAtom } from '../../desktop/atoms';
 
 import { Switch } from '../../components/Switch';
 import styles from './TopNavMenu.module.css';
 
 export const TopNavMenu = () => {
     const [treeLayout, setTreeLayout] = useAtom(desktopEnhancedTreeLayoutAtom);
-
+    const [residentDisplayMode, setResidentDisplayMode] = useAtom(residentDisplayModeAtom);
+    const [residentBadgeText, setResidentBadgeText] = useAtom(residentBadgeTextAtom);
 
     return (
         <Popover.Root>
@@ -20,10 +22,8 @@ export const TopNavMenu = () => {
             <Popover.Portal>
                 <Popover.Content className={styles.popoverContent} align="start" sideOffset={8}>
 
-
                     <div className={styles.menuRow}>
                         <div className={styles.menuRowText}>
-                            <span className="material-symbols-rounded">format_indent_increase</span>
                             <span>Show indentation lines</span>
                         </div>
                         <Switch
@@ -33,9 +33,49 @@ export const TopNavMenu = () => {
                         />
                     </div>
 
+                    <div className={styles.divider} />
+
+                    <div className={styles.sectionHeader}>Resident Display</div>
+
+                    <div className={styles.displayOptionsGrid}>
+                        <button
+                            className={styles.optionButton}
+                            data-active={residentDisplayMode === 'left-badge'}
+                            onClick={() => setResidentDisplayMode('left-badge')}
+                        >
+                            <span>Left</span>
+                        </button>
+                        <button
+                            className={styles.optionButton}
+                            data-active={residentDisplayMode === 'chip'}
+                            onClick={() => setResidentDisplayMode('chip')}
+                        >
+                            <span>Chip</span>
+                        </button>
+                        <button
+                            className={styles.optionButton}
+                            data-active={residentDisplayMode === 'right-badge'}
+                            onClick={() => setResidentDisplayMode('right-badge')}
+                        >
+                            <span>Right</span>
+                        </button>
+                    </div>
+
+                    <div className={styles.menuRow}>
+                        <div className={styles.menuRowText}>
+                            <span>Show full warning text</span>
+                        </div>
+                        <Switch
+                            checked={residentBadgeText === 'full'}
+                            onCheckedChange={(checked) => setResidentBadgeText(checked ? 'full' : 'short')}
+                            id="badge-text-toggle"
+                        />
+                    </div>
 
                 </Popover.Content>
             </Popover.Portal>
         </Popover.Root>
     );
 };
+
+

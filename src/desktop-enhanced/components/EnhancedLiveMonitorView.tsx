@@ -2,10 +2,11 @@
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { ColumnDef } from '@tanstack/react-table';
-import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom } from '../../desktop/atoms';
+import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom, residentDisplayModeAtom, residentBadgeTextAtom } from '../../desktop/atoms';
 import { LiveCheckRow } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
+import { ResidentChip } from '../../desktop/components/ResidentChip';
 import { loadEnhancedLivePage } from '../data/mockData';
 import { COLUMN_WIDTHS } from '../../desktop/components/tableConstants';
 import styles from '../../desktop/components/DataTable.module.css';
@@ -53,22 +54,55 @@ export const EnhancedLiveMonitorView = () => {
                 minSize: 240,
                 accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
                 cell: ({ row }) => {
+                    const displayMode = useAtomValue(residentDisplayModeAtom);
+                    const badgeTextMode = useAtomValue(residentBadgeTextAtom);
+
                     return (
                         <div className={styles.residentCell}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-0p5)', width: '100%' }}>
-                                {row.original.residents.map((r, i) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--spacing-2)', height: '24px', width: '100%' }}>
-                                        <span style={{ fontWeight: 500, color: 'var(--surface-fg-primary)' }}>{r.name}</span>
+                                {row.original.residents.map((r, i) => {
+                                    const srLabel = badgeTextMode === 'full' ? 'Suicide risk' : 'SR';
+                                    const mwLabel = badgeTextMode === 'full' ? 'Medical watch' : 'MW';
+
+                                    if (displayMode === 'chip') {
+                                        return (
+                                            <ResidentChip
+                                                key={i}
+                                                name={r.name}
+                                                showHighRisk={r.hasHighRisk}
+                                                showMedicalWatch={r.hasMedicalWatch}
+                                                textMode={badgeTextMode}
+                                            />
+                                        );
+                                    }
+
+                                    const badges = (
                                         <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
                                             {r.hasHighRisk && (
-                                                <StatusBadge status="special" label="SR" fill tooltip="Suicide risk" />
+                                                <StatusBadge status="special" label={srLabel} fill tooltip="Suicide risk" />
                                             )}
                                             {r.hasMedicalWatch && (
-                                                <StatusBadge status="special" label="MW" fill tooltip="Medical watch" />
+                                                <StatusBadge status="special" label={mwLabel} fill tooltip="Medical watch" />
                                             )}
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+
+                                    return (
+                                        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 'var(--spacing-2)', height: '24px', width: '100%' }}>
+                                            {displayMode === 'left-badge' ? (
+                                                <div style={{ display: 'flex', gap: 'var(--spacing-2)', alignItems: 'center' }}>
+                                                    <span style={{ fontWeight: 500, color: 'var(--surface-fg-primary)' }}>{r.name}</span>
+                                                    {badges}
+                                                </div>
+                                            ) : (
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                                                    <span style={{ fontWeight: 500, color: 'var(--surface-fg-primary)' }}>{r.name}</span>
+                                                    {badges}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     );

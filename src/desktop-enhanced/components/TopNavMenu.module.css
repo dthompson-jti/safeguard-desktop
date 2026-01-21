@@ -22,7 +22,8 @@
     border-radius: var(--radius-lg);
     padding: var(--spacing-1);
     min-width: 180px;
-    box-shadow: var(--shadow-lg);
+    /* strong drop shadow */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
     z-index: 1000;
 }
 
@@ -84,4 +85,48 @@
 .menuRowText .material-symbols-rounded {
     font-size: 1.25rem;
     color: var(--surface-fg-secondary);
+}
+
+.sectionHeader {
+    padding: var(--spacing-2) var(--spacing-3);
+    padding-bottom: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--surface-fg-tertiary);
+    /* user request to remove all caps */
+    letter-spacing: 0.05em;
+}
+
+.displayOptionsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--spacing-1);
+    padding: var(--spacing-2) var(--spacing-3);
+}
+
+.optionButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-1) var(--spacing-2);
+    border: 1px solid var(--surface-border-secondary);
+    border-radius: var(--radius-md);
+    background: transparent;
+    cursor: pointer;
+    color: var(--surface-fg-secondary);
+    font-size: 0.825rem;
+    transition: all 0.15s ease;
+}
+
+.optionButton:hover {
+    background: var(--surface-bg-secondary);
+}
+
+.optionButton[data-active="true"] {
+    background: var(--control-bg-selected);
+    border-color: var(--control-border-selected);
+    color: var(--control-fg-selected);
+    font-weight: 500;
 }

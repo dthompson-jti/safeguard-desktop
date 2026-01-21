@@ -1,0 +1,40 @@
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-0p5) var(--spacing-2);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface-bg-warning-primary);
+    color: var(--surface-fg-warning-primary);
+    border: 1px solid var(--surface-border-warning_subtle);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-tight);
+    cursor: default;
+    white-space: nowrap;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.name {
+    font-weight: 500;
+}
+
+.separator {
+    width: 1px;
+    height: 12px;
+    background-color: var(--surface-border-warning_subtle);
+    opacity: 0.5;
+}
+
+.icon {
+    font-size: 16px !important;
+    color: inherit;
+    font-variation-settings: 'opsz' 20, 'wght' 500, 'FILL' 1;
+}
+
+.status {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: inherit;
+}

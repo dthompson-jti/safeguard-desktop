@@ -94,13 +94,13 @@
     border-color: var(--surface-border-tertiary);
 }
 
-/* Special Status */
+/* Special Status - Always Warning */
 .badge[data-status='special'] {
-    background: var(--surface-bg-tertiary);
-    color: var(--surface-fg-tertiary);
-    border-color: var(--surface-border-tertiary);
+    background: var(--surface-bg-warning-primary);
+    color: var(--surface-fg-warning-primary);
+    border-color: var(--surface-border-warning_subtle);
 }
 
 .badge[data-status='special'] .icon {
-    color: var(--surface-fg-tertiary);
+    color: var(--surface-fg-warning-primary);
 }

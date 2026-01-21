@@ -17,6 +17,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - **Cell Refinement**: Removed manual padding-top "hacks" and fixed-top alignments in both Live Monitor and Historical Review views.
     - **Location Cell**: Added dedicated `.locationCell` styling to the shared design system to ensure consistent vertical centering of breadcrumb paths.
 
+### Changed (2026-01-21)
+- **Live View - Resident Badges Toggle**:
+    - **Toggle**: Added a main menu toggle "Show resident chips" to enable an alternate high-visibility display mode for residents.
+    - **Visual Chip**: When enabled, high-risk residents (SR/MW) are displayed in a single warning-colored chip combining name and status (e.g., `Resident Name | ⚠ SR`).
+    - **Status Styling**: Updated default "Special" (SR/MW) status badges to always use warning semantic colors (Yellow/Orange) instead of neutral gray.
+
 ### Changed (2026-01-20)
 - **Live View - Badges and Interactivity**:
     - **Resident Badges**: Replaced resident name links with interactive neutral badges. Clicking opens a context menu with "View resident".

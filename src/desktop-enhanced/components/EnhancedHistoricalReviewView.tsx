@@ -229,10 +229,10 @@ export const EnhancedHistoricalReviewView = () => {
                                     <span style={{ fontWeight: 500, color: 'var(--surface-fg-primary)' }}>{r.name}</span>
                                     <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
                                         {r.hasHighRisk && (
-                                            <StatusBadge status="special" label="SR" fill tooltip="Suicide risk" />
+                                            <StatusBadge status="special" label="Suicide risk" fill tooltip="Suicide risk" />
                                         )}
                                         {r.hasMedicalWatch && (
-                                            <StatusBadge status="special" label="MW" fill tooltip="Medical watch" />
+                                            <StatusBadge status="special" label="Medical watch" fill tooltip="Medical watch" />
                                         )}
                                     </div>
                                 </div>
