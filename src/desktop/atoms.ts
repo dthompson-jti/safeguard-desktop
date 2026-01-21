@@ -18,6 +18,8 @@ export const desktopViewAtom = atomWithStorage<DesktopView>(`${STORAGE_PREFIX}vi
 export const isAdvancedSearchOpenAtom = atom(false);
 
 
+
+
 /** Factory default filters (Immutable) */
 export const FACTORY_FILTER_DEFAULTS: DesktopFilter = {
     facility: 'all',

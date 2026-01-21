@@ -8,7 +8,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+- **Detail Panel - Location Tree Refinement**:
+    - **High-Craft Connectors**: Implemented pixel-perfect "L-bend" tree guides with clean 90-degree angles and technical precision.
+    - **Custom Iconography**: Updated location hierarchy icons to more descriptive symbols: Group (`corporate_fare`), Unit (`view_cozy`), and Room (`door_front`).
+    - **Technical Alignment**: Refined vertical tracking lines to connect precisely between hierarchical levels without "bleeding" or stray segments.
+- **Table View - Vertical Centering**:
+    - **Uniform Alignment**: Standardized all table cells to use `vertical-align: middle`, ensuring that single-resident rows remain perfectly centered even when adjacent rows expand for multi-resident rooms.
+    - **Cell Refinement**: Removed manual padding-top "hacks" and fixed-top alignments in both Live Monitor and Historical Review views.
+    - **Location Cell**: Added dedicated `.locationCell` styling to the shared design system to ensure consistent vertical centering of breadcrumb paths.
+
 ### Changed (2026-01-20)
+- **Live View - Badges and Interactivity**:
+    - **Resident Badges**: Replaced resident name links with interactive neutral badges. Clicking opens a context menu with "View resident".
+    - **Location Badges**: Replaced breadcrumbs (G > U > L) with interactive neutral badges. Clicking opens a context menu with "View in Facility Management".
+    - **Toggle**: Added a "Show resident badges" toggle to the main menu to switch between this new view and the classic link view.
+    - **Medical Watch Icon**: Updated "Medical Watch" badge icon to a warning triangle (`warning`) to align with "Suicide Risk" visual language.
 - **Live View Refinement**: Removed the Details Panel and its toggle button from the Live Monitor view to optimize focus on real-time metrics. The panel remains available in Historical Review for administrative tasks.
 - **Side Panel Refinement**: Implemented "Pinned" vs "Transient" visibility modes for the Details Panel.
     - **Transient Mode**: Panel automatically shows when exactly one record is selected and hides when selection is cleared or multiple items are selected.

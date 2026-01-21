@@ -1,13 +1,13 @@
 import * as Popover from '@radix-ui/react-popover';
 import { useAtom } from 'jotai';
 import { desktopEnhancedTreeLayoutAtom } from '../atoms';
+
 import { Switch } from '../../components/Switch';
 import styles from './TopNavMenu.module.css';
 
-
-
 export const TopNavMenu = () => {
     const [treeLayout, setTreeLayout] = useAtom(desktopEnhancedTreeLayoutAtom);
+
 
     return (
         <Popover.Root>
@@ -32,6 +32,7 @@ export const TopNavMenu = () => {
                             id="indent-toggle"
                         />
                     </div>
+
 
                 </Popover.Content>
             </Popover.Portal>

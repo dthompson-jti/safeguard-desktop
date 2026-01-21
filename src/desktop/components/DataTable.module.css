@@ -110,6 +110,15 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-2);
+    min-height: 24px;
+}
+
+.locationCell {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    min-height: 24px;
+    color: var(--surface-fg-primary);
 }
 
 
@@ -196,6 +205,22 @@
     overflow: hidden;
     text-overflow: ellipsis;
     border-bottom: 1px solid var(--surface-border-secondary);
+}
+
+/* Allow multiline resident names/badges and location breadcrumbs */
+.td:has(.residentCell),
+.td:has(.locationCell) {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    height: auto;
+    vertical-align: middle;
+    padding-top: var(--spacing-3);
+    padding-bottom: var(--spacing-3);
+}
+
+.tr {
+    height: auto;
 }
 
 /* No padding override for first child - ensure standard padding exists like all other columns */

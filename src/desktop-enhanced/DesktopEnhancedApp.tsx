@@ -85,7 +85,7 @@ export default function DesktopEnhancedApp() {
      * 1. It is explicitly "Pinned" by the user (isPanelOpen === true)
      * 2. It is in "Transient" mode (a single record is selected)
      */
-    const showPanel = (isPanelOpen || totalSelected === 1) && view !== 'live';
+    const showPanel = (isPanelOpen || totalSelected === 1);
 
     const mainContainerStyle = useMemo(() => ({
         gridTemplateColumns: showPanel ? `1fr ${panelWidth}px` : '1fr',
@@ -110,23 +110,21 @@ export default function DesktopEnhancedApp() {
                                 <h2 className={styles.pageTitle}>
                                     Safeguard checks – {view === 'live' ? 'Live view' : 'Historical view'}
                                 </h2>
-                                {view !== 'live' && (
-                                    <div className={styles.row2Actions}>
-                                        <Tooltip content={isPanelOpen ? "Close panel" : "Open panel"}>
-                                            <Button
-                                                variant="secondary"
-                                                size="s"
-                                                iconOnly
-                                                active={isPanelOpen}
-                                                onClick={() => setIsPanelOpen(!isPanelOpen)}
-                                            >
-                                                <span className="material-symbols-rounded">
-                                                    {isPanelOpen ? 'right_panel_close' : 'right_panel_open'}
-                                                </span>
-                                            </Button>
-                                        </Tooltip>
-                                    </div>
-                                )}
+                                <div className={styles.row2Actions}>
+                                    <Tooltip content={isPanelOpen ? "Close panel" : "Open panel"}>
+                                        <Button
+                                            variant="secondary"
+                                            size="s"
+                                            iconOnly
+                                            active={isPanelOpen}
+                                            onClick={() => setIsPanelOpen(!isPanelOpen)}
+                                        >
+                                            <span className="material-symbols-rounded">
+                                                {isPanelOpen ? 'right_panel_close' : 'right_panel_open'}
+                                            </span>
+                                        </Button>
+                                    </Tooltip>
+                                </div>
                             </div>
                         </div>
 

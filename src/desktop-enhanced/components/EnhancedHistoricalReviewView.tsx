@@ -16,7 +16,6 @@ import { DataTable } from '../../desktop/components/DataTable';
 import { BulkActionFooter } from '../../desktop/components/BulkActionFooter';
 import { RowContextMenu } from '../../desktop/components/RowContextMenu';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
-import { LinkButton } from '../../components/LinkButton';
 import { Tooltip } from '../../components/Tooltip';
 import { Button } from '../../components/Button';
 import { loadEnhancedHistoricalPage } from '../data/mockData';
@@ -151,13 +150,13 @@ export const EnhancedHistoricalReviewView = () => {
         const isMeta = event.ctrlKey || event.metaKey;
         const isShift = event.shiftKey;
 
-        setSelectedRows((prev: Set<string>) => {
-            const next = new Set(prev);
+        setSelectedRows((_prev: Set<string>) => {
+            const next = new Set(_prev);
             if (isMeta) {
                 if (next.has(row.id)) next.delete(row.id);
                 else next.add(row.id);
-            } else if (isShift && prev.size > 0) {
-                const lastId = Array.from(prev).pop();
+            } else if (isShift && _prev.size > 0) {
+                const lastId = Array.from(_prev).pop();
                 if (lastId) {
                     const allIds = loadedData.map((r: HistoricalCheck) => r.id);
                     const startIdx = allIds.indexOf(lastId);
@@ -224,12 +223,21 @@ export const EnhancedHistoricalReviewView = () => {
                 accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
                 cell: ({ row }) => (
                     <div className={styles.residentCell}>
-                        <LinkButton
-                            label={row.original.residents.map((r) => r.name).join(', ')}
-                            external
-                            onClick={() => { }}
-                        />
-                        <StatusBadge status="special" label="SR" fill tooltip="Suicide risk" />
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-0p5)', width: '100%' }}>
+                            {row.original.residents.map((r, i) => (
+                                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--spacing-2)', height: '24px', width: '100%' }}>
+                                    <span style={{ fontWeight: 500, color: 'var(--surface-fg-primary)' }}>{r.name}</span>
+                                    <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
+                                        {r.hasHighRisk && (
+                                            <StatusBadge status="special" label="SR" fill tooltip="Suicide risk" />
+                                        )}
+                                        {r.hasMedicalWatch && (
+                                            <StatusBadge status="special" label="MW" fill tooltip="Medical watch" />
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 ),
             },
@@ -245,11 +253,11 @@ export const EnhancedHistoricalReviewView = () => {
                 },
                 cell: ({ row }) => (
                     <div className={styles.locationCell}>
-                        <LinkButton variant="ghost" label={row.original.group} external onClick={() => { }} />
-                        <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
-                        <LinkButton variant="ghost" label={row.original.unit} external onClick={() => { }} />
-                        <span className={`material-symbols-rounded ${styles.nextIcon}`}>navigate_next</span>
-                        <LinkButton variant="ghost" label={row.original.location} external onClick={() => { }} />
+                        <span style={{ color: 'var(--surface-fg-primary)' }}>{row.original.group}</span>
+                        <span className="material-symbols-rounded" style={{ color: 'var(--surface-fg-quaternary)', fontSize: '16px' }}>navigate_next</span>
+                        <span style={{ color: 'var(--surface-fg-primary)' }}>{row.original.unit}</span>
+                        <span className="material-symbols-rounded" style={{ color: 'var(--surface-fg-quaternary)', fontSize: '16px' }}>navigate_next</span>
+                        <span style={{ color: 'var(--surface-fg-primary)' }}>{row.original.location}</span>
                     </div>
                 ),
             },
@@ -416,7 +424,7 @@ export const EnhancedHistoricalReviewView = () => {
                 ),
             },
         ],
-        [handleRowClick, handleOpenNoteModal]
+        [handleOpenNoteModal]
     );
 
     return (

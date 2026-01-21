@@ -124,43 +124,112 @@
 
 
 /* --- CONTENT AREA --- */
-.breadcrumb {
+/* locationTree: simplified robust architecture */
+.locationTree {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: var(--spacing-1) 0;
+}
+
+.treeNode {
+    position: relative;
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 0;
-    font-size: var(--font-size-sm);
-    color: var(--surface-fg-secondary);
+    min-height: 28px;
+    gap: 10px;
 }
 
-.breadcrumbIcon {
-    display: inline-flex;
+.treeIcon {
+    width: 20px;
+    height: 20px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 24px;
-    font-size: var(--icon-size-sm) !important;
     color: var(--surface-fg-quaternary);
-    margin-left: -28px;
-    pointer-events: none;
-    transition: opacity 0.15s ease;
+    flex-shrink: 0;
+    z-index: 2;
+    background: var(--surface-bg-primary);
 }
 
-/* Hide separator when the preceding link is hovered to avoid overlap with its external icon */
-.breadcrumb button:hover+.breadcrumbIcon {
-    opacity: 0;
+.treeIcon .material-symbols-rounded {
+    font-size: 18px !important;
 }
 
-/* breadcrumbLink removed - now using LinkButton */
+/* Indentation logic */
+.treeNode[data-depth="0"] {
+    padding-left: 0;
+}
+
+.treeNode[data-depth="1"] {
+    padding-left: 28px;
+}
+
+.treeNode[data-depth="2"] {
+    padding-left: 56px;
+}
+
+/* Vertical Guide: Depth 0 -> Depth 1 */
+.treeNode[data-depth="0"]::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    /* center of depth 0 icon */
+    top: 20px;
+    /* starts below icon */
+    height: 12px;
+    /* connects exactly to the bend top of depth 1 */
+    width: 1px;
+    background: var(--surface-border-tertiary);
+    z-index: 1;
+}
+
+/* Vertical Guide: Depth 1 -> Depth 2 */
+.treeNode[data-depth="1"]::after {
+    content: '';
+    position: absolute;
+    left: 38px;
+    /* center of depth 1 icon */
+    top: 20px;
+    height: 12px;
+    /* connects exactly to the bend top of depth 2 */
+    width: 1px;
+    background: var(--surface-border-tertiary);
+    z-index: 1;
+}
+
+/* The L-Bend Connector: Clean 90-degree angles */
+.treeBend {
+    position: absolute;
+    height: 18px;
+    top: -4px;
+    border-left: 1px solid var(--surface-border-tertiary);
+    border-bottom: 1px solid var(--surface-border-tertiary);
+    z-index: 1;
+}
+
+.treeNode[data-depth="1"] .treeBend {
+    left: 10px;
+    width: 28px;
+    /* connects 10 to 38 */
+}
+
+.treeNode[data-depth="2"] .treeBend {
+    left: 38px;
+    width: 28px;
+    /* connects 38 to 66 */
+}
+
 
 .content {
     flex: 1;
     overflow-y: auto;
-    padding: var(--spacing-6);
+    padding: var(--spacing-5) var(--spacing-6);
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-6);
+    gap: var(--spacing-4);
 }
+
 
 /* Cards / Sections */
 .section {

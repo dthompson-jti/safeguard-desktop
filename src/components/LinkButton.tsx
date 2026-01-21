@@ -6,7 +6,7 @@ interface LinkButtonProps {
     label: string;
     icon?: string;
     external?: boolean;
-    variant?: 'primary' | 'ghost';
+    variant?: 'primary' | 'ghost' | 'external-hover';
     onClick?: () => void;
     className?: string;
 }
