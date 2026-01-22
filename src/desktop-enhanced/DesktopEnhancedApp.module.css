@@ -1,17 +1,20 @@
 .mainContainer {
     height: 100%;
-    display: grid;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
     flex: 1;
     background-color: var(--surface-bg-primary);
     overflow: hidden;
-    transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    grid-template-rows: 1fr;
+    /* transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
+    /* grid-template-rows: 1fr; */
 }
 
 .contentWrapper {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    flex: 1;
     overflow: hidden;
 }
 
@@ -70,4 +73,7 @@
     border-left: 1px solid var(--surface-border-secondary);
     height: 100%;
     position: relative;
+    flex-shrink: 0;
+    /* Match the transition curve of the previous grid layout for showing/hiding */
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

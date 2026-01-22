@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import * as ToastPrimitive from '@radix-ui/react-toast';
 import { AnimatePresence } from 'framer-motion';
@@ -89,9 +89,8 @@ export default function DesktopEnhancedApp() {
      */
     const showPanel = isPanelOpen || (autoOpenPanel && totalSelected === 1);
 
-    const mainContainerStyle = useMemo(() => ({
-        gridTemplateColumns: showPanel ? `1fr ${panelWidth}px` : '1fr',
-    }), [showPanel, panelWidth]);
+    // Grid styling removed in favor of Flexbox optimization
+    // const mainContainerStyle = ...
 
     return (
         <Layout leftPanel={<NavigationPanel />}>
@@ -101,7 +100,6 @@ export default function DesktopEnhancedApp() {
                     data-view-mode={view}
                     className={styles.mainContainer}
                     data-panel-open={showPanel}
-                    style={mainContainerStyle}
                 >
                     <div className={styles.contentWrapper}>
                         <div className={styles.navContainer}>
@@ -152,7 +150,10 @@ export default function DesktopEnhancedApp() {
 
                     <AnimatePresence>
                         {showPanel && (
-                            <div className={styles.detailPanelWrapper}>
+                            <div
+                                className={styles.detailPanelWrapper}
+                                style={{ width: `var(--panel-width, ${panelWidth}px)` }}
+                            >
                                 <DetailPanel record={activeRecord} selectedCount={totalSelected} />
                             </div>
                         )}

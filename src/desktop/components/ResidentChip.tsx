@@ -3,6 +3,7 @@ import styles from './ResidentChip.module.css';
 import { Tooltip } from '../../components/Tooltip';
 
 import { ResidentBadgeTextMode } from '../atoms';
+import { getBadgeLabel } from '../utils/badgeUtils';
 
 interface ResidentChipProps {
     name: string;
@@ -26,8 +27,8 @@ export const ResidentChip: React.FC<ResidentChipProps> = ({ name, showHighRisk, 
     let statusLabel = '';
     let tooltip = '';
 
-    const srLabel = textMode === 'full' ? 'Suicide risk' : 'SR';
-    const mwLabel = textMode === 'full' ? 'Medical watch' : 'MW';
+    const srLabel = getBadgeLabel('Suicide Risk', textMode);
+    const mwLabel = getBadgeLabel('Medical Watch', textMode);
 
     if (showHighRisk) {
         statusLabel = srLabel;

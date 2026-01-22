@@ -3,7 +3,8 @@ import { Resident } from '../../types'; // Import from global types
 import { StatusBadge, StatusBadgeType } from './StatusBadge';
 import { Tooltip } from '../../components/Tooltip';
 import { useAtomValue } from 'jotai';
-import { residentBadgeColorModeAtom } from '../atoms';
+import { residentBadgeColorModeAtom, residentBadgeTextAtom } from '../atoms';
+import { getBadgeLabel } from '../utils/badgeUtils';
 
 interface ResidentStatusGroupProps {
     residents: Resident[];
@@ -13,6 +14,7 @@ interface ResidentStatusGroupProps {
 
 export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ residents, view, limit = 1 }) => {
     const colorMode = useAtomValue(residentBadgeColorModeAtom);
+    const badgeTextMode = useAtomValue(residentBadgeTextAtom);
     // 1. Flatten all statuses from all residents into a single list of simplified objects
     // We want to know: { label: string, status: StatusBadgeType, tooltip: string }
 
@@ -90,7 +92,7 @@ export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ reside
                 <StatusBadge
                     key={i}
                     status={badge.status}
-                    label={view === 'table' ? getShortLabel(badge.label) : badge.label}
+                    label={view === 'table' ? getBadgeLabel(badge.label, badgeTextMode) : badge.label}
                     fill
                     tooltip={badge.tooltip}
                     colorMode={colorMode}
@@ -113,11 +115,7 @@ export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ reside
     );
 };
 
-const getShortLabel = (label: string) => {
-    if (label === 'Suicide Risk') return 'SR';
-    if (label === 'Medical Watch') return 'MW';
-    return label;
-};
+
 
 const renderTooltipContent = (badges: any[]) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>

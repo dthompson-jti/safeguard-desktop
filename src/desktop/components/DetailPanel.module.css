@@ -5,7 +5,8 @@
     top: 0;
     right: 0;
     bottom: 0;
-    width: var(--panel-width, 400px);
+    /* width explicitly handled by grid container */
+    width: 100%;
     min-width: 320px;
     max-width: 600px;
     background: var(--surface-bg-primary);

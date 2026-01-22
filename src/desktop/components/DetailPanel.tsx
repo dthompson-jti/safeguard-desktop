@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { motion } from 'framer-motion';
 import {
@@ -37,6 +37,14 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
 
     // Derived state
     const colorMode = useAtomValue(residentBadgeColorModeAtom);
+
+
+    // Sync initial width to CSS variable
+    useLayoutEffect(() => {
+        document.documentElement.style.setProperty('--panel-width', `${panelWidth}px`);
+    }, [panelWidth]);
+
+
 
 
 
@@ -83,6 +91,9 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
 
     const handleResizeMove = useCallback((e: MouseEvent) => {
         if (!isResizing) return;
+        // Debug: Measure Event Frequency
+        console.log('[DetailPanel] ResizeMove', e.clientX, performance.now());
+
         const newWidth = window.innerWidth - e.clientX;
         const clampedWidth = Math.max(320, Math.min(600, newWidth));
 
@@ -136,7 +147,6 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
         <motion.div
             ref={panelRef}
             className={styles.panel}
-            style={{ '--panel-width': `${panelWidth}px` } as React.CSSProperties}
             initial="closed"
             animate="open"
             exit="closed"

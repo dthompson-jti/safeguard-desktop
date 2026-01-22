@@ -24,6 +24,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Resident Display - Historical View**:
     - **Feature Parity**: Enabled "Resident display" settings (Left/Right Badge, Chips) and "Warning text" settings (Short/Full) in the Historical View to match Live Monitor capabilities.
     - **Visual Fix**: Integrated `ResidentChip` component for consistent chip-style rendering.
+- **Badge Text Mode**:
+    - **Table Support**: Live and Historical tables now support toggling between Full Text ("Suicide Risk") and Acronyms ("SR").
+    - **Detail Panel**: Reverted to strict Full Text display for maximum clarity.
+    - **Shared Logic**: Standardized acronym mappings (MW, SR, AR, ER, FR, SH) across the application.
 - **Breadcrumb Styling**:
     - **Refinement**: Updated breadcrumbs to use semi-bold font weight for all items and primary foreground color for the selected item, improving readability and visual hierarchy.
 - **Mock Data**:
