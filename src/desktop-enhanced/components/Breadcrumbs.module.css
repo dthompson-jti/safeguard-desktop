@@ -38,10 +38,10 @@
 }
 
 .part:last-child .text {
-    color: var(--control-fg-selected);
+    color: var(--surface-fg-primary);
     cursor: default;
     pointer-events: none;
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
 }
 
 .chevron {

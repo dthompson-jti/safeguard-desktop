@@ -355,3 +355,7 @@ export const residentBadgeTextAtom = atomWithStorage<ResidentBadgeTextMode>(
     `${STORAGE_PREFIX}resident_badge_text`,
     'full'
 );
+
+/** Toggle for Officer input style (Select vs Combo Box) */
+export const officerInputStyleAtom = atomWithStorage<'select' | 'combo'>('officer-input-style', 'select');
+

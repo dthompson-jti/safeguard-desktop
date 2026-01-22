@@ -10,13 +10,16 @@ import {
     historicalRefreshAtom,
     historicalRowUpdateAtom,
     PanelData,
-    isDetailPanelOpenAtom
+    isDetailPanelOpenAtom,
+    residentDisplayModeAtom,
+    residentBadgeTextAtom
 } from '../../desktop/atoms';
 import { HistoricalCheck } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
 import { BulkActionFooter } from '../../desktop/components/BulkActionFooter';
 import { RowContextMenu } from '../../desktop/components/RowContextMenu';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
+import { ResidentChip } from '../../desktop/components/ResidentChip';
 import { Tooltip } from '../../components/Tooltip';
 import { Button } from '../../components/Button';
 import { loadEnhancedHistoricalPage } from '../data/mockData';
@@ -45,6 +48,8 @@ export const EnhancedHistoricalReviewView = () => {
     const [totalCount, setTotalCount] = useState(0);
 
     const filter = useAtomValue(desktopFilterAtom);
+    const displayMode = useAtomValue(residentDisplayModeAtom);
+    const badgeTextMode = useAtomValue(residentBadgeTextAtom);
     const setModalState = useSetAtom(supervisorNoteModalAtom);
     const refreshCount = useAtomValue(historicalRefreshAtom);
 
@@ -233,25 +238,57 @@ export const EnhancedHistoricalReviewView = () => {
                 size: 300,
                 minSize: 240,
                 accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
-                cell: ({ row }) => (
-                    <div className={styles.residentCell}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-0p5)', width: '100%' }}>
-                            {row.original.residents.map((r, i) => (
-                                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--spacing-2)', height: '24px', width: '100%' }}>
-                                    <span style={{ fontWeight: 500, color: 'var(--surface-fg-primary)' }}>{r.name}</span>
-                                    <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
-                                        {r.hasHighRisk && (
-                                            <StatusBadge status="special" label="Suicide risk" fill tooltip="Suicide risk" />
-                                        )}
-                                        {r.hasMedicalWatch && (
-                                            <StatusBadge status="special" label="Medical watch" fill tooltip="Medical watch" />
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
+                cell: ({ row }) => {
+                    return (
+                        <div className={styles.residentCell}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-0p5)', width: '100%' }}>
+                                {row.original.residents.map((r, i) => {
+                                    const srLabel = badgeTextMode === 'full' ? 'Suicide risk' : 'SR';
+                                    const mwLabel = badgeTextMode === 'full' ? 'Medical watch' : 'MW';
+
+                                    if (displayMode === 'chip') {
+                                        return (
+                                            <ResidentChip
+                                                key={i}
+                                                name={r.name}
+                                                showHighRisk={r.hasHighRisk}
+                                                showMedicalWatch={r.hasMedicalWatch}
+                                                textMode={badgeTextMode}
+                                            />
+                                        );
+                                    }
+
+                                    const badges = (
+                                        <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
+                                            {r.hasHighRisk && (
+                                                <StatusBadge status="special" label={srLabel} fill tooltip="Suicide risk" />
+                                            )}
+                                            {r.hasMedicalWatch && (
+                                                <StatusBadge status="special" label={mwLabel} fill tooltip="Medical watch" />
+                                            )}
+                                        </div>
+                                    );
+
+                                    return (
+                                        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 'var(--spacing-2)', height: '24px', width: '100%' }}>
+                                            {displayMode === 'left-badge' ? (
+                                                <div style={{ display: 'flex', gap: 'var(--spacing-2)', alignItems: 'center' }}>
+                                                    <span style={{ fontWeight: 500, color: 'var(--surface-fg-primary)' }}>{r.name}</span>
+                                                    {badges}
+                                                </div>
+                                            ) : (
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                                                    <span style={{ fontWeight: 500, color: 'var(--surface-fg-primary)' }}>{r.name}</span>
+                                                    {badges}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         </div>
-                    </div>
-                ),
+                    );
+                },
             },
             {
                 id: 'location',
@@ -436,7 +473,7 @@ export const EnhancedHistoricalReviewView = () => {
                 ),
             },
         ],
-        [handleOpenNoteModal]
+        [handleOpenNoteModal, displayMode, badgeTextMode]
     );
 
     return (

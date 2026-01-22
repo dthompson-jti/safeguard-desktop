@@ -153,8 +153,14 @@ const ROOMS: RoomDef[] = ((): RoomDef[] => {
                     usedNames.add(name);
 
                     // Assign High Risk
-                    const hasHighRisk = !isPairedMW && ((seed + r) % 8 === 0);
-                    const hasMedicalWatch = isPairedMW;
+                    let hasHighRisk = !isPairedMW && ((seed + r) % 8 === 0);
+                    let hasMedicalWatch = isPairedMW;
+
+                    // Manual override for Victor Hunt
+                    if (name === 'Victor Hunt') {
+                        hasHighRisk = true;
+                        hasMedicalWatch = true;
+                    }
 
                     roomResidents.push({
                         id: `res-${roomId}-${r}`,

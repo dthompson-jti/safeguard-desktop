@@ -11,7 +11,7 @@
     background: var(--surface-bg-primary);
     display: flex;
     flex-direction: column;
-    z-index: 100;
+    z-index: var(--z-sticky);
     /* Static border-left handled via pseudo or box-shadow if needed, but here we just ensure 
        the panel itself doesn't have a border that conflicts with the resizer */
 }
@@ -33,7 +33,7 @@
     width: 9px;
     cursor: col-resize;
     background: transparent;
-    z-index: 110;
+    z-index: var(--z-resizer);
     /* Above panel content and main chrome */
     display: flex;
     justify-content: center;
@@ -54,7 +54,7 @@
 }
 
 .active {
-    z-index: 112;
+    z-index: calc(var(--z-resizer) + 2);
     /* Ensure capture layer stays above during active drag */
 }
 
@@ -138,6 +138,12 @@
     align-items: center;
     min-height: 28px;
     gap: 10px;
+
+    /* Internal Tokens for Tree Layout */
+    --tree-icon-size: 20px;
+    --tree-icon-center: 10px;
+    /* Half of icon size */
+    --tree-indent-step: 28px;
 }
 
 .treeIcon {
@@ -162,22 +168,22 @@
 }
 
 .treeNode[data-depth="1"] {
-    padding-left: 28px;
+    padding-left: var(--tree-indent-step);
 }
 
 .treeNode[data-depth="2"] {
-    padding-left: 56px;
+    padding-left: calc(var(--tree-indent-step) * 2);
 }
 
 .treeNode[data-depth="3"] {
-    padding-left: 84px;
+    padding-left: calc(var(--tree-indent-step) * 3);
 }
 
 /* Vertical Guide: Depth 0 -> Depth 1 */
 .treeNode[data-depth="0"]::after {
     content: '';
     position: absolute;
-    left: 10px;
+    left: var(--tree-icon-center);
     /* center of depth 0 icon */
     top: 20px;
     /* starts below icon */
@@ -192,7 +198,7 @@
 .treeNode[data-depth="1"]::after {
     content: '';
     position: absolute;
-    left: 38px;
+    left: calc(var(--tree-icon-center) + var(--tree-indent-step));
     /* center of depth 1 icon */
     top: 20px;
     height: 12px;
@@ -206,7 +212,7 @@
 .treeNode[data-depth="2"]::after {
     content: '';
     position: absolute;
-    left: 66px;
+    left: calc(var(--tree-icon-center) + (var(--tree-indent-step) * 2));
     top: 20px;
     height: 12px;
     width: 1px;
@@ -225,20 +231,20 @@
 }
 
 .treeNode[data-depth="1"] .treeBend {
-    left: 10px;
-    width: 28px;
+    left: var(--tree-icon-center);
+    width: var(--tree-indent-step);
     /* connects 10 to 38 */
 }
 
 .treeNode[data-depth="2"] .treeBend {
-    left: 38px;
-    width: 28px;
+    left: calc(var(--tree-icon-center) + var(--tree-indent-step));
+    width: var(--tree-indent-step);
     /* connects 38 to 66 */
 }
 
 .treeNode[data-depth="3"] .treeBend {
-    left: 66px;
-    width: 28px;
+    left: calc(var(--tree-icon-center) + (var(--tree-indent-step) * 2));
+    width: var(--tree-indent-step);
     /* connects 66 to 94 */
 }
 

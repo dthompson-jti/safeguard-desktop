@@ -1,7 +1,7 @@
 import * as Popover from '@radix-ui/react-popover';
 import { useAtom } from 'jotai';
 import { desktopEnhancedTreeLayoutAtom } from '../atoms';
-import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom } from '../../desktop/atoms';
+import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, officerInputStyleAtom } from '../../desktop/atoms';
 
 import { Switch } from '../../components/Switch';
 import styles from './TopNavMenu.module.css';
@@ -11,6 +11,7 @@ export const TopNavMenu = () => {
     const [residentDisplayMode, setResidentDisplayMode] = useAtom(residentDisplayModeAtom);
     const [residentBadgeText, setResidentBadgeText] = useAtom(residentBadgeTextAtom);
     const [autoOpenPanel, setAutoOpenPanel] = useAtom(autoOpenDetailPanelAtom);
+    const [officerStyle, setOfficerStyle] = useAtom(officerInputStyleAtom);
 
     return (
         <Popover.Root>
@@ -83,6 +84,19 @@ export const TopNavMenu = () => {
                             checked={autoOpenPanel}
                             onCheckedChange={setAutoOpenPanel}
                             id="auto-open-toggle"
+                        />
+                    </div>
+
+                    <div className={styles.divider} />
+
+                    <div className={styles.menuRow}>
+                        <div className={styles.menuRowText}>
+                            <span className={styles.label}>Use Combo Box for Officer</span>
+                        </div>
+                        <Switch
+                            checked={officerStyle === 'combo'}
+                            onCheckedChange={(checked) => setOfficerStyle(checked ? 'combo' : 'select')}
+                            id="officer-style-toggle"
                         />
                     </div>
 

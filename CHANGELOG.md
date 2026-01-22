@@ -14,8 +14,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added "Last 12h" and "Last 72h" time presets.
 - Renamed "Northwood JDC" to "Facility" in header.
 - Fixed Resident Display Menu hook violation.
+- Fixed ComboBox interaction issues (jank, flash open/closed) and visual inconsistencies.
+- Removed unused ComboBox variables (lint fixes).
 
-## [0.1.0] - 2026-01-20
+## [0.1.0] - 2026-01-22
+- **Resident Display - Historical View**:
+    - **Feature Parity**: Enabled "Resident display" settings (Left/Right Badge, Chips) and "Warning text" settings (Short/Full) in the Historical View to match Live Monitor capabilities.
+    - **Visual Fix**: Integrated `ResidentChip` component for consistent chip-style rendering.
+- **Breadcrumb Styling**:
+    - **Refinement**: Updated breadcrumbs to use semi-bold font weight for all items and primary foreground color for the selected item, improving readability and visual hierarchy.
+- **Mock Data**:
+    - **Update**: Explicitly set High Risk and Medical Watch statuses for "Victor Hunt" to facilitate testing of critical indicators.
+
+## [0.1.0-pre] - 2026-01-20
 - **Advanced Search - Date Filter Interaction**:
     - **Enhanced Clickability**: Modified "Start date" and "End date" inputs to trigger the native date picker when clicking anywhere on the input field, not just the calendar icon.
     - **Native API Adoption**: Leveraged the `showPicker()` API for a seamless, browser-native experience.

@@ -1,0 +1,92 @@
+/* src/components/ComboBox.module.css */
+
+.wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.comboboxTrigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    /* SPEC-CSS: Use control height tokens (WCAG targets) */
+    /* AdvancedSearch overrides height with lg (48px) !important */
+    height: var(--control-height-md);
+    min-height: var(--control-height-md);
+
+    /* Standard padding, adjusted for icon */
+    padding: 0 var(--spacing-3);
+    padding-right: var(--spacing-8) !important;
+
+    /* Typography */
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+    line-height: 1;
+
+    /* Colors - Default to secondary (Select standard) */
+    /* AdvancedSearch overrides background/border with primary !important */
+    color: var(--surface-fg-primary);
+    background-color: var(--control-bg-secondary);
+    border: 1px solid var(--control-border-secondary);
+    border-radius: var(--radius-md);
+
+    outline: none;
+    cursor: text;
+    transition: all 0.2s ease;
+}
+
+.comboboxTrigger:hover:not(:disabled) {
+    background-color: var(--control-bg-secondary-hover);
+    border-color: var(--control-border-secondary-hover);
+}
+
+/* SPEC-CONTROL-STATES: State transition for opened popovers */
+.comboboxTrigger[data-state='open'],
+.comboboxTrigger:focus {
+    border-color: var(--surface-border-theme);
+    box-shadow: 0 0 0 var(--ring-width-focus) var(--control-focus-ring-standard);
+}
+
+.comboboxTrigger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--control-bg-disabled);
+}
+
+.comboboxTrigger::placeholder {
+    color: var(--control-fg-placeholder);
+}
+
+.iconWrapper {
+    position: absolute;
+    right: var(--spacing-2);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--surface-fg-tertiary);
+    pointer-events: none;
+}
+
+.dropdownIcon {
+    font-size: var(--icon-size-sm);
+}
+
+/* Dropdown Content */
+.listContainer {
+    max-height: 256px;
+    /* Match Select viewport */
+    overflow-y: auto;
+    padding: var(--spacing-0p5);
+}
+
+.noResults {
+    padding: var(--spacing-3);
+    font-size: var(--font-size-sm);
+    color: var(--surface-fg-tertiary);
+    text-align: center;
+}

@@ -1,10 +1,11 @@
 import { useState, useCallback, useRef } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
-import { desktopFilterAtom, updateFilterAtom, resetFiltersAtom } from '../atoms';
+import { desktopFilterAtom, updateFilterAtom, resetFiltersAtom, officerInputStyleAtom } from '../atoms';
 import { SUPERVISOR_NOTE_REASONS } from '../types';
 import { OFFICER_NAMES } from '../../desktop-enhanced/data/mockData';
 import { Button } from '../../components/Button';
 import { SearchableSelect } from '../../components/SearchableSelect';
+import { ComboBox } from '../../components/ComboBox';
 import { Select, SelectItem } from '../../components/Select';
 import styles from './AdvancedSearch.module.css';
 
@@ -31,6 +32,7 @@ const SPECIAL_STATUS_OPTIONS = [
 
 export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
     const filter = useAtomValue(desktopFilterAtom);
+    const officerStyle = useAtomValue(officerInputStyleAtom);
     const [, updateFilter] = useAtom(updateFilterAtom);
     const [, resetFilters] = useAtom(resetFiltersAtom);
 
@@ -101,16 +103,26 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
                 </div>
                 <div className={styles.fieldGroup}>
                     <label className={styles.label}>Officer</label>
-                    <SearchableSelect
-                        value={localFilter.officer}
-                        onValueChange={(val) => handleChange('officer', val)}
-                        placeholder="All officers"
-                        triggerClassName={styles.selectTrigger}
-                        options={[
-                            { value: 'any', label: 'All officers' },
-                            ...OFFICER_NAMES.map(name => ({ value: name, label: name }))
-                        ]}
-                    />
+                    {officerStyle === 'combo' ? (
+                        <ComboBox
+                            value={localFilter.officer === 'any' ? '' : localFilter.officer}
+                            onValueChange={(val) => handleChange('officer', val || 'any')}
+                            placeholder="All officers"
+                            options={OFFICER_NAMES.map(name => ({ value: name, label: name }))}
+                            triggerClassName={styles.selectTrigger}
+                        />
+                    ) : (
+                        <SearchableSelect
+                            value={localFilter.officer}
+                            onValueChange={(val) => handleChange('officer', val)}
+                            placeholder="All officers"
+                            triggerClassName={styles.selectTrigger}
+                            options={[
+                                { value: 'any', label: 'All officers' },
+                                ...OFFICER_NAMES.map(name => ({ value: name, label: name }))
+                            ]}
+                        />
+                    )}
                 </div>
 
                 {/* Row 2 */}

@@ -28,8 +28,8 @@
 }
 
 .title {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
     color: var(--surface-fg-primary);
     letter-spacing: -0.015em;
 }
@@ -48,7 +48,7 @@
 
 .label {
     font-size: var(--font-size-sm);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     color: var(--surface-fg-secondary);
 }
 
