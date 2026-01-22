@@ -43,7 +43,7 @@ export const BulkActionFooter = ({
                 size="s"
                 onClick={onAction}
             >
-                <span className="material-symbols-rounded">{actionLabel.includes('Edit') ? 'edit_note' : 'add_comment'}</span>
+                <span className="material-symbols-rounded">{actionIcon}</span>
                 {actionLabel}
             </Button>
         </div>
