@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
+- **Badge Color Configuration**: Added user-configurable color modes for Resident Badges (A=Neutral, B=Neutral Strong, C=Warning, D=Info, E=Solid).
+- **Detail Panel Layout**: Refined resident status layout (removed visual connectors, tightened spacing for multi-resident lists).
+- **Breadcrumb Styling**: Updated all text items to use semi-bold font weight.
 - Fixed Detail Panel layout bug (full height).
 - Updated Detail Panel location display (Facility added, Room unlinked).
 - Updated Tree View count logic (sums missed checks).

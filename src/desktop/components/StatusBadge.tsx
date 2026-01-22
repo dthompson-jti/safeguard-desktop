@@ -11,6 +11,8 @@ interface StatusBadgeProps {
     fill?: boolean;
     iconOnly?: boolean;
     tooltip?: string;
+    showIcon?: boolean;
+    colorMode?: 'neutral' | 'warning' | 'info' | 'solid' | 'neutral-strong';
 }
 
 const getStatusConfig = (status: StatusBadgeType): { label: string; icon: string | null } => {
@@ -37,7 +39,7 @@ const getStatusConfig = (status: StatusBadgeType): { label: string; icon: string
     }
 };
 
-export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label: customLabel, fill = false, iconOnly = false, tooltip }) => {
+export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label: customLabel, fill = false, iconOnly = false, tooltip, showIcon = true, colorMode }) => {
     const config = getStatusConfig(status);
     const label = customLabel || config.label;
     const tooltipContent = tooltip || (iconOnly ? label : undefined);
@@ -46,8 +48,9 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label: customL
         <div
             className={`${styles.badge} ${iconOnly ? styles.iconOnly : ''}`}
             data-status={status}
+            data-color-mode={colorMode}
         >
-            {config.icon && (
+            {config.icon && showIcon && (
                 <span
                     className={`material-symbols-rounded ${styles.icon} ${fill ? styles.iconFilled : ''}`}
                 >

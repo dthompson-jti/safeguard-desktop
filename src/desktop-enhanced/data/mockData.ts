@@ -131,7 +131,7 @@ const ROOMS: RoomDef[] = ((): RoomDef[] => {
                 const isDouble = (seededRandom(seed) > 0.6); // 40% doubles
                 const residentCount = isDouble ? 2 : 1;
 
-                const roomResidents: { id: string; name: string; location: string; hasHighRisk?: boolean; hasMedicalWatch?: boolean }[] = [];
+                const roomResidents: { id: string; name: string; location: string; hasHighRisk?: boolean; hasMedicalWatch?: boolean; otherRisks?: string[] }[] = [];
 
                 // FORCE: Make rooms 2 and 5 explicitly Paired MW for visibility (using approximate index)
                 const globalRoomIndex = rooms.length;
@@ -156,10 +156,26 @@ const ROOMS: RoomDef[] = ((): RoomDef[] => {
                     let hasHighRisk = !isPairedMW && ((seed + r) % 8 === 0);
                     let hasMedicalWatch = isPairedMW;
 
-                    // Manual override for Victor Hunt
+                    // Assign Other Risks (Assaultive, Flight Risk) for variety (approx 5% chance)
+                    let otherRisks: string[] | undefined = undefined;
+                    const randomVal = seededRandom(seed * 13 + r);
+
+                    if (randomVal > 0.95) {
+                        otherRisks = ['Flight Risk'];
+                    } else if (randomVal > 0.90 && randomVal <= 0.95) {
+                        otherRisks = ['Assaultive'];
+                    }
+
+                    // Manual override for Victor Hunt to ensure we see the [+2] case
                     if (name === 'Victor Hunt') {
                         hasHighRisk = true;
                         hasMedicalWatch = true;
+                        otherRisks = ['Flight Risk', 'Assaultive']; // Total 4 statuses test
+                    }
+                    // Override for Flight Risk test (Single + Other)
+                    if (name === 'Bobby Ferguson') {
+                        hasHighRisk = true;
+                        otherRisks = ['Flight Risk'];
                     }
 
                     roomResidents.push({
@@ -167,7 +183,8 @@ const ROOMS: RoomDef[] = ((): RoomDef[] => {
                         name,
                         location: locationDisplay, // "100"
                         hasHighRisk,
-                        hasMedicalWatch
+                        hasMedicalWatch,
+                        otherRisks
                     });
                 }
 

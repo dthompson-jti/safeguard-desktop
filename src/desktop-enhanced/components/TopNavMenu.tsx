@@ -1,7 +1,7 @@
 import * as Popover from '@radix-ui/react-popover';
 import { useAtom } from 'jotai';
 import { desktopEnhancedTreeLayoutAtom } from '../atoms';
-import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, officerInputStyleAtom } from '../../desktop/atoms';
+import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, officerInputStyleAtom, residentBadgeColorModeAtom } from '../../desktop/atoms';
 
 import { Switch } from '../../components/Switch';
 import styles from './TopNavMenu.module.css';
@@ -10,6 +10,7 @@ export const TopNavMenu = () => {
     const [treeLayout, setTreeLayout] = useAtom(desktopEnhancedTreeLayoutAtom);
     const [residentDisplayMode, setResidentDisplayMode] = useAtom(residentDisplayModeAtom);
     const [residentBadgeText, setResidentBadgeText] = useAtom(residentBadgeTextAtom);
+    const [badgeColorMode, setBadgeColorMode] = useAtom(residentBadgeColorModeAtom);
     const [autoOpenPanel, setAutoOpenPanel] = useAtom(autoOpenDetailPanelAtom);
     const [officerStyle, setOfficerStyle] = useAtom(officerInputStyleAtom);
 
@@ -72,6 +73,52 @@ export const TopNavMenu = () => {
                             onCheckedChange={(checked) => setResidentBadgeText(checked ? 'full' : 'short')}
                             id="badge-text-toggle"
                         />
+                    </div>
+
+                    <div className={styles.divider} />
+
+                    <div className={styles.sectionHeader}>Badge Color Mode</div>
+                    <div className={styles.displayOptionsGrid}>
+                        <button
+                            className={styles.optionButton}
+                            data-active={badgeColorMode === 'neutral'}
+                            onClick={() => setBadgeColorMode('neutral')}
+                            title="Neutral"
+                        >
+                            <span>A</span>
+                        </button>
+                        <button
+                            className={styles.optionButton}
+                            data-active={badgeColorMode === 'neutral-strong'}
+                            onClick={() => setBadgeColorMode('neutral-strong')}
+                            title="Neutral Strong"
+                        >
+                            <span>B</span>
+                        </button>
+                        <button
+                            className={styles.optionButton}
+                            data-active={badgeColorMode === 'warning'}
+                            onClick={() => setBadgeColorMode('warning')}
+                            title="Warning"
+                        >
+                            <span>C</span>
+                        </button>
+                        <button
+                            className={styles.optionButton}
+                            data-active={badgeColorMode === 'info'}
+                            onClick={() => setBadgeColorMode('info')}
+                            title="Info"
+                        >
+                            <span>D</span>
+                        </button>
+                        <button
+                            className={styles.optionButton}
+                            data-active={badgeColorMode === 'solid'}
+                            onClick={() => setBadgeColorMode('solid')}
+                            title="Solid"
+                        >
+                            <span>E</span>
+                        </button>
                     </div>
 
                     <div className={styles.divider} />

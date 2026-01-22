@@ -123,15 +123,15 @@ export const SupervisorNoteModal = () => {
             }
 
             addToast({
-                message: `Comment saved for ${modalState.selectedIds.length} check${modalState.selectedIds.length !== 1 ? 's' : ''}`,
+                message: `Review saved for ${modalState.selectedIds.length} check${modalState.selectedIds.length !== 1 ? 's' : ''}`,
                 icon: 'check_circle',
                 variant: 'success',
             });
 
             handleClose();
         } catch (error) {
-            console.error('Failed to save comment:', error);
-            addToast({ message: 'Failed to save comment.', icon: 'error', variant: 'alert' });
+            console.error('Failed to save review:', error);
+            addToast({ message: 'Failed to save review.', icon: 'error', variant: 'alert' });
         } finally {
             setIsSaving(false);
         }
@@ -169,15 +169,15 @@ export const SupervisorNoteModal = () => {
             }
 
             addToast({
-                message: 'Comment removed.',
+                message: 'Review removed.',
                 icon: 'delete',
                 variant: 'neutral',
             });
 
             handleClose();
         } catch (error) {
-            console.error('Failed to remove comment:', error);
-            addToast({ message: 'Failed to remove comment.', icon: 'error', variant: 'alert' });
+            console.error('Failed to remove review:', error);
+            addToast({ message: 'Failed to remove review.', icon: 'error', variant: 'alert' });
         } finally {
             setIsSaving(false);
         }
@@ -187,11 +187,11 @@ export const SupervisorNoteModal = () => {
         <Modal
             isOpen={modalState.isOpen}
             onClose={handleClose}
-            title={hasExistingComment ? "Edit supervisor comment" : "Add supervisor comment"}
+            title={hasExistingComment ? "Edit supervisor review" : "Add supervisor review"}
             width="440px"
         >
             <Modal.Header>
-                <span className={styles.title}>{hasExistingComment ? "Edit supervisor comment" : "Add supervisor comment"}</span>
+                <span className={styles.title}>{hasExistingComment ? "Edit supervisor review" : "Add supervisor review"}</span>
                 <Button variant="tertiary" size="s" iconOnly aria-label="Close" onClick={handleClose} disabled={isSaving}>
                     <span className="material-symbols-rounded">close</span>
                 </Button>
@@ -239,7 +239,7 @@ export const SupervisorNoteModal = () => {
                                 onClick={() => { void handleDelete(); }}
                                 disabled={isSaving}
                             >
-                                Remove comment
+                                Remove review
                             </Button>
                         </div>
                     )}

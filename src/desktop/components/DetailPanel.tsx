@@ -1,7 +1,15 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { motion } from 'framer-motion';
-import { supervisorNoteModalAtom, isDetailPanelOpenAtom, PanelData, panelWidthAtom } from '../atoms';
+import {
+    supervisorNoteModalAtom,
+    isDetailPanelOpenAtom,
+    PanelData,
+    panelWidthAtom,
+    residentBadgeColorModeAtom,
+    selectedLiveRowsAtom,
+    selectedHistoryRowsAtom
+} from '../atoms';
 import { StatusBadge, StatusBadgeType } from './StatusBadge';
 
 import { Button } from '../../components/Button';
@@ -27,12 +35,19 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
     const panelRef = useRef<HTMLDivElement>(null);
     const widthRef = useRef(panelWidth);
 
+    // Derived state
+    const colorMode = useAtomValue(residentBadgeColorModeAtom);
 
+
+
+    const setLiveSelection = useSetAtom(selectedLiveRowsAtom);
+    const setHistorySelection = useSetAtom(selectedHistoryRowsAtom);
 
     const handleClose = () => {
         setPanelOpen(false);
-        // In Preview Pane model, closing the panel DOES NOT clear selection.
-        // It just hides the preview.
+        // Clear selection on manual close to match desired behavior
+        setLiveSelection(new Set());
+        setHistorySelection(new Set());
     };
 
     const handleOpenNoteModal = () => {
@@ -184,25 +199,46 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                 <LabelValueRow
                                     label={isLive || record.residents.length > 1 ? 'Residents' : 'Resident'}
                                     value={
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-1.5)', width: '100%' }}>
-                                            {record.residents.map((r, i) => (
-                                                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: !isLive ? 'flex-start' : 'space-between', gap: 'var(--spacing-2)', width: '100%' }}>
-                                                    <LinkButton
-                                                        label={r.name}
-                                                        variant="primary"
-                                                        external
-                                                        onClick={() => { }}
-                                                    />
-                                                    <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
-                                                        {r.hasHighRisk && (
-                                                            <StatusBadge status="special" label="Suicide risk" fill tooltip="Suicide risk" />
-                                                        )}
-                                                        {r.hasMedicalWatch && (
-                                                            <StatusBadge status="special" label="Medical watch" fill tooltip="Medical watch" />
+                                        <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                                            {record.residents.map((r, i) => {
+                                                // Extract badges (Duplicate logic effectively, but localized for styling)
+                                                // Ideally we'd have a helper, but inline is fastest for this unique layout
+                                                const badges = [];
+                                                if (r.hasHighRisk) badges.push({ label: 'Suicide Risk', status: 'special' });
+                                                if (r.hasMedicalWatch) badges.push({ label: 'Medical Watch', status: 'special' });
+                                                if (r.otherRisks) r.otherRisks.forEach(risk => badges.push({ label: risk, status: 'special' }));
+
+                                                return (
+                                                    <div key={i} className={styles.locationTree} style={{ marginBottom: i < record.residents.length - 1 ? (badges.length > 0 ? '12px' : '4px') : 0 }}>
+                                                        {/* Root: Name */}
+                                                        <div className={styles.treeNode}>
+                                                            <LinkButton
+                                                                label={r.name}
+                                                                variant="primary"
+                                                                external
+                                                                onClick={() => { }}
+                                                            />
+                                                        </div>
+
+                                                        {/* Children: Badges (Grouped in one L-bracket) */}
+                                                        {badges.length > 0 && (
+                                                            <div className={styles.treeNode} style={{ alignItems: 'flex-start', paddingLeft: '16px' }}>
+                                                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', paddingTop: '4px', marginLeft: '0px' }}>
+                                                                    {badges.map((b: any, bi: number) => (
+                                                                        <StatusBadge
+                                                                            key={bi}
+                                                                            status={b.status}
+                                                                            label={b.label}
+                                                                            fill
+                                                                            colorMode={colorMode}
+                                                                        />
+                                                                    ))}
+                                                                </div>
+                                                            </div>
                                                         )}
                                                     </div>
-                                                </div>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
                                     }
                                 />
@@ -279,7 +315,7 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                         {/* SECTION 3: SUPERVISOR COMMENT - HIDDEN IN LIVE VIEW */}
                         {!isLive && (
                             <div className={styles.section}>
-                                <SidePanelHeading title="Supervisor comment" />
+                                <SidePanelHeading title="Supervisor review" />
                                 <div className={styles.metaStack}>
                                     <LabelValueRow
                                         label="Date"
@@ -290,7 +326,7 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                         value={record.supervisorName || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}
                                     />
                                     <LabelValueRow
-                                        label="Comment"
+                                        label="Review"
                                         value={record.supervisorNote || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}
                                     />
                                 </div>
@@ -300,8 +336,8 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                         size="s"
                                         onClick={handleOpenNoteModal}
                                     >
-                                        <span className="material-symbols-rounded">add_comment</span>
-                                        {record.supervisorNote ? 'Edit' : 'Add comment'}
+                                        <span className="material-symbols-rounded">{record.supervisorNote ? 'edit_note' : 'add_comment'}</span>
+                                        {record.supervisorNote ? 'Edit review' : 'Add review'}
                                     </Button>
                                 </div>
                             </div>

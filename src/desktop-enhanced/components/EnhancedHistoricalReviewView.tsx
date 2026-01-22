@@ -20,6 +20,7 @@ import { BulkActionFooter } from '../../desktop/components/BulkActionFooter';
 import { RowContextMenu } from '../../desktop/components/RowContextMenu';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
 import { ResidentChip } from '../../desktop/components/ResidentChip';
+import { ResidentStatusGroup } from '../../desktop/components/ResidentStatusGroup';
 import { Tooltip } from '../../components/Tooltip';
 import { Button } from '../../components/Button';
 import { loadEnhancedHistoricalPage } from '../data/mockData';
@@ -243,9 +244,6 @@ export const EnhancedHistoricalReviewView = () => {
                         <div className={styles.residentCell}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-0p5)', width: '100%' }}>
                                 {row.original.residents.map((r, i) => {
-                                    const srLabel = badgeTextMode === 'full' ? 'Suicide risk' : 'SR';
-                                    const mwLabel = badgeTextMode === 'full' ? 'Medical watch' : 'MW';
-
                                     if (displayMode === 'chip') {
                                         return (
                                             <ResidentChip
@@ -259,14 +257,7 @@ export const EnhancedHistoricalReviewView = () => {
                                     }
 
                                     const badges = (
-                                        <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
-                                            {r.hasHighRisk && (
-                                                <StatusBadge status="special" label={srLabel} fill tooltip="Suicide risk" />
-                                            )}
-                                            {r.hasMedicalWatch && (
-                                                <StatusBadge status="special" label={mwLabel} fill tooltip="Medical watch" />
-                                            )}
-                                        </div>
+                                        <ResidentStatusGroup residents={[r]} view="table" limit={1} />
                                     );
 
                                     return (
@@ -399,7 +390,7 @@ export const EnhancedHistoricalReviewView = () => {
 
             {
                 id: 'supervisorNote',
-                header: 'Comments',
+                header: 'Review',
                 size: 200,
                 minSize: 150,
                 accessorKey: 'supervisorNote',
@@ -425,6 +416,7 @@ export const EnhancedHistoricalReviewView = () => {
                                         e.stopPropagation();
                                         handleOpenNoteModal(row.original.id);
                                     }}
+                                    aria-label="Add review"
                                 >
                                     <span className="material-symbols-rounded">add_comment</span>
                                 </Button>
@@ -458,12 +450,12 @@ export const EnhancedHistoricalReviewView = () => {
                                 onClick: () => { /* Open room management */ },
                             },
                             {
-                                label: row.original.supervisorNote ? 'Edit comment' : 'Add comment',
+                                label: row.original.supervisorNote ? 'Edit review' : 'Add review',
                                 icon: 'add_comment',
                                 onClick: () => handleOpenNoteModal(row.original.id),
                             },
                             ...(row.original.supervisorNote ? [{
-                                label: 'Delete comment',
+                                label: 'Delete review',
                                 icon: 'delete',
                                 onClick: () => { /* Delete note */ },
                                 destructive: true,
@@ -496,7 +488,7 @@ export const EnhancedHistoricalReviewView = () => {
             {selectedRows.size > 0 && (
                 <BulkActionFooter
                     selectedCount={selectedRows.size}
-                    actionLabel={isEditMode ? 'Edit comments' : 'Add comment'}
+                    actionLabel={isEditMode ? 'Edit review' : 'Add review'}
                     actionIcon={isEditMode ? 'edit_note' : 'add_comment'}
                     onAction={() => {
                         setModalState({

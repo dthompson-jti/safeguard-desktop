@@ -114,13 +114,23 @@ export default function DesktopEnhancedApp() {
                                 </h2>
 
                                 <div className={styles.row2Actions}>
-                                    <Tooltip content={showPanel ? "Close panel" : "Open panel"}>
+                                    <Tooltip content={showPanel ? "Close side panel" : "Open side panel"}>
                                         <Button
                                             variant="secondary"
                                             size="s"
                                             iconOnly
-                                            active={showPanel}
-                                            onClick={() => setIsPanelOpen(!isPanelOpen)}
+                                            active={isPanelOpen}
+                                            onClick={() => {
+                                                if (showPanel) {
+                                                    // Close and Clear Selection
+                                                    setIsPanelOpen(false);
+                                                    setSelectedLive(new Set());
+                                                    setSelectedHistory(new Set());
+                                                } else {
+                                                    // Open/Pin
+                                                    setIsPanelOpen(true);
+                                                }
+                                            }}
                                         >
                                             <span className="material-symbols-rounded">
                                                 {showPanel ? 'right_panel_close' : 'right_panel_open'}

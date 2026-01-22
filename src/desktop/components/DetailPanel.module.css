@@ -242,11 +242,9 @@
     /* connects 38 to 66 */
 }
 
-.treeNode[data-depth="3"] .treeBend {
-    left: calc(var(--tree-icon-center) + (var(--tree-indent-step) * 2));
-    width: var(--tree-indent-step);
-    /* connects 66 to 94 */
-}
+
+
+
 
 
 .content {

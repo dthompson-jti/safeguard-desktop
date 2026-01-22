@@ -23,6 +23,7 @@ export interface Resident {
   location: string;
   hasHighRisk?: boolean; // Added for per-resident risk display
   hasMedicalWatch?: boolean; // Added for per-resident MW display
+  otherRisks?: string[]; // Additional risks (Flight Risk, Assaultive, etc)
 }
 
 export interface SafetyCheck {

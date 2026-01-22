@@ -21,6 +21,10 @@ export const isAdvancedSearchOpenAtom = atom(false);
 /** Toggle for showing residents in badges (chips) */
 export const showResidentBadgesAtom = atomWithStorage<boolean>(`${STORAGE_PREFIX}show_resident_badges`, false);
 
+/** Color mode for resident badges */
+export type BadgeColorMode = 'neutral' | 'warning' | 'info' | 'solid' | 'neutral-strong';
+export const residentBadgeColorModeAtom = atomWithStorage<BadgeColorMode>(`${STORAGE_PREFIX}badge_color_mode`, 'neutral');
+
 
 
 

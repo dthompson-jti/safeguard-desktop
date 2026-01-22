@@ -7,6 +7,7 @@ import { LiveCheckRow } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
 import { ResidentChip } from '../../desktop/components/ResidentChip';
+import { ResidentStatusGroup } from '../../desktop/components/ResidentStatusGroup';
 import { loadEnhancedLivePage } from '../data/mockData';
 import { COLUMN_WIDTHS } from '../../desktop/components/tableConstants';
 import styles from '../../desktop/components/DataTable.module.css';
@@ -52,17 +53,14 @@ export const EnhancedLiveMonitorView = () => {
             {
                 id: 'resident',
                 header: 'Resident',
-                size: 300,
-                minSize: 240,
+                size: 340,
+                minSize: 300,
                 accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
                 cell: ({ row }) => {
                     return (
                         <div className={styles.residentCell}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-0p5)', width: '100%' }}>
                                 {row.original.residents.map((r, i) => {
-                                    const srLabel = badgeTextMode === 'full' ? 'Suicide risk' : 'SR';
-                                    const mwLabel = badgeTextMode === 'full' ? 'Medical watch' : 'MW';
-
                                     if (displayMode === 'chip') {
                                         return (
                                             <ResidentChip
@@ -76,14 +74,7 @@ export const EnhancedLiveMonitorView = () => {
                                     }
 
                                     const badges = (
-                                        <div style={{ display: 'flex', gap: 'var(--spacing-1)' }}>
-                                            {r.hasHighRisk && (
-                                                <StatusBadge status="special" label={srLabel} fill tooltip="Suicide risk" />
-                                            )}
-                                            {r.hasMedicalWatch && (
-                                                <StatusBadge status="special" label={mwLabel} fill tooltip="Medical watch" />
-                                            )}
-                                        </div>
+                                        <ResidentStatusGroup residents={[r]} view="table" limit={1} />
                                     );
 
                                     return (
