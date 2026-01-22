@@ -7,6 +7,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
+- **ComboBox UI Refinement**:
+    - **Chevron Alignment**: Standardized the dropdown chevron's position (12px right offset) and size (20px) to match the standard `Select` component.
+    - **Interaction**: Added a smooth 180-degree rotation transition when the menu is opened.
+- **Toast Notification Redesign**:
+    - **Visuals**: Implemented high-fidelity design using solid semantic backgrounds and high-contrast typography.
+    - **Typography**: Refined text to use 14px (small) for both title (semi-bold) and description (regular).
+    - **Spacing**: Standardized **12px padding/icon-gap** and a tighter **4px title-to-description gap** using design tokens.
+    - **Alignment**: Standardized **vertical centering** for all toast elements.
+    - **Positioning**: Moved to the **bottom-right** corner.
+    - **Components**: Updated leading icon (24px) and close button (Large, 40x40 with 24px icon) to match "On Solid" button standards.
+    - **Terminology**: Standardized on "**Supervisor review**" (Saved/Removed) to align with recent administrative refactors.
+    - **Action Link**: Switched to a streamlined underlined link style.
+- **Terminology & Casing Refactor**:
+    - **Renaming**: Systematically renamed "Commented" status to "**Reviewed**" across types, atoms, and UI components to align with administrative standards.
+    - **Formatting**: Enforced the use of **en dashes** (`–`) with surrounding spaces for status labels (e.g., "Missed – not reviewed").
+    - **Sentence Case**: Standardized all status badge labels and filter options to use sentence case. Removed CSS `text-transform: capitalize` from badges to ensure precise casing control.
+- **Detail Panel Animation Mastery**:
+    - **Sync**: Synchronized the `DetailPanel` wrapper's width transition with the internal content slide animation using Framer Motion's `AnimatePresence`. 
+    - **Visual Fix**: Resolved the "jarring" panel closure by ensuring the main viewport expands at the exact same rate the panel slides out, creating a cohesive layout shift.
+    - **Overflow**: Added `overflow: hidden` to the panel wrapper during transitions to prevent content clipping regressions.
 - **Right Panel Resize Optimization**: 
     - **Architecture**: Migrated the main layout from CSS Grid to **Flexbox** to eliminate expensive browser reflows of the `DataTable` during width changes.
     - **Performance**: Implemented a transition blocker (`data-resizing`) that forces `transition: none !important` while dragging, ensuring a 1:1 mouse-to-panel response.

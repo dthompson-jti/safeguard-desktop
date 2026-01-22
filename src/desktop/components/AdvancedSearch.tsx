@@ -176,7 +176,7 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
                     </div>
                 </div>
                 <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Reason for missed check(s)</label>
+                    <label className={styles.label}>Reason for missed checks</label>
                     <Select
                         value={localFilter.commentReason}
                         onValueChange={(val) => handleChange('commentReason', val)}

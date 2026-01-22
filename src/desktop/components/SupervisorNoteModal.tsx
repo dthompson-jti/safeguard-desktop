@@ -123,7 +123,8 @@ export const SupervisorNoteModal = () => {
             }
 
             addToast({
-                message: `Review saved for ${modalState.selectedIds.length} check${modalState.selectedIds.length !== 1 ? 's' : ''}`,
+                title: 'Supervisor review saved',
+                message: `Applied to ${modalState.selectedIds.length} check${modalState.selectedIds.length !== 1 ? 's' : ''}`,
                 icon: 'check_circle',
                 variant: 'success',
             });
@@ -131,7 +132,7 @@ export const SupervisorNoteModal = () => {
             handleClose();
         } catch (error) {
             console.error('Failed to save review:', error);
-            addToast({ message: 'Failed to save review.', icon: 'error', variant: 'alert' });
+            addToast({ title: 'Error', message: 'Failed to save supervisor review.', icon: 'error', variant: 'alert' });
         } finally {
             setIsSaving(false);
         }
@@ -169,7 +170,8 @@ export const SupervisorNoteModal = () => {
             }
 
             addToast({
-                message: 'Review removed.',
+                title: 'Supervisor review removed',
+                message: `Cleared from ${modalState.selectedIds.length} check${modalState.selectedIds.length !== 1 ? 's' : ''}`,
                 icon: 'delete',
                 variant: 'neutral',
             });
@@ -177,7 +179,7 @@ export const SupervisorNoteModal = () => {
             handleClose();
         } catch (error) {
             console.error('Failed to remove review:', error);
-            addToast({ message: 'Failed to remove review.', icon: 'error', variant: 'alert' });
+            addToast({ title: 'Error', message: 'Failed to remove supervisor review.', icon: 'error', variant: 'alert' });
         } finally {
             setIsSaving(false);
         }

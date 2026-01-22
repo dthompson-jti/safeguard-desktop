@@ -330,6 +330,25 @@ The reference uses Radix UI `ContextMenu` with global `.menu-popover` and `.menu
 
 ---
 
+## 9. Toasts
+
+### Current Implementation (Updated 2026-01-22)
+
+| Aspect | Current Value | Status |
+|--------|---------------|--------|
+| **Positioning** | **Bottom Right** | ✅ Optimized |
+| **Padding/Gap** | `12px` (`var(--spacing-3)`) | ✅ High Density |
+| **Title Gap** | `4px` (`var(--spacing-1)`) | ✅ Fine-tuned |
+| **Aesthetics** | Solid Semantic Backgrounds | ✅ Premium |
+| **Action** | Underlined Action Link | ✅ High Fidelity |
+| **Close Button** | Large (40x40) On-Solid | ✅ High Fidelity |
+
+### Recommended Changes
+
+**None** - Component is currently at maximum fidelity with the "solid" semantic design system.
+
+---
+
 ## Summary: Priority Changes
 
 ### High Priority (Visual Impact)

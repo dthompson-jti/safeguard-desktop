@@ -9,8 +9,13 @@ import { removeToastAtom, Toast } from '../data/toastAtoms';
  * A self-contained, animated toast instance. It wraps Radix's Root component
  * with Framer Motion to handle animations, adhering to the project's canonical
  * 'spring' animation principle for a consistent, high-craft feel.
+ * 
+ * ARCHITECTURAL INVARIANT: Structure
+ * Toasts support an optional 'title' and a required 'message'. 
+ * If a title is provided, it is rendered prominently above the message.
+ * Screen-reader accessibility is maintained via Radix Toast primitives.
  */
-export const ToastMessage = ({ id, message, icon, variant = 'neutral', timestamp, action, persistent }: Toast) => {
+export const ToastMessage = ({ id, title, message, icon, variant = 'neutral', timestamp, action, persistent }: Toast) => {
   const removeToast = useSetAtom(removeToastAtom);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -46,7 +51,7 @@ export const ToastMessage = ({ id, message, icon, variant = 'neutral', timestamp
         // FIX: Removed `layout` prop.
         // Framer Motion's layout projection interferes with Radix's CSS transform-based 
         // swipe gestures. Removing it ensures the toast tracks the finger 1:1 during swipe.
-        className="toast-root"
+        className={`toast-root ${variant}`}
         data-variant={variant}
         initial={{ y: -20, scale: 0.95, opacity: 0 }}
         animate={{ y: 0, scale: 1, opacity: 1 }}
@@ -54,7 +59,11 @@ export const ToastMessage = ({ id, message, icon, variant = 'neutral', timestamp
         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
       >
         <span className="material-symbols-rounded toast-icon">{icon}</span>
-        <ToastPrimitive.Description className="toast-description">{message}</ToastPrimitive.Description>
+
+        <div className="toast-content">
+          {title && <div className="toast-title">{title}</div>}
+          <ToastPrimitive.Description className="toast-description">{message}</ToastPrimitive.Description>
+        </div>
 
         {action && (
           <button
@@ -68,7 +77,13 @@ export const ToastMessage = ({ id, message, icon, variant = 'neutral', timestamp
           </button>
         )}
 
-        <ToastPrimitive.Close className="toast-close-button" aria-label="Close">
+        <ToastPrimitive.Close
+          className="toast-close-button btn"
+          data-variant="on-solid"
+          data-size="lg"
+          data-icon-only="true"
+          aria-label="Close"
+        >
           <span className="material-symbols-rounded">close</span>
         </ToastPrimitive.Close>
       </motion.li>

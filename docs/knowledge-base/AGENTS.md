@@ -94,6 +94,7 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 *   **The Rule:** Choose padding based on the "Split Density" contract:
     *   **Headers/Nav (Chrome):** Use `var(--spacing-2)` (8px).
     *   **Cards/Lists (Content):** Use `var(--spacing-4)` (16px).
+    *   **Contextual Overlays (Toasts):** Use `var(--spacing-3)` (12px) for padding/icon-gap, and `var(--spacing-1)` (4px) for title-to-description hierarchy.
     *   **Footers:** Use `var(--spacing-4)` (16px) to align with content.
 *   **Anti-Pattern:** Do not use `spacing-4` for Headers or `spacing-2` for text-heavy content.
 
@@ -219,7 +220,8 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 
 ### Terminology Precision
 *   **Lesson:** User-facing terminology is a strict spec.
-*   **Pattern:** "Due" means "Due". Do not use "Due Now", "Due Soon", or "Due!" unless explicitly specified. Removing variations reduces cognitive load.
+*   **Pattern:** "Due" means "Due". Do not use "Due Now", "Due Soon", or "Due!" unless explicitly specified.
+*   **Pattern (Supervisor Review):** Standardize on "Supervisor review" (Saved/Removed) rather than "Note" or "Comment" to align with administrative refactors.
 
 ### React Hooks vs. Raw Atoms
 *   **Lesson:** When an atom has a side-effect (like updating the DOM), **never** use the raw atom setter directly. You must use the abstraction hook.

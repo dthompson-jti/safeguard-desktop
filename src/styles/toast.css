@@ -6,14 +6,15 @@
   /* 
     Dynamic Positioning Contract:
     Floats above the footer (if present) + standard spacing.
+    Moved to BOTTOM RIGHT as requested.
   */
   bottom: calc(var(--footer-height, 0px) + var(--spacing-4));
-  left: 0;
-  right: 0;
+  right: var(--spacing-4);
+  left: auto;
 
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   gap: var(--spacing-3);
 
   margin: 0;
@@ -31,157 +32,137 @@
   pointer-events: auto;
 
   /* Metrics Spec */
-  width: auto;
-  max-width: calc(100vw - 32px);
-  padding: var(--spacing-4);
-  border-radius: var(--radius-xl);
-  gap: var(--spacing-4);
+  min-width: 320px;
+  max-width: 440px;
+  padding: var(--spacing-3);
+  border-radius: var(--radius-lg);
+  gap: var(--spacing-3);
 
   display: flex;
   align-items: center;
-  /* justify-content removed to allow natural flow with close button */
+  /* Centered vertically at all times */
 
   /* Typography */
   font-family: var(--font-family-sans);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  color: var(--surface-fg-secondary);
 
   /* Depth */
-  box-shadow: var(--surface-shadow-md);
+  box-shadow: var(--surface-shadow-xl);
 
   /* Interaction */
   user-select: none;
 }
 
-.toast-root .material-symbols-rounded {
-  font-size: var(--icon-size-md);
+.toast-icon {
+  font-size: var(--icon-size-lg);
+  /* 24px icon */
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--surface-fg-on-solid);
+}
+
+.toast-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  /* 4px gap between title and body */
+  flex-grow: 1;
+  color: var(--surface-fg-on-solid);
+}
+
+.toast-title {
+  font-size: var(--font-size-sm);
+  /* Small (14px) */
+  font-weight: 600;
+  /* Semi-bold */
+  line-height: var(--line-height-tight);
 }
 
 .toast-description {
   white-space: pre-line;
-  /* Support \n for multi-line error messages */
   margin: 0;
-  /* Allow text to grow but not shrink below content size */
-  flex-grow: 1;
+  font-size: var(--font-size-sm);
+  /* Small (14px) */
+  font-weight: 400;
+  /* Regular */
+  line-height: var(--line-height-normal);
 }
 
-/* --- Action Button --- */
+/* --- Action Link --- */
 
 .toast-action {
   all: unset;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 var(--spacing-3);
-  height: 32px;
-  border-radius: var(--radius-sm);
+
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
 
-  /* Semantic Colors */
-  background-color: var(--surface-bg-primary);
-  color: var(--surface-fg-primary);
-  border: 1px solid var(--surface-border-primary);
-  box-shadow: var(--surface-shadow-sm);
+  color: var(--surface-fg-on-solid);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 
-  transition: transform 0.1s, background-color 0.2s;
+  transition: opacity 0.2s;
 
-  /* Separate from text and close button */
-  margin-left: var(--spacing-2);
-  margin-right: var(--spacing-1);
+  margin-left: var(--spacing-4);
+  margin-right: var(--spacing-2);
   white-space: nowrap;
 }
 
+.toast-action:hover {
+  opacity: 0.8;
+}
+
 .toast-action:active {
-  transform: scale(0.96);
-  background-color: var(--surface-bg-secondary);
+  transform: translateY(1px);
 }
 
 /* --- Close Button --- */
 
 .toast-close-button {
-  all: unset;
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--control-height-sm);
-  height: var(--control-height-sm);
-  border-radius: var(--radius-md);
-  flex-shrink: 0;
-  cursor: pointer;
-  background: none;
-  color: var(--surface-fg-tertiary);
-  transition: background-color 0.2s, opacity 0.2s;
-  margin-left: auto;
-  /* Push to right if container expands */
-}
-
-.toast-close-button:hover {
-  background-color: var(--utility-alpha-black-10);
+  /* Dimensions & Variant handled by .btn data-size="lg" in TSX */
+  color: var(--surface-fg-on-solid) !important;
+  opacity: 1 !important;
 }
 
 .toast-close-button .material-symbols-rounded {
-  font-size: var(--icon-size-md);
+  font-size: var(--icon-size-lg) !important;
+  /* 24px icon */
 }
 
-/* --- Semantic Variants --- */
+/* --- Semantic Variants - SOLID --- */
 
-/* Neutral (Default) */
+/* Neutral (Default) - Keep subtle but accessible */
 .toast-root[data-variant='neutral'] {
-  background-color: var(--surface-bg-primary);
-  border: 1px solid var(--surface-border-secondary);
-}
-
-.toast-root[data-variant='neutral'] .toast-icon {
-  color: var(--surface-fg-secondary);
+  background-color: var(--surface-bg-primary-solid);
+  border: 1px solid var(--primitives-grey-700);
 }
 
 /* Success */
 .toast-root[data-variant='success'] {
-  background-color: var(--surface-bg-success);
-  border: 1px solid var(--surface-border-success);
-}
-
-.toast-root[data-variant='success'] .toast-icon {
-  color: var(--surface-fg-success-primary);
-  font-variation-settings: 'FILL' 0;
+  background-color: var(--surface-bg-success-solid);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Alert / Error */
 .toast-root[data-variant='alert'] {
-  background-color: var(--surface-bg-error-primary);
-  border: 1px solid var(--surface-border-alert);
-}
-
-.toast-root[data-variant='alert'] .toast-icon {
-  color: var(--surface-fg-alert-primary);
-  font-variation-settings: 'FILL' 0;
+  background-color: var(--surface-bg-error-solid);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Warning */
 .toast-root[data-variant='warning'] {
-  background-color: var(--surface-bg-warning-primary);
-  border: 1px solid var(--surface-border-warning);
-}
-
-.toast-root[data-variant='warning'] .toast-icon {
-  color: var(--surface-fg-warning-primary);
-  font-variation-settings: 'FILL' 0;
+  background-color: var(--surface-bg-warning-solid);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Info */
 .toast-root[data-variant='info'] {
-  background-color: var(--surface-bg-info);
-  border: 1px solid var(--surface-border-info);
-}
-
-.toast-root[data-variant='info'] .toast-icon {
-  color: var(--surface-fg-info-primary);
-  font-variation-settings: 'FILL' 0;
+  background-color: var(--surface-bg-info-solid);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Radix Swipe Transformations */

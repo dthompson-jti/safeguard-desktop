@@ -8,6 +8,7 @@ export interface Toast {
   id: string;
   stableId?: string; // Optional ID for aggregation/deduplication
   timestamp: number; // Used to reset timer on updates
+  title?: string;
   message: string;
   icon: string;
   variant: ToastVariant;
@@ -24,6 +25,7 @@ export const toastsAtom = atom<Toast[]>([]);
 export const addToastAtom = atom(
   null,
   (get, set, {
+    title,
     message,
     icon,
     variant = 'neutral',
@@ -31,6 +33,7 @@ export const addToastAtom = atom(
     action,
     persistent
   }: {
+    title?: string;
     message: string;
     icon: string;
     variant?: ToastVariant;
@@ -51,6 +54,7 @@ export const addToastAtom = atom(
         const updatedToasts = [...currentToasts];
         updatedToasts[existingIndex] = {
           ...updatedToasts[existingIndex],
+          title,
           message,
           icon,
           variant,
@@ -70,6 +74,7 @@ export const addToastAtom = atom(
       id: nanoid(),
       stableId,
       timestamp: now,
+      title,
       message,
       icon,
       variant,

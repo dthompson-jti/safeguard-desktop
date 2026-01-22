@@ -339,7 +339,7 @@ export const DetailPanel = ({ record, selectedCount = 0, onResizeStart, onResize
                                         value={record.supervisorName || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}
                                     />
                                     <LabelValueRow
-                                        label="Review"
+                                        label="Reason"
                                         value={record.supervisorNote || <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}
                                     />
                                 </div>
