@@ -36,7 +36,7 @@ export const FACTORY_FILTER_DEFAULTS: DesktopFilter = {
     search: '',
     showMissedOnly: false,
     statusFilter: 'all',
-    historicalStatusFilter: 'missed-uncommented',
+    historicalStatusFilter: 'missed-not-reviewed',
     timeRangePreset: 'last-24h',
     dateStart: null,
     dateEnd: null,
@@ -173,9 +173,9 @@ export const filteredHistoricalChecksAtom = atom((get) => {
         if (filter.historicalStatusFilter !== 'all') {
             if (filter.historicalStatusFilter === 'missed-all') {
                 if (check.status !== 'missed') return false;
-            } else if (filter.historicalStatusFilter === 'missed-uncommented') {
+            } else if (filter.historicalStatusFilter === 'missed-not-reviewed') {
                 if (check.status !== 'missed' || check.supervisorNote) return false;
-            } else if (filter.historicalStatusFilter === 'missed-commented') {
+            } else if (filter.historicalStatusFilter === 'missed-reviewed') {
                 if (check.status !== 'missed' || !check.supervisorNote) return false;
             } else if (filter.historicalStatusFilter === 'completed') {
                 if (check.status !== 'completed') return false;

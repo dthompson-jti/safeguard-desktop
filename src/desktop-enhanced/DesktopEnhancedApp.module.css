@@ -74,6 +74,9 @@
     height: 100%;
     position: relative;
     flex-shrink: 0;
-    /* Match the transition curve of the previous grid layout for showing/hiding */
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: width;
+}
+
+.detailPanelWrapper[data-resizing="true"] {
+    transition: none;
 }

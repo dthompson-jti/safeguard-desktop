@@ -327,7 +327,7 @@ export const EnhancedHistoricalReviewView = () => {
                     if (row.original.status === 'completed') {
                         displayStatus = 'completed';
                     } else if (row.original.status === 'missed') {
-                        displayStatus = row.original.supervisorNote ? 'missed-commented' : 'missed-uncommented';
+                        displayStatus = row.original.supervisorNote ? 'missed-reviewed' : 'missed-not-reviewed';
                     } else {
                         displayStatus = row.original.status as StatusBadgeType;
                     }

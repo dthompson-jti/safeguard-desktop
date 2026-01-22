@@ -232,9 +232,9 @@ export function loadHistoricalChecksPage(
                     if (filter.unit !== 'all' && check.unit !== filter.unit) return false;
 
                     // Use historicalStatusFilter for filtering
-                    if (filter.historicalStatusFilter === 'missed-uncommented') {
+                    if (filter.historicalStatusFilter === 'missed-not-reviewed') {
                         if (check.status !== 'missed' || check.supervisorNote) return false;
-                    } else if (filter.historicalStatusFilter === 'missed-commented') {
+                    } else if (filter.historicalStatusFilter === 'missed-reviewed') {
                         if (check.status !== 'missed' || !check.supervisorNote) return false;
                     } else if (filter.historicalStatusFilter === 'completed') {
                         if (check.status !== 'completed') return false;

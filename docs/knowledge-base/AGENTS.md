@@ -529,3 +529,12 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 *   **When CSS Works:** If the element has a CSS module class directly applied (not as a descendant).
 *   **Anti-Pattern:** Adding multiple selectors with `!important` hoping specificity wins - the selector never matches.
 *   **Reference:** See `AppHeader.tsx` icon color application, comment in `AppHeader.module.css`.
+
+### 26. High-Frequency Resize Management
+*   **The Lesson:** Interactive resizing of complex layouts (e.g., side panels with DataTables) requires specific performance optimizations to avoid lag.
+*   **The Constraints:**
+    1.  **Flexbox Over Grid:** Grid track recalculation is significantly more expensive than Flexbox width adjustments during high-frequency updates.
+    2.  **Transition Blocker:** Always disable CSS transitions (`transition: none`) on the resizable container during active manipulation (e.g., using a `data-resizing` attribute).
+    3.  **Hardware Acceleration:** Apply `will-change: width` to promote the resizable container to its own compositor layer.
+    4.  **Sync Control:** Prefer synchronous CSS variable updates over React state or `requestAnimationFrame` to eliminate 1-frame latency between the mouse and the UI.
+*   **Reference:** See `SPEC-ANIMATION.md` Section 3.D and `SPEC-CSS.md` Section 13.

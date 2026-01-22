@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import * as ToastPrimitive from '@radix-ui/react-toast';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Layout } from './Layout';
 import { NavigationPanel } from './components/NavigationPanel';
 import { Breadcrumbs } from './components/Breadcrumbs';
@@ -65,7 +65,7 @@ export default function DesktopEnhancedApp() {
         if (view === 'historical') {
             setFilter(prev => ({
                 ...prev,
-                historicalStatusFilter: 'missed-uncommented',
+                historicalStatusFilter: 'missed-not-reviewed',
                 // Time range "Last 24h" (mock values)
                 dateStart: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                 dateEnd: new Date().toISOString().split('T')[0],
@@ -88,6 +88,7 @@ export default function DesktopEnhancedApp() {
      * 2. Auto-open is ENABLED AND exactly one record is selected (Transient Mode)
      */
     const showPanel = isPanelOpen || (autoOpenPanel && totalSelected === 1);
+    const [isResizing, setIsResizing] = useState(false);
 
     // Grid styling removed in favor of Flexbox optimization
     // const mainContainerStyle = ...
@@ -150,12 +151,26 @@ export default function DesktopEnhancedApp() {
 
                     <AnimatePresence>
                         {showPanel && (
-                            <div
+                            <motion.div
                                 className={styles.detailPanelWrapper}
-                                style={{ width: `var(--panel-width, ${panelWidth}px)` }}
+                                initial={{ width: 0, opacity: 0 }}
+                                animate={{ width: panelWidth, opacity: 1 }}
+                                exit={{ width: 0, opacity: 0 }}
+                                transition={{
+                                    type: 'tween',
+                                    ease: [0.16, 1, 0.3, 1],
+                                    duration: 0.3
+                                }}
+                                style={{ overflow: 'hidden' }}
+                                data-resizing={isResizing}
                             >
-                                <DetailPanel record={activeRecord} selectedCount={totalSelected} />
-                            </div>
+                                <DetailPanel
+                                    record={activeRecord}
+                                    selectedCount={totalSelected}
+                                    onResizeStart={() => setIsResizing(true)}
+                                    onResizeEnd={() => setIsResizing(false)}
+                                />
+                            </motion.div>
                         )}
                     </AnimatePresence>
 

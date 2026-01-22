@@ -509,3 +509,13 @@ For complex data tables, ensuring column stability and proper border rendering i
 *   **Divider Location:** Apply horizontal dividers (`border-bottom`) to `td` elements, not `tr`. This allows for cleaner interactions and avoids "jumping" borders on hover.
 *   **Skeleton Alignment:** Skeleton loaders must match the `padding` and `border` of real cells exactly to prevent a 1px jump when data loads.
 
+
+#### 13. High-Frequency Resize Management
+
+When implementing resizable side panels containing complex children (like `DataTable`):
+
+-   **Prefer Flexbox:** Use `flex-basis` or `width` on containers rather than `grid-template-columns`. CSS Grid track recalculations are significantly more expensive for the browser's layout engine than Flexbox adjustments.
+-   **Hardware Acceleration:** Always apply `will-change: width` to any container whose width is modified 60 times per second during a drag. This promotes the element to its own compositor layer.
+-   **Direct Property Updates:** Avoid updating React state at 60fps for resizing. Instead, update a CSS Custom Property (e.g., `--panel-width`) directly on the `document.documentElement` or a local wrapper using a `useRef` for the value.
+-   **Layout Regressions:** Absolutely positioned children inside a resizable wrapper should use `width: 100%` to ensure they fill the expanding surface without "dead space" or snapping.
+

@@ -12,18 +12,18 @@ interface ResidentStatusGroupProps {
     limit?: number; // For table view, defaults to 1
 }
 
+interface BadgeItem {
+    label: string;
+    status: StatusBadgeType; // 'special' mainly
+    tooltip: string;
+    priority: number;
+}
+
 export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ residents, view, limit = 1 }) => {
     const colorMode = useAtomValue(residentBadgeColorModeAtom);
     const badgeTextMode = useAtomValue(residentBadgeTextAtom);
     // 1. Flatten all statuses from all residents into a single list of simplified objects
     // We want to know: { label: string, status: StatusBadgeType, tooltip: string }
-
-    interface BadgeItem {
-        label: string;
-        status: StatusBadgeType; // 'special' mainly
-        tooltip: string;
-        priority: number;
-    }
 
     const allBadges: BadgeItem[] = [];
 
@@ -117,7 +117,7 @@ export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ reside
 
 
 
-const renderTooltipContent = (badges: any[]) => (
+const renderTooltipContent = (badges: BadgeItem[]) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
         {badges.map((b, i) => (
             <div key={i}>• {b.label}</div>

@@ -505,9 +505,9 @@ export const loadEnhancedHistoricalPage = (
                 if (filter.historicalStatusFilter && filter.historicalStatusFilter !== 'all') {
                     if (filter.historicalStatusFilter === 'missed-all') {
                         filtered = filtered.filter(r => r.status === 'missed');
-                    } else if (filter.historicalStatusFilter === 'missed-uncommented') {
+                    } else if (filter.historicalStatusFilter === 'missed-not-reviewed') {
                         filtered = filtered.filter(r => r.status === 'missed' && !r.supervisorNote);
-                    } else if (filter.historicalStatusFilter === 'missed-commented') {
+                    } else if (filter.historicalStatusFilter === 'missed-reviewed') {
                         filtered = filtered.filter(r => r.status === 'missed' && !!r.supervisorNote);
                     } else if (filter.historicalStatusFilter === 'completed') {
                         filtered = filtered.filter(r => r.status === 'completed');

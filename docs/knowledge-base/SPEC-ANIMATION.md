@@ -100,6 +100,16 @@ This document defines the critical animation behaviors and constraints for the S
 }
 ```
 
+### D. Interactive Resizing Contract
+**Rule:** Disable all active transitions during interactive width resizing.
+
+- **Why:** Browsers attempt to interpolate width changes over the transition duration (e.g., 0.3s), creating a "rubber-band" lag effect against the mouse position.
+- **Implementation:**
+  1. Lift `isResizing` state to the parent that controls the resizable container width.
+  2. Set `data-resizing="true"` on the wrapper during the `mousemove` cycle.
+  3. CSS: `.wrapper[data-resizing="true"] { transition: none; }`.
+  4. Use Hardware Acceleration: Add `will-change: width` to the resizable container.
+
 ---
 
 ## 4. File Locations

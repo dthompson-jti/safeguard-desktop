@@ -22,9 +22,11 @@ import styles from './DetailPanel.module.css';
 interface DetailPanelProps {
     record: PanelData | null;
     selectedCount?: number;
+    onResizeStart?: () => void;
+    onResizeEnd?: () => void;
 }
 
-export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => {
+export const DetailPanel = ({ record, selectedCount = 0, onResizeStart, onResizeEnd }: DetailPanelProps) => {
     // State management
     const [panelWidth, setPanelWidth] = useAtom(panelWidthAtom);
     const setPanelOpen = useSetAtom(isDetailPanelOpenAtom);
@@ -84,32 +86,32 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
     const handleResizeStart = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
         setIsResizing(true);
+        onResizeStart?.();
         if (panelRef.current) {
             panelRef.current.style.transition = 'none';
         }
-    }, []);
+    }, [onResizeStart]);
 
     const handleResizeMove = useCallback((e: MouseEvent) => {
         if (!isResizing) return;
-        // Debug: Measure Event Frequency
-        console.log('[DetailPanel] ResizeMove', e.clientX, performance.now());
 
         const newWidth = window.innerWidth - e.clientX;
         const clampedWidth = Math.max(320, Math.min(600, newWidth));
 
-        // Direct DOM update on root for real-time grid scaling
+        // Direct update (matches Left panel). The transition: none fix is the key.
         widthRef.current = clampedWidth;
         document.documentElement.style.setProperty('--panel-width', `${clampedWidth}px`);
     }, [isResizing]);
 
     const handleResizeEnd = useCallback(() => {
         setIsResizing(false);
+        onResizeEnd?.();
         if (panelRef.current) {
             panelRef.current.style.transition = '';
             // Sync Jotai state once dragging stops
             setPanelWidth(widthRef.current);
         }
-    }, [setPanelWidth]);
+    }, [setPanelWidth, onResizeEnd]);
 
     // Add/remove global listeners for resize
     useEffect(() => {
@@ -213,7 +215,8 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                             {record.residents.map((r, i) => {
                                                 // Extract badges (Duplicate logic effectively, but localized for styling)
                                                 // Ideally we'd have a helper, but inline is fastest for this unique layout
-                                                const badges = [];
+                                                interface BadgeItem { label: string; status: StatusBadgeType; }
+                                                const badges: BadgeItem[] = [];
                                                 if (r.hasHighRisk) badges.push({ label: 'Suicide Risk', status: 'special' });
                                                 if (r.hasMedicalWatch) badges.push({ label: 'Medical Watch', status: 'special' });
                                                 if (r.otherRisks) r.otherRisks.forEach(risk => badges.push({ label: risk, status: 'special' }));
@@ -234,7 +237,7 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                                         {badges.length > 0 && (
                                                             <div className={styles.treeNode} style={{ alignItems: 'flex-start', paddingLeft: '16px' }}>
                                                                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', paddingTop: '4px', marginLeft: '0px' }}>
-                                                                    {badges.map((b: any, bi: number) => (
+                                                                    {badges.map((b, bi: number) => (
                                                                         <StatusBadge
                                                                             key={bi}
                                                                             status={b.status}

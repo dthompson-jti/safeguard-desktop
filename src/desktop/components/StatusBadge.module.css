@@ -11,7 +11,6 @@
     line-height: var(--line-height-tight);
     border: 1px solid transparent;
     white-space: nowrap;
-    text-transform: capitalize;
 }
 
 .iconOnly {
@@ -36,15 +35,15 @@
 
 /* Missed - Uncommented (semantic red) */
 .badge[data-status='missed'],
-.badge[data-status='missed-uncommented'],
+.badge[data-status='missed-not-reviewed'],
 .badge[data-status='overdue'] {
     background: var(--surface-bg-error-primary);
     color: var(--surface-fg-alert-primary);
     border-color: var(--surface-border-alert_subtle);
 }
 
-/* Missed - Commented (semantic grey) */
-.badge[data-status='missed-commented'] {
+/* Missed - Reviewed (semantic grey) */
+.badge[data-status='missed-reviewed'] {
     background: var(--surface-bg-tertiary);
     color: var(--surface-fg-tertiary);
     border-color: var(--surface-border-tertiary);

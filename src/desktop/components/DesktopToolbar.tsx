@@ -40,8 +40,8 @@ const LIVE_STATUS_OPTIONS = [
 const HISTORICAL_STATUS_OPTIONS = [
     { value: 'all', label: 'All statuses' },
     { value: 'missed-all', label: 'Missed – all' },
-    { value: 'missed-uncommented', label: 'Missed – no comment' },
-    { value: 'missed-commented', label: 'Missed – commented' },
+    { value: 'missed-not-reviewed', label: 'Missed – not reviewed' },
+    { value: 'missed-reviewed', label: 'Missed – reviewed' },
     { value: 'completed', label: 'Completed' },
 ];
 

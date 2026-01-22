@@ -7,9 +7,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
+- **Right Panel Resize Optimization**: 
+    - **Architecture**: Migrated the main layout from CSS Grid to **Flexbox** to eliminate expensive browser reflows of the `DataTable` during width changes.
+    - **Performance**: Implemented a transition blocker (`data-resizing`) that forces `transition: none !important` while dragging, ensuring a 1:1 mouse-to-panel response.
+    - **Hardware Acceleration**: Added `will-change: width` to the panel wrapper to promote it to a dedicated compositor layer.
+    - **Layout Fix**: Resolved "**dead space**" regressions by ensuring the internal panel div strictly fills its container width (100%).
 - **Badge Color Configuration**: Added user-configurable color modes for Resident Badges (A=Neutral, B=Neutral Strong, C=Warning, D=Info, E=Solid).
 - **Detail Panel Layout**: Refined resident status layout (removed visual connectors, tightened spacing for multi-resident lists).
 - **Breadcrumb Styling**: Updated all text items to use semi-bold font weight.
+- **Lint & Type Safety**:
+    - Resolved `unsafe-member-access` and `no-explicit-any` errors in `DetailPanel.tsx` and `ResidentStatusGroup.tsx`.
+    - Fixed missing `useCallback` dependencies in `DetailPanel.tsx`.
 - Fixed Detail Panel layout bug (full height).
 - Updated Detail Panel location display (Facility added, Room unlinked).
 - Updated Tree View count logic (sums missed checks).

@@ -26,7 +26,7 @@ export interface HistoricalCheck {
 }
 
 /** Combined status filter for historical view */
-export type HistoricalStatusFilter = 'all' | 'missed-all' | 'missed-uncommented' | 'missed-commented' | 'completed';
+export type HistoricalStatusFilter = 'all' | 'missed-all' | 'missed-not-reviewed' | 'missed-reviewed' | 'completed';
 
 /** Status filter for live view */
 export type LiveStatusFilter = 'all' | 'upcoming' | 'due' | 'overdue';
