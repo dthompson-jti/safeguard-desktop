@@ -26,13 +26,13 @@ export interface HistoricalCheck {
 }
 
 /** Combined status filter for historical view */
-export type HistoricalStatusFilter = 'all' | 'missed-uncommented' | 'missed-commented' | 'completed';
+export type HistoricalStatusFilter = 'all' | 'missed-all' | 'missed-uncommented' | 'missed-commented' | 'completed';
 
 /** Status filter for live view */
 export type LiveStatusFilter = 'all' | 'upcoming' | 'due' | 'overdue';
 
 /** Time range presets for historical view */
-export type TimeRangePreset = 'today' | 'last-24h' | 'last-8h' | 'last-7d' | 'custom';
+export type TimeRangePreset = 'today' | 'last-24h' | 'last-12h' | 'last-8h' | 'last-72h' | 'custom';
 
 /** Filter state for toolbar */
 export interface DesktopFilter {
@@ -50,8 +50,9 @@ export interface DesktopFilter {
     officer: string;
     startDate: string | null;
     endDate: string | null;
-    enhancedObservation: 'any' | 'sr' | 'mw';
+    enhancedObservation: 'any' | 'has-any' | 'sr' | 'mw';
     commentFilter: 'any' | 'has' | 'none';
+    commentReason: string;
 }
 
 /** Derived live check for table display */

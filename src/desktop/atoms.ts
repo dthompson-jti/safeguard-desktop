@@ -41,6 +41,7 @@ export const FACTORY_FILTER_DEFAULTS: DesktopFilter = {
     endDate: null,
     enhancedObservation: 'any',
     commentFilter: 'any',
+    commentReason: 'any',
 };
 
 
@@ -84,7 +85,8 @@ export const isFilterCustomizedAtom = atom((get) => {
         current.startDate !== saved.startDate ||
         current.endDate !== saved.endDate ||
         current.enhancedObservation !== saved.enhancedObservation ||
-        current.commentFilter !== saved.commentFilter
+        current.commentFilter !== saved.commentFilter ||
+        current.commentReason !== saved.commentReason
     );
 });
 
@@ -165,7 +167,9 @@ export const filteredHistoricalChecksAtom = atom((get) => {
 
         // Combined Historical Status Filter
         if (filter.historicalStatusFilter !== 'all') {
-            if (filter.historicalStatusFilter === 'missed-uncommented') {
+            if (filter.historicalStatusFilter === 'missed-all') {
+                if (check.status !== 'missed') return false;
+            } else if (filter.historicalStatusFilter === 'missed-uncommented') {
                 if (check.status !== 'missed' || check.supervisorNote) return false;
             } else if (filter.historicalStatusFilter === 'missed-commented') {
                 if (check.status !== 'missed' || !check.supervisorNote) return false;

@@ -39,6 +39,7 @@ const LIVE_STATUS_OPTIONS = [
 
 const HISTORICAL_STATUS_OPTIONS = [
     { value: 'all', label: 'All statuses' },
+    { value: 'missed-all', label: 'Missed – all' },
     { value: 'missed-uncommented', label: 'Missed – no comment' },
     { value: 'missed-commented', label: 'Missed – commented' },
     { value: 'completed', label: 'Completed' },
@@ -46,9 +47,10 @@ const HISTORICAL_STATUS_OPTIONS = [
 
 const TIME_RANGE_OPTIONS = [
     { value: 'today', label: 'Today' },
-    { value: 'last-24h', label: 'Last 24 hours' },
     { value: 'last-8h', label: 'Last 8 hours' },
-    { value: 'last-7d', label: 'Last 7 days' },
+    { value: 'last-12h', label: 'Last 12 hours' },
+    { value: 'last-24h', label: 'Last 24 hours' },
+    { value: 'last-72h', label: 'Last 72 hours' },
     { value: 'custom', label: 'Custom range...' },
 ];
 
@@ -112,13 +114,18 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                 startStr = start.toISOString().split('T')[0];
                 break;
             }
+            case 'last-12h': {
+                const start = new Date(now.getTime() - 12 * 60 * 60 * 1000);
+                startStr = start.toISOString().split('T')[0];
+                break;
+            }
             case 'last-24h': {
                 const start = new Date(now.getTime() - 24 * 60 * 60 * 1000);
                 startStr = start.toISOString().split('T')[0];
                 break;
             }
-            case 'last-7d': {
-                const start = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            case 'last-72h': {
+                const start = new Date(now.getTime() - 72 * 60 * 60 * 1000);
                 startStr = start.toISOString().split('T')[0];
                 break;
             }

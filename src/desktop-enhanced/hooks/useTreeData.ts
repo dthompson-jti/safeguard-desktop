@@ -57,7 +57,10 @@ export const useTreeData = () => {
         enhancedMockData.liveData.forEach(check => {
             const key = getCountKey(check.group || 'Other', check.unit || 'Other');
             const current = countsMap.get(key) || { missed: 0, secondary: 0 };
-            if (check.status === 'overdue') current.missed++;
+            if (check.status === 'overdue') {
+                // Sum the actual number of missed checks (e.g., Room 104 with 2 missed checks adds 2 to the tree count)
+                current.missed += (check.missedCheckCount || 1);
+            }
             if (check.status === 'due') current.secondary++;
             countsMap.set(key, current);
         });

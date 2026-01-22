@@ -480,7 +480,9 @@ export const loadEnhancedHistoricalPage = (
                 if (filter.group && filter.group !== 'all') filtered = filtered.filter(r => r.group === filter.group);
                 if (filter.unit && filter.unit !== 'all') filtered = filtered.filter(r => r.unit === filter.unit);
                 if (filter.historicalStatusFilter && filter.historicalStatusFilter !== 'all') {
-                    if (filter.historicalStatusFilter === 'missed-uncommented') {
+                    if (filter.historicalStatusFilter === 'missed-all') {
+                        filtered = filtered.filter(r => r.status === 'missed');
+                    } else if (filter.historicalStatusFilter === 'missed-uncommented') {
                         filtered = filtered.filter(r => r.status === 'missed' && !r.supervisorNote);
                     } else if (filter.historicalStatusFilter === 'missed-commented') {
                         filtered = filtered.filter(r => r.status === 'missed' && !!r.supervisorNote);
@@ -517,6 +519,7 @@ export const loadEnhancedHistoricalPage = (
                 }
                 if (filter.enhancedObservation && filter.enhancedObservation !== 'any') {
                     filtered = filtered.filter(r => {
+                        if (filter.enhancedObservation === 'has-any') return !!r.hasHighRisk || r.location.includes('MW');
                         if (filter.enhancedObservation === 'sr') return !!r.hasHighRisk;
                         if (filter.enhancedObservation === 'mw') return r.location.includes('MW'); // Mock logic
                         return true;
@@ -528,6 +531,11 @@ export const loadEnhancedHistoricalPage = (
                         if (filter.commentFilter === 'none') return !r.supervisorNote;
                         return true;
                     });
+                }
+                if (filter.commentReason && filter.commentReason !== 'any') {
+                    filtered = filtered.filter(r =>
+                        r.supervisorNote && r.supervisorNote.startsWith(filter.commentReason)
+                    );
                 }
             }
             const data = filtered.slice(cursor, cursor + pageSize);

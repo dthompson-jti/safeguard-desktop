@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
+- Fixed Detail Panel layout bug (full height).
+- Updated Detail Panel location display (Facility added, Room unlinked).
+- Updated Tree View count logic (sums missed checks).
+- Added "Missed - All" option to Advanced Search.
+- Added "Last 12h" and "Last 72h" time presets.
+- Renamed "Northwood JDC" to "Facility" in header.
+- Fixed Resident Display Menu hook violation.
+
+## [0.1.0] - 2026-01-20
+- **Advanced Search - Date Filter Interaction**:
+    - **Enhanced Clickability**: Modified "Start date" and "End date" inputs to trigger the native date picker when clicking anywhere on the input field, not just the calendar icon.
+    - **Native API Adoption**: Leveraged the `showPicker()` API for a seamless, browser-native experience.
 
 - **Detail Panel - Location Tree Refinement**:
     - **High-Craft Connectors**: Implemented pixel-perfect "L-bend" tree guides with clean 90-degree angles and technical precision.
@@ -24,6 +36,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - **Tree View**: Updated `NavigationPanel` and `useTreeData` to reflect the new facility name and cleaner unit display.
 - **Table Layout**:
     - **Column Widths**: Adjusted default widths to accommodate longer descriptive unit names. Increased Location (260px), Officer (160px), and Group (110px) columns.
+
+### Changed (2026-01-21) - Filter & UI Refinement
+- **Advanced Search Filters**:
+    - **Semantic Clarification**: Renamed ambiguous "Any [Status/Officer]" options to "**All [Status/Officer]**" to clearly indicate "No Filter".
+    - **New Options**: Added "**Any enhanced observation**" option to filter for both Special Risk (SR) and Medical Watch (MW) records simultaneously.
+    - **Casing**: Enforced sentence case for all filter dropdown options (e.g., "Missed – no comment").
+    - **Comment Reason**: Simplified options by ensuring the default "All records" state covers the "Any reason" use case.
+- **UI Experience**:
+    - **Scroll Behavior**: Replaced non-standard "Scroll Buttons" in `Select` dropdowns with standard native scrolling (`overflow-y: auto`) for a more natural web experience.
+- **Detail Panel**:
+    - **Location Tree**: Fixed indentation for Room-level nodes (depth 3) to strictly visually nest under Units.
+    - **Labeling**: Renamed the root location node from generic "Facility" to specific "**Northwood JDC**".
 
 ### Changed (2026-01-21) - Late Session 2
 - **Default User Settings**:

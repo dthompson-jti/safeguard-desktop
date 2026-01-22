@@ -1,8 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import { desktopFilterAtom, updateFilterAtom, resetFiltersAtom } from '../atoms';
+import { SUPERVISOR_NOTE_REASONS } from '../types';
 import { OFFICER_NAMES } from '../../desktop-enhanced/data/mockData';
 import { Button } from '../../components/Button';
+import { SearchableSelect } from '../../components/SearchableSelect';
 import { Select, SelectItem } from '../../components/Select';
 import styles from './AdvancedSearch.module.css';
 
@@ -11,16 +13,18 @@ interface AdvancedSearchProps {
 }
 
 const HISTORICAL_STATUS_OPTIONS = [
-    { value: 'all', label: 'Any status' },
-    { value: 'missed-uncommented', label: 'Missed – No Comment' },
-    { value: 'missed-commented', label: 'Missed – Commented' },
+    { value: 'all', label: 'All statuses' },
+    { value: 'missed-all', label: 'Missed – all' },
+    { value: 'missed-uncommented', label: 'Missed – no comment' },
+    { value: 'missed-commented', label: 'Missed – commented' },
     { value: 'completed', label: 'Completed' },
 ];
 
 const SPECIAL_STATUS_OPTIONS = [
-    { value: 'any', label: 'Any status' },
-    { value: 'sr', label: 'Special Risk (SR)' },
-    { value: 'mw', label: 'Medical Watch (MW)' },
+    { value: 'any', label: 'All records' },
+    { value: 'has-any', label: 'Any enhanced observation' },
+    { value: 'sr', label: 'Special risk (SR)' },
+    { value: 'mw', label: 'Medical watch (MW)' },
 ];
 
 
@@ -29,6 +33,9 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
     const filter = useAtomValue(desktopFilterAtom);
     const [, updateFilter] = useAtom(updateFilterAtom);
     const [, resetFilters] = useAtom(resetFiltersAtom);
+
+    const startDateRef = useRef<HTMLInputElement>(null);
+    const endDateRef = useRef<HTMLInputElement>(null);
 
     // Local state for pending changes
     const [localFilter, setLocalFilter] = useState({
@@ -39,6 +46,7 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
         startDate: filter.startDate || '',
         endDate: filter.endDate || '',
         commentFilter: filter.commentFilter,
+        commentReason: filter.commentReason || 'any',
     });
 
     const handleChange = useCallback((key: keyof typeof localFilter, value: string) => {
@@ -54,6 +62,7 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
             startDate: localFilter.startDate || null,
             endDate: localFilter.endDate || null,
             commentFilter: localFilter.commentFilter,
+            commentReason: localFilter.commentReason === 'any' ? '' : localFilter.commentReason,
         });
         onClose();
     };
@@ -92,17 +101,16 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
                 </div>
                 <div className={styles.fieldGroup}>
                     <label className={styles.label}>Officer</label>
-                    <Select
+                    <SearchableSelect
                         value={localFilter.officer}
                         onValueChange={(val) => handleChange('officer', val)}
-                        placeholder="Any user"
+                        placeholder="All officers"
                         triggerClassName={styles.selectTrigger}
-                    >
-                        <SelectItem value="any">Any user</SelectItem>
-                        {OFFICER_NAMES.map(name => (
-                            <SelectItem key={name} value={name}>{name}</SelectItem>
-                        ))}
-                    </Select>
+                        options={[
+                            { value: 'any', label: 'All officers' },
+                            ...OFFICER_NAMES.map(name => ({ value: name, label: name }))
+                        ]}
+                    />
                 </div>
 
                 {/* Row 2 */}
@@ -133,22 +141,41 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
 
                 {/* Row 3 */}
                 <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Start date</label>
-                    <input
-                        type="date"
-                        className={styles.input}
-                        value={localFilter.startDate}
-                        onChange={(e) => handleChange('startDate', e.target.value)}
-                    />
+                    <label className={styles.label}>Date range</label>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 'var(--spacing-2)' }}>
+                        <input
+                            ref={startDateRef}
+                            type="date"
+                            className={styles.input}
+                            value={localFilter.startDate}
+                            onChange={(e) => handleChange('startDate', e.target.value)}
+                            onClick={() => startDateRef.current?.showPicker()}
+                            placeholder="Start"
+                        />
+                        <input
+                            ref={endDateRef}
+                            type="date"
+                            className={styles.input}
+                            value={localFilter.endDate}
+                            onChange={(e) => handleChange('endDate', e.target.value)}
+                            onClick={() => endDateRef.current?.showPicker()}
+                            placeholder="End"
+                        />
+                    </div>
                 </div>
                 <div className={styles.fieldGroup}>
-                    <label className={styles.label}>End date</label>
-                    <input
-                        type="date"
-                        className={styles.input}
-                        value={localFilter.endDate}
-                        onChange={(e) => handleChange('endDate', e.target.value)}
-                    />
+                    <label className={styles.label}>Comment reason</label>
+                    <Select
+                        value={localFilter.commentReason}
+                        onValueChange={(val) => handleChange('commentReason', val)}
+                        triggerClassName={styles.selectTrigger}
+                    >
+                        <SelectItem value="any">All records</SelectItem>
+
+                        {SUPERVISOR_NOTE_REASONS.map(reason => (
+                            <SelectItem key={reason} value={reason}>{reason}</SelectItem>
+                        ))}
+                    </Select>
                 </div>
 
                 {/* Row 4 (Removed Comments) */}

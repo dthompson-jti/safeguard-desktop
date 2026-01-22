@@ -169,6 +169,10 @@
     padding-left: 56px;
 }
 
+.treeNode[data-depth="3"] {
+    padding-left: 84px;
+}
+
 /* Vertical Guide: Depth 0 -> Depth 1 */
 .treeNode[data-depth="0"]::after {
     content: '';
@@ -198,6 +202,18 @@
     z-index: 1;
 }
 
+/* Vertical Guide: Depth 2 -> Depth 3 */
+.treeNode[data-depth="2"]::after {
+    content: '';
+    position: absolute;
+    left: 66px;
+    top: 20px;
+    height: 12px;
+    width: 1px;
+    background: var(--surface-border-tertiary);
+    z-index: 1;
+}
+
 /* The L-Bend Connector: Clean 90-degree angles */
 .treeBend {
     position: absolute;
@@ -218,6 +234,12 @@
     left: 38px;
     width: 28px;
     /* connects 38 to 66 */
+}
+
+.treeNode[data-depth="3"] .treeBend {
+    left: 66px;
+    width: 28px;
+    /* connects 66 to 94 */
 }
 
 

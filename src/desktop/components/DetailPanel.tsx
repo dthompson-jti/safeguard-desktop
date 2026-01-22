@@ -210,16 +210,25 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                     label="Location"
                                     value={
                                         <div className={styles.locationTree}>
-                                            {/* Root: Group */}
+                                            {/* Root: Facility */}
                                             <div className={styles.treeNode} data-depth="0">
+                                                <div className={styles.treeIcon}>
+                                                    <span className="material-symbols-rounded">domain</span>
+                                                </div>
+                                                <LinkButton variant="primary" label="Northwood JDC" external onClick={() => { }} />
+                                            </div>
+
+                                            {/* Level 1: Group */}
+                                            <div className={styles.treeNode} data-depth="1">
+                                                <div className={styles.treeBend} />
                                                 <div className={styles.treeIcon}>
                                                     <span className="material-symbols-rounded">corporate_fare</span>
                                                 </div>
                                                 <LinkButton variant="primary" label={record.group || '—'} external onClick={() => { }} />
                                             </div>
 
-                                            {/* Level 1: Unit */}
-                                            <div className={styles.treeNode} data-depth="1">
+                                            {/* Level 2: Unit */}
+                                            <div className={styles.treeNode} data-depth="2">
                                                 <div className={styles.treeBend} />
                                                 <div className={styles.treeIcon}>
                                                     <span className="material-symbols-rounded">view_cozy</span>
@@ -227,13 +236,13 @@ export const DetailPanel = ({ record, selectedCount = 0 }: DetailPanelProps) => 
                                                 <LinkButton variant="primary" label={record.unit || '—'} external onClick={() => { }} />
                                             </div>
 
-                                            {/* Level 2: Room */}
-                                            <div className={styles.treeNode} data-depth="2">
+                                            {/* Level 3: Room (Text Only) */}
+                                            <div className={styles.treeNode} data-depth="3">
                                                 <div className={styles.treeBend} />
                                                 <div className={styles.treeIcon}>
                                                     <span className="material-symbols-rounded">door_front</span>
                                                 </div>
-                                                <LinkButton variant="primary" label={record.location} external onClick={() => { }} />
+                                                <span className={styles.plainTextValue}>{record.location}</span>
                                             </div>
                                         </div>
                                     }

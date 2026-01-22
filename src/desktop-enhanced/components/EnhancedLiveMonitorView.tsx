@@ -1,7 +1,7 @@
 // src/desktop-enhanced/components/EnhancedLiveMonitorView.tsx
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, RowSelectionState, Updater } from '@tanstack/react-table';
 import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom, residentDisplayModeAtom, residentBadgeTextAtom, isDetailPanelOpenAtom } from '../../desktop/atoms';
 import { LiveCheckRow } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
@@ -13,6 +13,8 @@ import styles from '../../desktop/components/DataTable.module.css';
 
 export const EnhancedLiveMonitorView = () => {
     const filter = useAtomValue(desktopFilterAtom);
+    const displayMode = useAtomValue(residentDisplayModeAtom);
+    const badgeTextMode = useAtomValue(residentBadgeTextAtom);
     // Pagination State
     const [loadedData, setLoadedData] = useState<LiveCheckRow[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -54,9 +56,6 @@ export const EnhancedLiveMonitorView = () => {
                 minSize: 240,
                 accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
                 cell: ({ row }) => {
-                    const displayMode = useAtomValue(residentDisplayModeAtom);
-                    const badgeTextMode = useAtomValue(residentBadgeTextAtom);
-
                     return (
                         <div className={styles.residentCell}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-0p5)', width: '100%' }}>
@@ -191,7 +190,7 @@ export const EnhancedLiveMonitorView = () => {
             },
 
         ],
-        []
+        [displayMode, badgeTextMode]
     );
 
     const [selectedRows, setSelectedRows] = useAtom(selectedLiveRowsAtom);
@@ -205,7 +204,7 @@ export const EnhancedLiveMonitorView = () => {
     }, [selectedRows]);
 
     const handleRowSelectionChange = useCallback(
-        (updaterOrValue: any) => {
+        (updaterOrValue: Updater<RowSelectionState>) => {
             const newSelection = (typeof updaterOrValue === 'function' ? updaterOrValue(rowSelection) : updaterOrValue) as Record<string, boolean>;
             const newSet = new Set(Object.keys(newSelection).filter((k) => newSelection[k]));
             setSelectedRows(newSet);

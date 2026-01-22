@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { desktopEnhancedExpandedNodesAtom } from '../atoms';
 import { useTreeData, TreeGroup, TreeUnit } from '../hooks/useTreeData';
@@ -36,11 +36,28 @@ export const NavigationPanel: React.FC = () => {
         setIsActionsOpen(false);
     };
 
+    // Auto-expand on mount
+    useEffect(() => {
+        const allIds = new Set<string>();
+        const traverse = (nodes: TreeNode[]) => {
+            nodes.forEach(node => {
+                allIds.add(node.id);
+                if ('children' in node && node.children) {
+                    traverse(node.children as TreeNode[]);
+                }
+            });
+        };
+        traverse(facilityNodes);
+        setExpanded(allIds);
+        // We only want to run this once on mount/data load, not on every re-render or manual collapse
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
 
     return (
         <div className={styles.navPanel}>
             <div className={styles.header}>
-                <h2>Northwood JDC</h2>
+                <h2>Facility</h2>
                 <div className={styles.headerActions}>
                     <Popover
                         open={isActionsOpen}

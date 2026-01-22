@@ -81,15 +81,9 @@ export const Select = ({ children, value, onValueChange, placeholder, disabled, 
           sideOffset={5}
           align="end"
         >
-          <RadixSelect.ScrollUpButton className={styles.scrollButton}>
-            <span className="material-symbols-rounded">expand_less</span>
-          </RadixSelect.ScrollUpButton>
           <RadixSelect.Viewport className={styles.selectViewport}>
             {children}
           </RadixSelect.Viewport>
-          <RadixSelect.ScrollDownButton className={styles.scrollButton}>
-            <span className="material-symbols-rounded">expand_more</span>
-          </RadixSelect.ScrollDownButton>
         </RadixSelect.Content>
       </RadixSelect.Portal>
     </RadixSelect.Root>

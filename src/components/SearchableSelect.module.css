@@ -1,0 +1,63 @@
+/* src/components/SearchableSelect.module.css */
+
+.searchInputContainer {
+    padding: var(--spacing-2);
+    border-bottom: 1px solid var(--surface-border-secondary);
+    background-color: var(--surface-bg-primary);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.searchInputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    color: var(--surface-fg-tertiary);
+}
+
+.searchIcon {
+    position: absolute;
+    left: var(--spacing-2);
+    font-size: 18px;
+    pointer-events: none;
+}
+
+.searchInput {
+    width: 100%;
+    height: 32px;
+    padding-left: 30px;
+    /* Space for icon */
+    padding-right: var(--spacing-2);
+    border: 1px solid var(--surface-border-secondary);
+    border-radius: var(--radius-sm);
+    background-color: var(--search-input-bg-primary);
+    color: var(--search-input-fg-primary);
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-sm);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+    border-color: var(--surface-border-theme);
+}
+
+.listContainer {
+    max-height: 256px;
+    /* Match Select viewport height */
+    overflow-y: auto;
+    padding: 4px;
+    /* Match Select padding */
+}
+
+.listContainer:empty {
+    padding: 0;
+}
+
+.noResults {
+    padding: var(--spacing-3);
+    color: var(--surface-fg-tertiary);
+    font-size: var(--font-size-sm);
+    text-align: center;
+}
