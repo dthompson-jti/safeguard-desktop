@@ -519,3 +519,25 @@ When implementing resizable side panels containing complex children (like `DataT
 -   **Direct Property Updates:** Avoid updating React state at 60fps for resizing. Instead, update a CSS Custom Property (e.g., `--panel-width`) directly on the `document.documentElement` or a local wrapper using a `useRef` for the value.
 -   **Layout Regressions:** Absolutely positioned children inside a resizable wrapper should use `width: 100%` to ensure they fill the expanding surface without "dead space" or snapping.
 
+
+#### 14. The Third-Party Component Override Contract
+
+When styling third-party libraries (especially those with virtualizers or internal sizers like `cmdk` or `radix-ui`):
+
+-   **The Problem:** Libraries often insert wrapper `div`s or use `display: contents` that break standard sibling selectors (e.g., `.item + .item`) or flex `gap` properties.
+-   **The Solution:** Use **Attribute Selectors** targeting the library's guaranteed data attributes rather than class names or DOM structure assumptions.
+-   **The Pattern:**
+    ```css
+    /* Robust Selector: Targets attribute regardless of nesting depth */
+    .commandList [cmdk-item] {
+      margin-bottom: var(--spacing-0p5);
+    }
+    
+    /* Fallback: Standard class selector if attribute is stripped */
+    .commandList :global(.menuItem) {
+      margin-bottom: var(--spacing-0p5);
+    }
+    ```
+-   **Specificity:** If the library uses inline styles or high specificity, use `!important` judiciously within the scope of the component module **only** after verifying the library provides no API for the specific style (e.g., `gap`).
+
+

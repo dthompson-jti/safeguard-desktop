@@ -51,6 +51,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed ComboBox interaction issues (jank, flash open/closed) and visual inconsistencies.
 - Removed unused ComboBox variables (lint fixes).
 
+- **Officer Combo Box Archive**:
+    - **Removal**: Removed the "Use Combo Box for Officer" toggle from the main menu as the component is incomplete.
+    - **Archive**: Added deprecated/archived status comments to `ComboBox.tsx` to prevent accidental usage.
+
 ## [0.1.0] - 2026-01-22
 - **Resident Display - Historical View**:
     - **Feature Parity**: Enabled "Resident display" settings (Left/Right Badge, Chips) and "Warning text" settings (Short/Full) in the Historical View to match Live Monitor capabilities.

@@ -12,6 +12,15 @@ interface ComboBoxProps {
     triggerClassName?: string;
 }
 
+/**
+ * ARCHIVED COMPONENT - DO NOT USE
+ * 
+ * This component was an experiment for a combobox input and is currently unfinished.
+ * It has some suspicious behavior (flashing, focus issues) and is hidden from the UI.
+ * 
+ * Please do not re-enable or use this without significant refactoring.
+ * Archived on: 2026-01-22
+ */
 export const ComboBox = ({
     value,
     onValueChange,
