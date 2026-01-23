@@ -24,7 +24,7 @@ There are no right or wrong answers—we're testing the system, not you. Please 
 
 ### Part 1: Historical View & Commenting
 **Scenario**: "You are starting in the Historical View for Northwood JDC. You need to review specifically the Cedar and Maple wings."
-- **Task**: 1. Locate the **Cedar** and **Maple** wings in the navigation. 2. Add a comment to the checks associated with these wings.
+- **Task**: 1. Locate the **Cedar** and **Maple** wings in the navigation. 2. Add a review to the checks associated with these wings.
 
 ### Part 2: Live View & Risk Assessment
 **Scenario**: "Switch over to the Live Monitor to see what's happening right now."
@@ -43,11 +43,11 @@ There are no right or wrong answers—we're testing the system, not you. Please 
 
 ### Part 5: Advanced Filtering & Editing
 **Scenario**: "You want to audit the work already done."
-- **Task**: 1. Filter the view to show only checks that have been **commented on**. 2. Select an item and edit the existing comment.
+- **Task**: 1. Filter the view to show only checks that have been **reviewed**. 2. Select an item and edit the existing review.
 - **Observation Points**: Usability of "Advanced Search". Ease of editing an existing record.
 
 ### Part 6: Terminology & Status Validation (Discussion)
-**Topic**: The merged status label: **"Missed - No Comment"** (merging "Missed" and "Commented" logic).
+**Topic**: The merged status label: **"Missed – not reviewed"** (merging "Missed" and "Reviewed" logic).
 - **Questions**: Does this phrasing make sense? Is the distinction between a "missed check" and a "commented check" preserved clearly enough?
 
 ## 5. UI Preference & Wrap-up

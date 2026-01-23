@@ -218,10 +218,12 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 *   **Lesson:** Do not fill mock data with random noise. Use it to construct **deterministic stress tests**.
 *   **Pattern:** See `src/data/mock/checkData.ts` (A-Wing). Configured checks just seconds before major transitions allow for rapid visual verification of the entire lifecycle without waiting 15 minutes.
 
-### Terminology Precision
+### 22. Terminology Precision
 *   **Lesson:** User-facing terminology is a strict spec.
 *   **Pattern:** "Due" means "Due". Do not use "Due Now", "Due Soon", or "Due!" unless explicitly specified.
-*   **Pattern (Supervisor Review):** Standardize on "Supervisor review" (Saved/Removed) rather than "Note" or "Comment" to align with administrative refactors.
+*   **Pattern (Supervisor Review):** Standardize on "Supervisor review" rather than "Note" or "Comment".
+*   **Status Labels:** Use "**Reviewed**" and "**not reviewed**" for missed checks.
+*   **Mechanical Typography:** Always use the **en dash** (` – `) with surrounding spaces (e.g., "Missed – not reviewed").
 
 ### React Hooks vs. Raw Atoms
 *   **Lesson:** When an atom has a side-effect (like updating the DOM), **never** use the raw atom setter directly. You must use the abstraction hook.
@@ -536,7 +538,7 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 *   **The Lesson:** Interactive resizing of complex layouts (e.g., side panels with DataTables) requires specific performance optimizations to avoid lag.
 *   **The Constraints:**
     1.  **Flexbox Over Grid:** Grid track recalculation is significantly more expensive than Flexbox width adjustments during high-frequency updates.
-    2.  **Transition Blocker:** Always disable CSS transitions (`transition: none`) on the resizable container during active manipulation (e.g., using a `data-resizing` attribute).
+    2.  **Transition Blocker:** Always disable CSS transitions (`transition: none`) on the resizable container **and all descendants** during active manipulation (e.g., using a `data-resizing` attribute and the `*` selector).
     3.  **Hardware Acceleration:** Apply `will-change: width` to promote the resizable container to its own compositor layer.
-    4.  **Sync Control:** Prefer synchronous CSS variable updates over React state or `requestAnimationFrame` to eliminate 1-frame latency between the mouse and the UI.
+    4.  **Sync Control (Framer Motion):** If using Framer Motion wrappers, set `duration: 0` during `isResizing=true` to eliminate the 300ms transition lag. Use `animate={{ width: isResizing ? 'var(--panel-width)' : panelWidth }}` to bind the width directly to the live CSS variable during drag.
 *   **Reference:** See `SPEC-ANIMATION.md` Section 3.D and `SPEC-CSS.md` Section 13.

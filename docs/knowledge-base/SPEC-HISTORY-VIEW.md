@@ -69,8 +69,8 @@ Allows supervisors to:
 
 | Data State | Display | Color |
 |------------|---------|-------|
-| `status='missed'` AND no `supervisorNote` | Missed – No Comment | 🔴 Red |
-| `status='missed'` AND has `supervisorNote` | Missed – Commented | ⚫ Grey |
+| `status='missed'` AND no `supervisorNote` | Missed – not reviewed | 🔴 Red |
+| `status='missed'` AND has `supervisorNote` | Missed – reviewed | ⚫ Grey |
 | `status='completed'` | Completed | 🟢 Green |
 
 ---
@@ -81,7 +81,7 @@ Filters are managed via [desktopFilterAtom](file:///c:/Users/dthompson/Documents
 
 | Filter | Options | Default (Historical) |
 |--------|---------|----------------------|
-| `historicalStatusFilter` | `all`, `missed-uncommented`, `missed-commented`, `completed` | `missed-uncommented` |
+| `historicalStatusFilter` | `all`, `missed-not-reviewed`, `missed-reviewed`, `completed` | `missed-not-reviewed` |
 | `dateStart` | ISO date | Last 24 hours |
 | `dateEnd` | ISO date | Today |
 | `group` | `all`, Alpha-Delta | `all` |
@@ -141,7 +141,7 @@ SR badge displayed in Resident column for high-risk residents, consistent with L
    - Other
 4. Add optional custom text
 5. `reviewStatus` changes to `verified`
-6. Status badge changes from "Missed – No Comment" to "Missed – Commented"
+6. Status badge changes from "Missed – not reviewed" to "Missed – reviewed"
 
 ---
 

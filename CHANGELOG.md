@@ -28,19 +28,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - **Tighter Layout**: Reduced the gap between the checkmark/icon and text in all dropdown items from `12px` (var(--spacing-3)) to `8px` (var(--spacing-2)) for a more cohesive, high-density look.
     - **Search Popover**: Fixed missing spacing in `SearchableSelect` and aligned it with the new standard 8px gap using robust overrides.
     - **Token Compliance**: Refactored `Select` and `FilterSelect` internals to use standard spacing tokens instead of hardcoded 2px gaps.
-- **Terminology & Casing Refactor**:
-    - **Renaming**: Systematically renamed "Commented" status to "**Reviewed**" across types, atoms, and UI components to align with administrative standards.
-    - **Formatting**: Enforced the use of **en dashes** (`–`) with surrounding spaces for status labels (e.g., "Missed – not reviewed").
-    - **Sentence Case**: Standardized all status badge labels and filter options to use sentence case. Removed CSS `text-transform: capitalize` from badges to ensure precise casing control.
-- **Detail Panel Animation Mastery**:
-    - **Sync**: Synchronized the `DetailPanel` wrapper's width transition with the internal content slide animation using Framer Motion's `AnimatePresence`. 
-    - **Visual Fix**: Resolved the "jarring" panel closure by ensuring the main viewport expands at the exact same rate the panel slides out, creating a cohesive layout shift.
-    - **Overflow**: Added `overflow: hidden` to the panel wrapper during transitions to prevent content clipping regressions.
-- **Right Panel Resize Optimization**: 
-    - **Architecture**: Migrated the main layout from CSS Grid to **Flexbox** to eliminate expensive browser reflows of the `DataTable` during width changes.
-    - **Performance**: Implemented a transition blocker (`data-resizing`) that forces `transition: none !important` while dragging, ensuring a 1:1 mouse-to-panel response.
-    - **Hardware Acceleration**: Added `will-change: width` to the panel wrapper to promote it to a dedicated compositor layer.
-    - **Layout Fix**: Resolved "**dead space**" regressions by ensuring the internal panel div strictly fills its container width (100%).
+- **Terminology & Mechanical Typography**:
+    - **Status Refactor**: Renamed "Commented" status to "**Reviewed**" across types, atoms, and UI components (e.g., `missed-not-reviewed`, `missed-reviewed`).
+    - **Mechanical Layout**: Enforced strict use of the **en dash** (`–`) with surrounding spaces in status strings (e.g., "Missed – not reviewed").
+    - **Sentence Case**: Standardized all status badge labels and filter options to use sentence case. Removed legacy CSS `text-transform: capitalize` from badges.
+- **Detail Panel Animation & Performance Mastery**:
+    - **Animation Sync**: Coordinated the `DetailPanel` width transition with the internal content slide using Framer Motion's `AnimatePresence`, eliminating jerky layout shifts.
+    - **Resize Optimization**: Hardened the resize behavior by bypassing Framer Motion transitions during active drags using the `--panel-width` CSS variable and `data-resizing` suppression logic.
+    - **Aggressive Suppression**: Implemented a CSS "kill-switch" for nested transitions during resize events, ensuring zero-lag mouse tracking.
+    - **Hardware Acceleration**: Added `will-change: width` to the panel wrapper to optimize compositor re-painting.
+    - **Clean Specification**: Established the **Interactive Resizing Contract** in `SPEC-ANIMATION.md` and `AGENTS.md` to prevent future regressions.
 - **Badge Color Configuration**: Added user-configurable color modes for Resident Badges (A=Neutral, B=Neutral Strong, C=Warning, D=Info, E=Solid).
 - **Detail Panel Layout**: Refined resident status layout (removed visual connectors, tightened spacing for multi-resident lists).
 - **Breadcrumb Styling**: Updated all text items to use semi-bold font weight.

@@ -107,8 +107,9 @@ This document defines the critical animation behaviors and constraints for the S
 - **Implementation:**
   1. Lift `isResizing` state to the parent that controls the resizable container width.
   2. Set `data-resizing="true"` on the wrapper during the `mousemove` cycle.
-  3. CSS: `.wrapper[data-resizing="true"] { transition: none; }`.
-  4. Use Hardware Acceleration: Add `will-change: width` to the resizable container.
+  3. **CSS Kill-Switch:** `.wrapper[data-resizing="true"], .wrapper[data-resizing="true"] * { transition: none !important; }` (The `*` ensures nested components like badges don't lag).
+  4. **Framer Motion Bypass:** Set `transition={{ duration: isResizing ? 0 : 0.3 }}`. If using `animate={{ width }}`, pass `isResizing ? 'var(--panel-width)' : panelWidth` to the `width` prop to use the raw CSS variable during drag.
+  5. **Hardware Acceleration:** Add `will-change: width` to the resizable container.
 
 ---
 

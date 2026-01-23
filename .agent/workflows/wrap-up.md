@@ -28,7 +28,10 @@ Finalize work session with verification, cleanup, and documentation.
 
 5. **Changelog & Specs**: 
    - Update `CHANGELOG.md` with summary
-   - Update relevant `docs/knowledge-base/*.md` files for architectural or token changes
+   - **Knowledge Base Alignment**: 
+     - Update relevant `docs/knowledge-base/*.md` files for architectural or token changes
+     - **Constraint Propagation**: Ensure any new performance "contracts" or UI patterns (e.g. resize logic) are added to `AGENTS.md` and relevant specs.
+     - **Terminology Audit**: If refactoring terms, run a `grep_search` across `docs/` to ensure NO instances of the old term remain.
 
 6. **Archive Artifacts**: 
    - Move completed `implementation_plan.md` to `docs/archive/` with dated filename

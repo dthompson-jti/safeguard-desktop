@@ -154,12 +154,15 @@ export default function DesktopEnhancedApp() {
                             <motion.div
                                 className={styles.detailPanelWrapper}
                                 initial={{ width: 0, opacity: 0 }}
-                                animate={{ width: panelWidth, opacity: 1 }}
+                                animate={{
+                                    width: isResizing ? 'var(--panel-width)' : panelWidth,
+                                    opacity: 1
+                                }}
                                 exit={{ width: 0, opacity: 0 }}
                                 transition={{
                                     type: 'tween',
                                     ease: [0.16, 1, 0.3, 1],
-                                    duration: 0.3
+                                    duration: isResizing ? 0 : 0.3
                                 }}
                                 style={{ overflow: 'hidden' }}
                                 data-resizing={isResizing}

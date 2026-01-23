@@ -515,8 +515,9 @@ For complex data tables, ensuring column stability and proper border rendering i
 When implementing resizable side panels containing complex children (like `DataTable`):
 
 -   **Prefer Flexbox:** Use `flex-basis` or `width` on containers rather than `grid-template-columns`. CSS Grid track recalculations are significantly more expensive for the browser's layout engine than Flexbox adjustments.
+-   **Transition Blocker:** Always disable CSS transitions (`transition: none`) on the resizable container **and all descendants** during active manipulation (e.g., using `.wrapper[data-resizing="true"], .wrapper[data-resizing="true"] *`).
 -   **Hardware Acceleration:** Always apply `will-change: width` to any container whose width is modified 60 times per second during a drag. This promotes the element to its own compositor layer.
--   **Direct Property Updates:** Avoid updating React state at 60fps for resizing. Instead, update a CSS Custom Property (e.g., `--panel-width`) directly on the `document.documentElement` or a local wrapper using a `useRef` for the value.
+-   **Direct Property Updates:** Avoid updating React state at 60fps for resizing. Instead, update a CSS Custom Property (e.g., `--panel-width`) directly on the `document.documentElement` or a local wrapper using a `useRef` for the value. In Framer Motion, set `duration: 0` during resize to bypass the internal transition engine.
 -   **Layout Regressions:** Absolutely positioned children inside a resizable wrapper should use `width: 100%` to ensure they fill the expanding surface without "dead space" or snapping.
 
 

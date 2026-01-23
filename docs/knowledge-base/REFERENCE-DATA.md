@@ -89,7 +89,7 @@
 | `LiveCheckRow` | Live table row (includes `hasHighRisk`) |
 | `DesktopFilter` | Toolbar filter state |
 | `LiveStatusFilter` | `'all'` \| `'upcoming'` \| `'due'` \| `'overdue'` |
-| `HistoricalStatusFilter` | `'all'` \| `'missed-uncommented'` \| `'missed-commented'` \| `'completed'` |
+| `HistoricalStatusFilter` | `'all'` \| `'missed-not-reviewed'` \| `'missed-reviewed'` \| `'completed'` |
 | `SupervisorNoteReason` | Predefined note reasons |
 
 ---
