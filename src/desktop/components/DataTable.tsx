@@ -30,6 +30,7 @@ interface DataTableProps<T> {
     onRowClick?: (row: T, event: React.MouseEvent) => void;
     onRowDoubleClick?: (row: T, event: React.MouseEvent) => void;
     initialSorting?: SortingState;
+    emptyState?: React.ReactNode;
 }
 
 export function DataTable<T>({
@@ -46,6 +47,7 @@ export function DataTable<T>({
     onRowClick,
     onRowDoubleClick,
     initialSorting = [],
+    emptyState,
 }: DataTableProps<T>) {
     const [sorting, setSorting] = useState<SortingState>(initialSorting);
     const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({});
@@ -410,12 +412,14 @@ export function DataTable<T>({
                     </tbody>
                 </table>
                 {table.getRowModel().rows.length === 0 && !isLoading && data.length === 0 && (
-                    <div className={styles.emptyState}>
-                        <span className={`material-symbols-rounded ${styles.emptyIcon}`}>
-                            inbox
-                        </span>
-                        <p>No data to display</p>
-                    </div>
+                    emptyState || (
+                        <div className={styles.emptyState}>
+                            <span className={`material-symbols-rounded ${styles.emptyIcon}`}>
+                                inbox
+                            </span>
+                            <p>No data to display</p>
+                        </div>
+                    )
                 )}
 
                 {/* Table Footer - Moved inside scrollArea for better sticky behavior */}
@@ -431,7 +435,7 @@ export function DataTable<T>({
                             </div>
                         ) : (
                             <div className={styles.footerCount}>
-                                {data.length.toLocaleString()} of {(totalCount ?? data.length).toLocaleString()} records
+                                Showing {data.length.toLocaleString()} of {(totalCount ?? data.length).toLocaleString()} results
                             </div>
                         )}
                     </div>

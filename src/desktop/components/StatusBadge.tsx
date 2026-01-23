@@ -33,7 +33,7 @@ const getStatusConfig = (status: StatusBadgeType): { label: string; icon: string
         case 'completed':
             return { label: 'Completed', icon: 'check_circle' };
         case 'special':
-            return { label: 'Special', icon: 'warning' };
+            return { label: 'Suicide risk', icon: 'warning' };
         default:
             return { label: status, icon: null };
     }

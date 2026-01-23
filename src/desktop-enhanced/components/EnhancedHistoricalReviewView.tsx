@@ -12,7 +12,8 @@ import {
     PanelData,
     isDetailPanelOpenAtom,
     residentDisplayModeAtom,
-    residentBadgeTextAtom
+    residentBadgeTextAtom,
+    resetFiltersAtom
 } from '../../desktop/atoms';
 import { HistoricalCheck } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
@@ -53,6 +54,7 @@ export const EnhancedHistoricalReviewView = () => {
     const badgeTextMode = useAtomValue(residentBadgeTextAtom);
     const setModalState = useSetAtom(supervisorNoteModalAtom);
     const refreshCount = useAtomValue(historicalRefreshAtom);
+    const resetFilters = useSetAtom(resetFiltersAtom);
 
     // Initial load & Re-fetch on refreshCount change
     const rowUpdate = useAtomValue(historicalRowUpdateAtom);
@@ -468,6 +470,22 @@ export const EnhancedHistoricalReviewView = () => {
         [handleOpenNoteModal, displayMode, badgeTextMode]
     );
 
+    const handleResetAll = () => {
+        resetFilters();
+    };
+
+    const emptyState = (
+        <div className={styles.emptyState}>
+            <span className={`material-symbols-rounded ${styles.emptyIcon}`}>
+                search_off
+            </span>
+            <p>No records found matching your current filters.</p>
+            <Button variant="tertiary" size="s" onClick={handleResetAll}>
+                Clear all filters
+            </Button>
+        </div>
+    );
+
     return (
         <>
             <DataTable
@@ -484,6 +502,7 @@ export const EnhancedHistoricalReviewView = () => {
                 onRowClick={handleRowClick}
                 onRowDoubleClick={() => setPanelOpen(true)}
                 initialSorting={[{ id: 'scheduled', desc: true }]}
+                emptyState={emptyState}
             />
             {selectedRows.size > 0 && (
                 <BulkActionFooter

@@ -43,7 +43,7 @@
 /* Used as a marker class to show the clear button */
 .activeContainer {
     display: inline-flex;
-    gap: 2px;
+    gap: var(--spacing-0p5);
 }
 
 

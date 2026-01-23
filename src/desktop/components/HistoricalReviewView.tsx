@@ -7,6 +7,7 @@ import {
     activeDetailRecordAtom,
     isDetailPanelOpenAtom,
     desktopFilterAtom,
+    resetFiltersAtom,
     PanelData,
 } from '../atoms';
 import { HistoricalCheck } from '../types';
@@ -15,10 +16,10 @@ import { BulkActionFooter } from './BulkActionFooter';
 import { RowContextMenu } from './RowContextMenu';
 import { StatusBadge, StatusBadgeType } from './StatusBadge';
 import {
-    TOTAL_HISTORICAL_RECORDS,
     loadEnhancedHistoricalPage as loadHistoricalChecksPage
 } from '../../desktop-enhanced/data/mockData';
 import { COLUMN_WIDTHS } from './tableConstants';
+import { Button } from '../../components/Button';
 import styles from './DataTable.module.css';
 
 const formatTime = (isoString: string): string => {
@@ -34,22 +35,25 @@ export const HistoricalReviewView = () => {
     const [selectedRows, setSelectedRows] = useAtom(selectedHistoryRowsAtom);
     const setModalState = useSetAtom(supervisorNoteModalAtom);
     const setIsPanelOpen = useSetAtom(isDetailPanelOpenAtom);
+    const resetFilters = useSetAtom(resetFiltersAtom);
 
     // Pagination State
     const [loadedData, setLoadedData] = useState<HistoricalCheck[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [cursor, setCursor] = useState(0);
+    const [totalFilteredCount, setTotalFilteredCount] = useState(0);
 
     const filter = useAtomValue(desktopFilterAtom);
 
     // Initial load
     useEffect(() => {
         setIsLoading(true);
-        void loadHistoricalChecksPage(0, 50, filter).then(({ data, nextCursor }) => {
+        void loadHistoricalChecksPage(0, 50, filter).then(({ data, nextCursor, totalCount }) => {
             setLoadedData(data);
             setCursor(nextCursor ?? 0);
             setHasMore(nextCursor !== null);
+            setTotalFilteredCount(totalCount);
             setIsLoading(false);
         });
     }, [filter]);
@@ -58,10 +62,11 @@ export const HistoricalReviewView = () => {
         if (isLoading || !hasMore) return;
 
         setIsLoading(true);
-        void loadHistoricalChecksPage(cursor, 50, filter).then(({ data, nextCursor }) => {
+        void loadHistoricalChecksPage(cursor, 50, filter).then(({ data, nextCursor, totalCount }) => {
             setLoadedData((prev) => [...prev, ...data]);
             setCursor(nextCursor ?? cursor);
             setHasMore(nextCursor !== null);
+            setTotalFilteredCount(totalCount);
             setIsLoading(false);
         });
     }, [cursor, isLoading, hasMore, filter]);
@@ -329,6 +334,22 @@ export const HistoricalReviewView = () => {
         [handleOpenNoteModal, handleRowClick]
     );
 
+    const handleResetAll = () => {
+        resetFilters();
+    };
+
+    const emptyState = (
+        <div className={styles.emptyState}>
+            <span className={`material-symbols-rounded ${styles.emptyIcon}`}>
+                search_off
+            </span>
+            <p>No records found matching your current filters.</p>
+            <Button variant="tertiary" size="s" onClick={handleResetAll}>
+                Clear all filters
+            </Button>
+        </div>
+    );
+
     return (
         <>
             <DataTable
@@ -338,11 +359,12 @@ export const HistoricalReviewView = () => {
                 rowSelection={rowSelection}
                 onRowSelectionChange={handleRowSelectionChange}
                 getRowId={(row) => row.id}
-                totalCount={TOTAL_HISTORICAL_RECORDS}
+                totalCount={totalFilteredCount}
                 isLoading={isLoading}
                 hasMore={hasMore}
                 onLoadMore={handleLoadMore}
                 onRowClick={handleRowClick}
+                emptyState={emptyState}
             />
 
             {selectedRows.size > 0 && (

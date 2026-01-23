@@ -729,8 +729,9 @@
 }
 
 .footerCount {
-    font-weight: var(--font-weight-medium);
-    color: var(--surface-fg-tertiary);
+    font-weight: 500;
+    color: var(--surface-fg-primary);
+    font-size: 13px;
 }
 
 .loadingIndicator {

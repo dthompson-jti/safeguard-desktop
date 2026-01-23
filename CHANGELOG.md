@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
+- **Unified Filter UI**:
+    - **Consolidated Layout**: Merged the standalone `FilterBar` into the `DesktopToolbar`. Filters are now managed directly within the Advanced Search panel or quick filter dropdowns.
+    - **Horizontal Alignment**: Search and Advanced Search remain left-aligned, while quick filter dropdowns float to the right (via `margin-left: auto`).
+    - **Results Feedback**: Relocated the record count ("Showing X of Y results") to a prominent, sticky `DataTable` footer to maximize table viewport space.
+    - **Simplified Views**: Removed all legacy `FilterBar` component usage and source files.
 - **ComboBox UI Refinement**:
     - **Chevron Alignment**: Standardized the dropdown chevron's position (12px right offset) and size (20px) to match the standard `Select` component.
     - **Interaction**: Added a smooth 180-degree rotation transition when the menu is opened.
@@ -19,9 +24,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - **Components**: Updated leading icon (24px) and close button (Large, 40x40 with 24px icon) to match "On Solid" button standards.
     - **Terminology**: Standardized on "**Supervisor review**" (Saved/Removed) to align with recent administrative refactors.
     - **Action Link**: Switched to a streamlined underlined link style.
-- **Search Popover Spacing**:
-    - **Fix**: Resolved missing spacing between items in `SearchableSelect` by implementing a robust override for `cmdk` internal styles.
-    - **Consistency**: Enforced standard `2px` (var(--spacing-0p5)) optical gap between items to match `Select` component behavior.
+- **Select Item Spacing (Holistic)**:
+    - **Tighter Layout**: Reduced the gap between the checkmark/icon and text in all dropdown items from `12px` (var(--spacing-3)) to `8px` (var(--spacing-2)) for a more cohesive, high-density look.
+    - **Search Popover**: Fixed missing spacing in `SearchableSelect` and aligned it with the new standard 8px gap using robust overrides.
+    - **Token Compliance**: Refactored `Select` and `FilterSelect` internals to use standard spacing tokens instead of hardcoded 2px gaps.
 - **Terminology & Casing Refactor**:
     - **Renaming**: Systematically renamed "Commented" status to "**Reviewed**" across types, atoms, and UI components to align with administrative standards.
     - **Formatting**: Enforced the use of **en dashes** (`–`) with surrounding spaces for status labels (e.g., "Missed – not reviewed").

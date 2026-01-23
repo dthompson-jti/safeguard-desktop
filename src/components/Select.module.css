@@ -79,7 +79,7 @@
   /* Rely on menuPopover padding */
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--spacing-0p5);
   overflow-y: auto;
 }
 

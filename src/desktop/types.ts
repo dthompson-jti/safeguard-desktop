@@ -22,7 +22,7 @@ export interface HistoricalCheck {
     reviewStatus: 'pending' | 'verified';
     supervisorName?: string;
     reviewDate?: string;        // ISO string
-    hasHighRisk?: boolean;      // Resident has special risk classification
+    hasHighRisk?: boolean;      // Resident has suicide risk classification
 }
 
 /** Combined status filter for historical view */

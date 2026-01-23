@@ -54,8 +54,8 @@
   align-items: center;
   width: 100%;
   text-align: left;
-  gap: var(--spacing-3);
-  /* 12px for text indentation from icon */
+  gap: var(--spacing-2);
+  /* 8px for text indentation from icon */
   font-size: var(--font-size-sm);
   font-weight: 500;
   font-family: var(--font-family-sans);

@@ -24,7 +24,7 @@ const HISTORICAL_STATUS_OPTIONS = [
 const SPECIAL_STATUS_OPTIONS = [
     { value: 'any', label: 'All records' },
     { value: 'has-any', label: 'Any enhanced observation' },
-    { value: 'sr', label: 'Special risk (SR)' },
+    { value: 'sr', label: 'Suicide risk (SR)' },
     { value: 'mw', label: 'Medical watch (MW)' },
 ];
 
@@ -66,12 +66,10 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
             commentFilter: localFilter.commentFilter,
             commentReason: localFilter.commentReason === 'any' ? '' : localFilter.commentReason,
         });
-        onClose();
     };
 
     const handleReset = () => {
         resetFilters();
-        onClose();
     };
 
     return (

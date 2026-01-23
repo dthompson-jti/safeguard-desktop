@@ -466,9 +466,16 @@ export const loadEnhancedLivePage = (
             if (filter) {
                 if (filter.search) {
                     const s = filter.search.toLowerCase();
+                    const isSR = s === 'sr' || s === 'special risk' || s === 'suicide risk' || s === 'special' || s === 'suicide' || s === 'high risk';
+                    const isMW = s === 'mw' || s === 'medical watch' || s === 'medical' || s === 'watch';
+
                     filtered = filtered.filter(row =>
                         row.residents.some(r => r.name.toLowerCase().includes(s)) ||
-                        row.location.toLowerCase().includes(s)
+                        row.location.toLowerCase().includes(s) ||
+                        (row.lastCheckOfficer && row.lastCheckOfficer.toLowerCase().includes(s)) ||
+                        row.status.toLowerCase().includes(s) ||
+                        (isSR && row.hasHighRisk) ||
+                        (isMW && row.location.includes('MW'))
                     );
                 }
                 if (filter.group && filter.group !== 'all') filtered = filtered.filter(r => r.group === filter.group);
@@ -495,9 +502,18 @@ export const loadEnhancedHistoricalPage = (
             if (filter) {
                 if (filter.search) {
                     const s = filter.search.toLowerCase();
+                    const isSR = s === 'sr' || s === 'special risk' || s === 'suicide risk' || s === 'special' || s === 'suicide' || s === 'high risk';
+                    const isMW = s === 'mw' || s === 'medical watch' || s === 'medical' || s === 'watch';
+
                     filtered = filtered.filter(row =>
                         row.residents.some(r => r.name.toLowerCase().includes(s)) ||
-                        row.location.toLowerCase().includes(s)
+                        row.location.toLowerCase().includes(s) ||
+                        row.officerName.toLowerCase().includes(s) ||
+                        (row.supervisorNote && row.supervisorNote.toLowerCase().includes(s)) ||
+                        (row.officerNote && row.officerNote.toLowerCase().includes(s)) ||
+                        row.status.toLowerCase().includes(s) ||
+                        (isSR && row.hasHighRisk) ||
+                        (isMW && row.location.includes('MW'))
                     );
                 }
                 if (filter.group && filter.group !== 'all') filtered = filtered.filter(r => r.group === filter.group);
