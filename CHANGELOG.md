@@ -19,6 +19,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - **Components**: Updated leading icon (24px) and close button (Large, 40x40 with 24px icon) to match "On Solid" button standards.
     - **Terminology**: Standardized on "**Supervisor review**" (Saved/Removed) to align with recent administrative refactors.
     - **Action Link**: Switched to a streamlined underlined link style.
+- **Search Popover Spacing**:
+    - **Fix**: Resolved missing spacing between items in `SearchableSelect` by implementing a robust override for `cmdk` internal styles.
+    - **Consistency**: Enforced standard `2px` (var(--spacing-0p5)) optical gap between items to match `Select` component behavior.
 - **Terminology & Casing Refactor**:
     - **Renaming**: Systematically renamed "Commented" status to "**Reviewed**" across types, atoms, and UI components to align with administrative standards.
     - **Formatting**: Enforced the use of **en dashes** (`–`) with surrounding spaces for status labels (e.g., "Missed – not reviewed").

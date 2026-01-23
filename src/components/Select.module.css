@@ -75,7 +75,8 @@
 /* Ensure items have spacing */
 .selectViewport {
   max-height: 256px;
-  padding: 4px;
+  padding: 0;
+  /* Rely on menuPopover padding */
   display: flex;
   flex-direction: column;
   gap: 2px;

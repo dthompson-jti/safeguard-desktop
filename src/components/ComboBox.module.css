@@ -1,97 +1,101 @@
 /* src/components/ComboBox.module.css */
 
-.wrapper {
-    position: relative;
+.commandRoot {
     width: 100%;
 }
 
-.comboboxTrigger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
+.inputContainer {
+    position: relative;
     width: 100%;
+    display: flex;
+    align-items: center;
 
-    /* SPEC-CSS: Use control height tokens (WCAG targets) */
-    /* AdvancedSearch overrides height with lg (48px) !important */
-    height: var(--control-height-md);
-    min-height: var(--control-height-md);
-
-    /* Standard padding, adjusted for icon */
-    padding: 0 var(--spacing-3);
-    padding-right: var(--spacing-8) !important;
-
-    /* Typography */
-    font-family: var(--font-family-sans);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-regular);
-    line-height: 1;
-
-    /* Colors - Default to secondary (Select standard) */
-    /* AdvancedSearch overrides background/border with primary !important */
-    color: var(--surface-fg-primary);
+    /* Colors - Standard semantic tokens - Consistently on the container */
     background-color: var(--control-bg-secondary);
     border: 1px solid var(--control-border-secondary);
     border-radius: var(--radius-md);
-
-    outline: none;
-    cursor: text;
     transition: all 0.2s ease;
+
+    /* SPEC: Ensure min-height matches project standard */
+    min-height: var(--control-height-md);
 }
 
-.comboboxTrigger:hover:not(:disabled) {
+/* Support parent overrides (like height-lg in AdvancedSearch) */
+.inputContainer:has(.comboboxInput) {
+    height: auto;
+}
+
+.inputContainer:hover:not([data-disabled='true']) {
     background-color: var(--control-bg-secondary-hover);
     border-color: var(--control-border-secondary-hover);
 }
 
-/* SPEC-CONTROL-STATES: State transition for opened popovers */
-.comboboxTrigger[data-state='open'],
-.comboboxTrigger:focus {
+.inputContainer:focus-within {
     border-color: var(--surface-border-theme);
     box-shadow: 0 0 0 var(--ring-width-focus) var(--control-focus-ring-standard);
+    background-color: var(--control-bg-primary);
 }
 
-.comboboxTrigger:disabled {
+.comboboxInput {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    /* Inherit from container */
+
+    padding: 0 var(--spacing-3);
+    padding-right: var(--spacing-10);
+
+    /* Typography */
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+
+    /* NEUTRALIZED: Input is just a functional layer now */
+    border: none !important;
+    background: transparent !important;
+    color: var(--surface-fg-primary);
+    outline: none !important;
+    box-shadow: none !important;
+
+    transition: none;
+    /* Transition handled by container */
+}
+
+.inputContainer[data-disabled='true'] {
     opacity: 0.5;
     cursor: not-allowed;
     background-color: var(--control-bg-disabled);
 }
 
-.comboboxTrigger::placeholder {
-    color: var(--control-fg-placeholder);
-}
-
 .iconWrapper {
     position: absolute;
     right: var(--spacing-3);
-    top: 50%;
-    transform: translateY(-50%);
+    pointer-events: none;
     display: flex;
     align-items: center;
-    justify-content: center;
     color: var(--surface-fg-tertiary);
-    pointer-events: none;
 }
 
 .dropdownIcon {
     font-size: var(--icon-size-md);
-    transition: transform 0.2s ease, color 0.15s;
 }
 
-.comboboxTrigger[data-state='open']+.iconWrapper .dropdownIcon {
-    transform: rotate(180deg);
-}
-
-/* Dropdown Content */
-.listContainer {
+/* Command Styles for Popover */
+.commandList {
     max-height: 256px;
-    /* Match Select viewport */
     overflow-y: auto;
-    padding: var(--spacing-0p5);
+    overflow-x: hidden;
+    padding: var(--spacing-1p5) 0 0 0;
+    display: flex;
+    flex-direction: column;
+    /* gap: 2px; REMOVED: Using margin on items to bypass sizer wrappers */
 }
 
-.noResults {
-    padding: var(--spacing-3);
-    font-size: var(--font-size-sm);
-    color: var(--surface-fg-tertiary);
-    text-align: center;
+.commandList :global(.menuItem)+ :global(.menuItem) {
+    margin-top: 2px;
+}
+
+/* Hidden helper for cmdk state */
+.hiddenEmpty {
+    display: none !important;
 }

@@ -1,5 +1,6 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import * as Popover from '@radix-ui/react-popover';
+import { Command, CommandItem, CommandList, CommandInput } from './ui/Command';
 import styles from './ComboBox.module.css';
 
 interface ComboBoxProps {
@@ -21,206 +22,121 @@ export const ComboBox = ({
 }: ComboBoxProps) => {
     const [open, setOpen] = useState(false);
 
-    // Track interaction source to prevent race conditions
-    const isInteractingRef = useRef(false);
-    const flashProtectionRef = useRef(false);
-    const wrapperRef = useRef<HTMLDivElement>(null);
-    // Derived state: verify if current value maps to a known label
+    // Track selected option to display its label
     const selectedOption = options.find(opt => opt.value === value);
 
-    // Input value state
-    const [inputValue, setInputValue] = useState('');
+    // Search value is controlled state for the autocomplete input
+    const [searchValue, setSearchValue] = useState('');
 
-    // Sync input with selection when *not* editing (closed)
+    // When value changes from outside, or on mount, sync search value
     useEffect(() => {
         if (!open) {
-            setInputValue(selectedOption ? selectedOption.label : '');
+            setSearchValue(selectedOption?.label || '');
         }
-    }, [open, selectedOption]);
+    }, [value, selectedOption, open]);
 
-    const filteredOptions = useMemo(() => {
-        if (!inputValue) return options;
-        if (selectedOption && inputValue === selectedOption.label) return options;
-
-        const lowerTerm = inputValue.toLowerCase();
-        return options.filter(opt => opt.label.toLowerCase().includes(lowerTerm));
-    }, [options, inputValue, selectedOption]);
-
-    const handleSelect = (newValue: string) => {
-        onValueChange(newValue);
+    const handleSelect = (itemValue: string) => {
+        onValueChange(itemValue);
         setOpen(false);
-        isInteractingRef.current = false;
     };
 
-    const handleBlur = () => {
-        // Delay blur handling slightly to allow item clicks to register
-        // if they weren't caught by onMouseDown
-        setTimeout(() => {
-            if (isInteractingRef.current) return;
-
-            if (inputValue.trim() === '') {
-                onValueChange('');
-            } else {
-                const match = options.find(opt => opt.label.toLowerCase() === inputValue.toLowerCase());
-                if (match) {
-                    onValueChange(match.value);
-                }
-            }
-        }, 150);
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') {
-            if (filteredOptions.length > 0) {
-                handleSelect(filteredOptions[0].value);
-            }
-            e.preventDefault();
-        } else if (e.key === 'ArrowDown') {
-            setOpen(true);
-        }
-    };
-
-    const openMenu = () => {
-        // Prevent double-firing or rapid toggles
-        if (!open) {
-            setOpen(true);
-            isInteractingRef.current = true;
-
-            // "Flash Protection": Block immediate close events (like onFocusOutside)
-            // that fire incorrectly during the opening phase (e.g. ~20ms after open).
-            flashProtectionRef.current = true;
-            setTimeout(() => {
-                flashProtectionRef.current = false;
-            }, 200);
-        }
-    };
+    const inputRef = useRef<HTMLInputElement>(null);
 
     return (
-        <Popover.Root
-            open={open}
-            onOpenChange={(newOpen) => {
-                if (!newOpen && flashProtectionRef.current) {
-                    return;
-                }
-
-                setOpen(newOpen);
-                if (!newOpen) isInteractingRef.current = false;
-            }}
+        <Command
+            className={styles.commandRoot}
+            loop
+        // If search is empty, show all. If typing, filter!
+        // cmdk ignores state if searchValue is managed externally, 
+        // so we use searchValue state and let cmdk filter or filter ourselves.
         >
-            <div
-                className={styles.wrapper}
-                ref={wrapperRef}
-            >
-                {/*
-                   STRATEGY: Detached Anchor
-                   The input is NOT wrapped in Popover.Anchor to prevent Radix from
-                   inferring trigger behavior. We use a hidden anchor div.
-                */}
+            <Popover.Root open={open} onOpenChange={setOpen}>
                 <Popover.Anchor asChild>
                     <div
-                        style={{ position: 'absolute', inset: 0, pointerEvents: 'none', visibility: 'hidden' }}
-                    />
+                        className={`${styles.inputContainer} ${triggerClassName || ''}`}
+                        data-disabled={disabled ? 'true' : 'false'}
+                    >
+                        <CommandInput
+                            ref={inputRef}
+                            /**
+                             * INVARIANT: The inner input is "neutralized" (no borders/background).
+                             * All visual styling (borders, focus rings, backgrounds) MUST be applied 
+                             * to the parent .inputContainer to prevent "double borders" and 
+                             * layout shifts when the popover opens.
+                             */
+                            className={styles.comboboxInput}
+                            value={searchValue}
+                            onValueChange={setSearchValue}
+                            onFocus={(e) => {
+                                setOpen(true);
+                                // SPEC: Select search text on focus instead of clearing
+                                // to avoid "flashing" between bracketed label and empty input.
+                                e.currentTarget.select();
+                            }}
+                            onBlur={() => {
+                                // Delay reset to allow item selection to win
+                                setTimeout(() => {
+                                    if (!open) {
+                                        setSearchValue(selectedOption?.label || '');
+                                    }
+                                }, 150);
+                            }}
+                            placeholder={placeholder}
+                            disabled={disabled}
+                        />
+                        <span className={styles.iconWrapper}>
+                            <span className={`material-symbols-rounded ${styles.dropdownIcon}`}>
+                                keyboard_arrow_down
+                            </span>
+                        </span>
+                    </div>
                 </Popover.Anchor>
 
-                <input
-                    className={`${styles.comboboxTrigger} ${triggerClassName || ''}`}
-                    value={inputValue}
-                    onChange={(e) => {
-                        setInputValue(e.target.value);
-                        openMenu();
-                    }}
-                    onFocus={() => {
-                        openMenu();
-                    }}
-                    onClick={() => {
-                        openMenu();
-                    }}
-                    onBlur={() => {
-                        handleBlur();
-                    }}
-                    onKeyDown={handleKeyDown}
-                    placeholder={placeholder}
-                    disabled={disabled}
-                    data-state={open ? 'open' : 'closed'}
-                    spellCheck={false}
-                    autoComplete="off"
-                />
-                <div className={styles.iconWrapper}>
-                    <span className={`material-symbols-rounded ${styles.dropdownIcon}`}>
-                        keyboard_arrow_down
-                    </span>
-                </div>
-            </div>
-
-            <Popover.Portal>
                 <Popover.Content
                     className="menuPopover"
                     align="start"
                     sideOffset={5}
+                    // Avoid focusing something else, keep focus on input
                     onOpenAutoFocus={(e) => e.preventDefault()}
-                    onCloseAutoFocus={(e) => {
-                        if (inputValue) e.preventDefault();
+                    onInteractOutside={(e) => {
+                        // If they click the input, don't close (Radix default handles toggle)
+                        if (e.target === inputRef.current) e.preventDefault();
                     }}
                     style={{
                         width: 'var(--radix-popover-trigger-width)',
-                        minWidth: '220px',
-                        padding: 0,
                         zIndex: 'var(--z-dropdown)'
                     }}
-                    onPointerDownOutside={(e) => {
-                        const target = e.target as HTMLElement;
-                        // Robust check against wrapper
-                        if (wrapperRef.current && wrapperRef.current.contains(target)) {
-                            e.preventDefault();
-                        }
-                    }}
-                    onFocusOutside={(e) => {
-                        // Also block focus outside if it's the wrapper (unlikely but safe)
-                        const target = e.target as HTMLElement;
-                        if (wrapperRef.current && wrapperRef.current.contains(target)) {
-                            e.preventDefault();
-                        }
-                    }}
                 >
-                    <div className={styles.listContainer}>
-                        <div
-                            className="menuItem"
-                            onMouseDown={(e) => {
-                                e.preventDefault();
-                                handleSelect('');
-                            }}
-                        >
-                            <div className="menuCheckmark">
-                                {value === '' && <span className="material-symbols-rounded">check</span>}
-                            </div>
-                            <span>(All officers)</span>
-                        </div>
-
-                        {filteredOptions.length > 0 ? (
-                            filteredOptions.map((opt) => (
-                                <div
-                                    key={opt.value}
-                                    className="menuItem"
-                                    data-state={opt.value === value ? 'checked' : 'unchecked'}
-                                    onMouseDown={(e) => {
-                                        e.preventDefault();
-                                        handleSelect(opt.value);
-                                    }}
-                                >
-                                    <div className="menuCheckmark">
-                                        {opt.value === value && (
-                                            <span className="material-symbols-rounded">check</span>
-                                        )}
-                                    </div>
-                                    <span>{opt.label}</span>
+                    <CommandList className={styles.commandList}>
+                        {/* 
+              cmdk will automatically filter the items based on the CommandInput value!
+              We just need to render all options here.
+            */}
+                        <CommandItem
+                            key="empty-state-placeholder"
+                            value=""
+                            className={styles.hiddenEmpty}
+                            disabled
+                        />
+                        {options.map((opt) => (
+                            <CommandItem
+                                key={opt.value}
+                                value={opt.label}
+                                onSelect={() => handleSelect(opt.value)}
+                                className="menuItem"
+                                data-state={value === opt.value ? 'checked' : undefined}
+                            >
+                                <div className="menuCheckmark">
+                                    {value === opt.value && (
+                                        <span className="material-symbols-rounded">check</span>
+                                    )}
                                 </div>
-                            ))
-                        ) : (
-                            <div className={styles.noResults}>No results found</div>
-                        )}
-                    </div>
+                                {opt.label}
+                            </CommandItem>
+                        ))}
+                    </CommandList>
                 </Popover.Content>
-            </Popover.Portal>
-        </Popover.Root>
+            </Popover.Root>
+        </Command>
     );
 };

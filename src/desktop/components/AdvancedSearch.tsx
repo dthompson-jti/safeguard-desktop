@@ -108,7 +108,10 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
                             value={localFilter.officer === 'any' ? '' : localFilter.officer}
                             onValueChange={(val) => handleChange('officer', val || 'any')}
                             placeholder="All officers"
-                            options={OFFICER_NAMES.map(name => ({ value: name, label: name }))}
+                            options={[
+                                { value: '', label: '(All officers)' },
+                                ...OFFICER_NAMES.map(name => ({ value: name, label: name }))
+                            ]}
                             triggerClassName={styles.selectTrigger}
                         />
                     ) : (
