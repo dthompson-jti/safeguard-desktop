@@ -10,7 +10,7 @@
 Allows supervisors to monitor:
 - **Overdue checks** requiring immediate attention (red alert)
 - **Due checks** in the grace window (amber warning)
-- **Upcoming checks** scheduled for the near future (neutral)
+- **Upcoming checks** scheduled for the near future (info)
 
 ---
 
@@ -70,7 +70,7 @@ Each room has a **unique** scheduled time based on room index:
 |------------|------------------|--------|
 | 0-9 | -20 to -29 mins (past) | Overdue |
 | 10-19 | -5 to +4 mins (around now) | Due |
-| 20-59 | +5 to +44 mins (future) | Upcoming |
+| 20-59 | +5 to +44 mins (future) | Upcoming (Info) |
 
 ---
 

@@ -48,9 +48,7 @@ The semantic variants differ only in their background and border colors, using "
 
 | Variant | Property | Semantic Token Path | Primitive Token Path | Primitive Value |
 | :--- | :--- | :--- | :--- | :--- |
-| **Neutral** | **Background** | `--surface-bg-primary-solid` | `--primitives-grey-950` | `#0A0C12` |
-| | **Border** | `--surface-border-primary` | `--primitives-grey-700` | `#414651` |
-| **Success** | **Background** | `--surface-bg-success-solid` | `--primitives-green-600` | `#0D935A` |
+| Success | **Background** | `--surface-bg-success-solid` | `--primitives-green-600` | `#0D935A` |
 | | **Border** | N/A | N/A | `rgba(0, 0, 0, 0.1)` |
 | **Alert** | **Background** | `--surface-bg-error-solid` | `--primitives-red-600` | `#D63230` |
 | | **Border** | N/A | N/A | `rgba(0, 0, 0, 0.1)` |

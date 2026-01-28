@@ -287,7 +287,7 @@ export const generateEnhancedData = () => {
         // Determine Live status based on time difference
         let liveStatus: 'upcoming' | 'due' | 'overdue';
         let timerText: string;
-        let timerSeverity: 'alert' | 'warning' | 'neutral';
+        let timerSeverity: 'alert' | 'warning' | 'info';
 
         if (deltaMinutes > 15) {
             // More than 15 mins past scheduled time
@@ -313,7 +313,7 @@ export const generateEnhancedData = () => {
             // More than 5 mins before scheduled time → Upcoming
             liveStatus = 'upcoming';
             timerText = `Due in ${Math.abs(deltaMinutes)}m`;
-            timerSeverity = 'neutral';
+            timerSeverity = 'info';
         }
 
         // Calculate missed check count

@@ -2,7 +2,7 @@
 import { atom } from 'jotai';
 import { nanoid } from 'nanoid';
 
-export type ToastVariant = 'neutral' | 'success' | 'alert' | 'info' | 'warning';
+export type ToastVariant = 'success' | 'alert' | 'info' | 'warning';
 
 export interface Toast {
   id: string;
@@ -28,7 +28,7 @@ export const addToastAtom = atom(
     title,
     message,
     icon,
-    variant = 'neutral',
+    variant = 'info',
     stableId,
     action,
     persistent

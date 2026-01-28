@@ -12,7 +12,7 @@ interface StatusBadgeProps {
     iconOnly?: boolean;
     tooltip?: string;
     showIcon?: boolean;
-    colorMode?: 'neutral' | 'warning' | 'info' | 'solid' | 'neutral-strong';
+    colorMode?: 'warning' | 'info' | 'solid' | 'neutral-strong';
 }
 
 const getStatusConfig = (status: StatusBadgeType): { label: string; icon: string | null } => {

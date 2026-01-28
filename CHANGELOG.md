@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
+- **Semantic Type Migration**:
+    - **Neutral Removal**: Completely removed the `neutral` semantic type across the application (Toasts, Badges, Timers).
+    - **Info Adoption**: Migrated all informational states to use the `info` semantic type for better consistency and explicit intent.
+    - **Defaults**: Updated default notification and badge states to `info`.
+    - **UI Cleanup**: Removed the "Neutral" option from the Badge Color Mode selector in the Main Menu.
+    - **Mock Data**: Updated all mock data generators to use `info` severity for neutral/upcoming statuses.
+
 - **Unified Filter UI**:
     - **Consolidated Layout**: Merged the standalone `FilterBar` into the `DesktopToolbar`. Filters are now managed directly within the Advanced Search panel or quick filter dropdowns.
     - **Horizontal Alignment**: Search and Advanced Search remain left-aligned, while quick filter dropdowns float to the right (via `margin-left: auto`).

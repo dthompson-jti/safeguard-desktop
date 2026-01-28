@@ -44,7 +44,6 @@ Toasts use **Solid** semantic tokens for maximum visibility and "premium" feel.
 
 | Variant | Data Attribute | Background Token | Icon |
 | :--- | :--- | :--- | :--- |
-| **Neutral** | `neutral` | `var(--surface-bg-primary-solid)` | `info` |
 | **Success** | `success` | `var(--surface-bg-success-solid)` | `check_circle` |
 | **Warning** | `warning` | `var(--surface-bg-warning-solid)` | `warning` |
 | **Alert** | `alert` | `var(--surface-bg-error-solid)` | `error` |

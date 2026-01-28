@@ -80,14 +80,6 @@ export const TopNavMenu = () => {
                     <div className={styles.displayOptionsGrid}>
                         <button
                             className={styles.optionButton}
-                            data-active={badgeColorMode === 'neutral'}
-                            onClick={() => setBadgeColorMode('neutral')}
-                            title="Neutral"
-                        >
-                            <span>A</span>
-                        </button>
-                        <button
-                            className={styles.optionButton}
                             data-active={badgeColorMode === 'neutral-strong'}
                             onClick={() => setBadgeColorMode('neutral-strong')}
                             title="Neutral Strong"

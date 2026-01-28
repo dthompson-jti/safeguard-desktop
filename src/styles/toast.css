@@ -135,10 +135,10 @@
 
 /* --- Semantic Variants - SOLID --- */
 
-/* Neutral (Default) - Keep subtle but accessible */
-.toast-root[data-variant='neutral'] {
-  background-color: var(--surface-bg-primary-solid);
-  border: 1px solid var(--primitives-grey-700);
+/* Info (Default) - Keep subtle but accessible */
+.toast-root[data-variant='info'] {
+  background-color: var(--surface-bg-info-solid);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Success */
@@ -156,12 +156,6 @@
 /* Warning */
 .toast-root[data-variant='warning'] {
   background-color: var(--surface-bg-warning-solid);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-/* Info */
-.toast-root[data-variant='info'] {
-  background-color: var(--surface-bg-info-solid);
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 

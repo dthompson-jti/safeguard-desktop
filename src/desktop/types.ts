@@ -60,7 +60,7 @@ export interface LiveCheckRow {
     id: string;
     status: 'due' | 'upcoming' | 'overdue';
     timerText: string;
-    timerSeverity: 'alert' | 'warning' | 'neutral';
+    timerSeverity: 'alert' | 'warning' | 'info';
     location: string;
     residents: Resident[];
     hasHighRisk: boolean;

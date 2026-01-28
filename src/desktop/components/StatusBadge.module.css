@@ -105,16 +105,6 @@
 }
 
 /* Special Status - Color Modes */
-.badge[data-status='special'][data-color-mode='neutral'] {
-    background: var(--surface-bg-tertiary);
-    color: var(--surface-fg-tertiary);
-    border-color: var(--surface-border-tertiary);
-}
-
-.badge[data-status='special'][data-color-mode='neutral'] .icon {
-    color: var(--surface-fg-tertiary);
-}
-
 .badge[data-status='special'][data-color-mode='warning'] {
     /* Same as default */
     background: var(--surface-bg-warning-primary);

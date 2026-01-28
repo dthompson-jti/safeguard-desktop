@@ -173,7 +173,7 @@ export const SupervisorNoteModal = () => {
                 title: 'Supervisor review removed',
                 message: `Cleared from ${modalState.selectedIds.length} check${modalState.selectedIds.length !== 1 ? 's' : ''}`,
                 icon: 'delete',
-                variant: 'neutral',
+                variant: 'info',
             });
 
             handleClose();

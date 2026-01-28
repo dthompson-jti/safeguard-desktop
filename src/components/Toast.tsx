@@ -15,7 +15,7 @@ import { removeToastAtom, Toast } from '../data/toastAtoms';
  * If a title is provided, it is rendered prominently above the message.
  * Screen-reader accessibility is maintained via Radix Toast primitives.
  */
-export const ToastMessage = ({ id, title, message, icon, variant = 'neutral', timestamp, action, persistent }: Toast) => {
+export const ToastMessage = ({ id, title, message, icon, variant = 'info', timestamp, action, persistent }: Toast) => {
   const removeToast = useSetAtom(removeToastAtom);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 

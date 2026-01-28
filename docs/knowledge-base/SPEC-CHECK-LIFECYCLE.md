@@ -31,7 +31,7 @@ In the **Live Monitor View**, checks exist in one of three states:
 
 | Status | Timer Severity | Time Offset | Description |
 |--------|----------------|-------------|-------------|
-| `upcoming` | `neutral` | > 5 mins before scheduled | Check is scheduled but not yet actionable |
+| `upcoming` | `info` | > 5 mins before scheduled | Check is scheduled but not yet actionable |
 | `due` | `warning` | ±5 mins of scheduled time | Check is in the grace window, action recommended |
 | `overdue` | `alert` | > 15 mins past scheduled | Check is missed and requires immediate attention |
 
@@ -104,7 +104,7 @@ interface LiveCheckRow {
     id: string;
     status: 'upcoming' | 'due' | 'overdue';
     timerText: string;
-    timerSeverity: 'alert' | 'warning' | 'neutral';
+    timerSeverity: 'alert' | 'warning' | 'info';
     location: string;
     residents: Resident[];
     hasHighRisk: boolean;

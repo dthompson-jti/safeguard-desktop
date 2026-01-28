@@ -25,7 +25,7 @@ const createLiveCheck = (
         unit?: string;
     } = {}
 ): LiveCheckRow => {
-    const timerSeverity = status === 'overdue' ? 'alert' : status === 'due' ? 'warning' : 'neutral';
+    const timerSeverity = status === 'overdue' ? 'alert' : status === 'due' ? 'warning' : 'info';
 
     // Derive group and unit uniquely
     const getRoomNum = (loc: string) => {
@@ -169,7 +169,7 @@ export function loadLiveChecksPage(
                 const generated = Array.from({ length: generateCount }, (_, i) => {
                     const idx = startIndex + i;
                     const status = 'upcoming' as LiveCheckRow['status'];
-                    const timerSeverity = 'neutral' as LiveCheckRow['timerSeverity'];
+                    const timerSeverity = 'info' as LiveCheckRow['timerSeverity'];
 
                     return {
                         id: `gen-live-${idx}`,
