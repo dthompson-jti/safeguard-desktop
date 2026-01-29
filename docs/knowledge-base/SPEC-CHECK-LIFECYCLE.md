@@ -62,6 +62,11 @@ In the **Historical Review View**, checks are archived with these statuses:
 | `completed` | < 2 mins late | Check was done on time |
 | `missed` | ∞ (never done) | Check was never completed |
 
+### Deferred Listing Rule
+
+> [!IMPORTANT]
+> To prevent clutter and ensure operational focus, **Missed checks accruing in the Live View (overdue) are NOT shown in the Historical Review View** until the most recent check for that location is completed. This ensures history reflects settled rounds rather than active alerts.
+
 ### Review Workflow
 
 | Review Status | Meaning |

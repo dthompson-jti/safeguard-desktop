@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
+- **Mock Data Scenarios & Lifecycle**:
+    - **Refined Data Generation**: Implemented realistic unit-specific scenarios in `mockData.ts`:
+        - **Maple Transitional**: Simulates neglected wing rounds (all rooms 🔴 Missed).
+        - **Oak Integrated**: Simulates specific neglected residents (sequential "Missed (3)" status).
+        - **Cedar Assessment**: Simulates sporadic historical missed checks across various residents.
+        - **Oak Enhanced**: Simulates historical sequential missed checks ("volleys").
+    - **History Logic Realignment**: Missed checks that are currently "Live" (overdue) are no longer automatically injected into the historical review view. They only appear in history once the current chain of missed checks is resolved/completed, as per operational requirements.
 - **Badge Truncation Configuration**:
     - Added a main menu toggle "**Truncate more than 1 badge**" to control table density.
     - When enabled, multiple risk badges for a resident are collapsed into a single badge and a `+N` counter with a detailed tooltip.

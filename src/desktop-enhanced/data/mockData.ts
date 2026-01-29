@@ -257,7 +257,14 @@ export const generateEnhancedData = () => {
         const seed = roomIdx * 123 + 456;
         const rand = seededRandom(seed);
 
-        if (profile.tier === 'punctual') {
+        // --- SCENARIO OVERRIDES ---
+        if (room.unit === 'Maple Transitional') {
+            // Maple Transitional: Entire unit missed rounds (20-50m overdue)
+            targetDelta = 20 + Math.floor(seededRandom(seed) * 30);
+        } else if (room.unit === 'Oak Integrated' && roomIdx % 5 === 0) {
+            // Oak Integrated: 2 residents have a volley of missed checks (40m overdue -> Missed (3))
+            targetDelta = 40;
+        } else if (profile.tier === 'punctual') {
             // Punctual: Forced to Upcoming (-15 to -6m)
             // NO Warning (Due soon), NO Alert (Missed)
             targetDelta = -Math.floor(seededRandom(seed + 1) * 10 + 6);
@@ -364,10 +371,23 @@ export const generateEnhancedData = () => {
                 const checkAgeHours = (now.getTime() - slotTime.getTime()) / (60 * 60 * 1000);
                 const decayFactor = Math.exp(-checkAgeHours / 12);
 
-                // Use resident specific seed
                 const resSeed = slotIndex + roomIdx * 1000 + resIdx * 50;
                 const randomVal = seededRandom(resSeed);
-                const isMissed = randomVal < (profile.missedProb * decayFactor);
+                let isMissed = randomVal < (profile.missedProb * decayFactor);
+
+                // --- HISTORICAL SCENARIO OVERRIDES ---
+                if (room.unit === 'Cedar Assessment') {
+                    // Cedar Assessment: Sporadic missed checks across residents
+                    isMissed = (resSeed % 15 === 0);
+                } else if (room.unit === 'Oak Enhanced' && roomIdx % 5 === 0) {
+                    // Oak Enhanced: "Volley" of missed checks followed by a completed one
+                    // We'll make indices 4, 5, 6 missed (recent history)
+                    // Note: slotTime increases, so higher slotIndex is closer to "now"
+                    const volleyIndices = [4, 5, 6];
+                    if (volleyIndices.includes(slotIndex)) {
+                        isMissed = true;
+                    }
+                }
 
                 const status: 'completed' | 'missed' = isMissed ? 'missed' : 'completed';
                 const variance = isMissed ? Infinity : Math.floor(seededRandom(resSeed + 1) * 10) - 2;
@@ -408,41 +428,9 @@ export const generateEnhancedData = () => {
                 slotIndex++;
             }
 
-            // INJECT: If the current live status is 'overdue', we must add the "missed" checks to history.
-            // The Live View aggregates these into "Missed (N)", but History needs individual rows.
-            if (missedCheckCount > 0) {
-                for (let m = 0; m < missedCheckCount; m++) {
-                    // Calculate time for this specific missed check
-                    // The first one (m=0) is at scheduledTime. Subsequent ones are +15m, +30m, etc.
-                    const missedTime = new Date(scheduledTime.getTime() + m * CHECK_INTERVAL_MINS * MS_PER_MINUTE);
-                    const checkId = `hist-${room.id}-${resIdx}-missed-${m}`; // Distinct ID
-
-                    // These are RECENT missed checks, so they are likely unreviewed (pending).
-                    // But to match the mock vibe, we'll leave them mostly unreviewed.
-                    const supervisorNote = undefined;
-                    const supervisorName = undefined;
-                    const reviewDate = undefined;
-
-                    historicalData.push({
-                        id: checkId,
-                        residents: [resident],
-                        location: room.location,
-                        scheduledTime: missedTime.toISOString(),
-                        actualTime: null,
-                        status: 'missed',
-                        varianceMinutes: Infinity,
-                        group: room.group,
-                        unit: room.unit,
-                        officerName: '', // Blank for missed
-                        officerNote: undefined,
-                        supervisorNote,
-                        supervisorName,
-                        reviewDate,
-                        reviewStatus: 'pending',
-                        hasHighRisk: (roomIdx + resIdx) % 7 === 0,
-                    });
-                }
-            }
+            // NOTE: Per instructions, missed checks accruing in Live view (overdue)
+            // are NOT shown in history until the most recent check is completed.
+            // Therefore, we no longer inject live missed checks here.
         });
     });
 
