@@ -26,7 +26,7 @@ export const SupervisorNoteModal = () => {
     const setRefreshTrigger = useSetAtom(historicalRefreshAtom);
     const addToast = useSetAtom(addToastAtom);
 
-    const [reason, setReason] = useState<SupervisorNoteReason>('Unit Lockdown');
+    const [reason, setReason] = useState<SupervisorNoteReason>('Unspecified');
     const [additionalNotes, setAdditionalNotes] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const setRowUpdate = useSetAtom(historicalRowUpdateAtom);
@@ -67,7 +67,7 @@ export const SupervisorNoteModal = () => {
             }
         } else {
             setHasExistingComment(false);
-            setReason('Unit Lockdown');
+            setReason('Unspecified');
             setAdditionalNotes('');
         }
     }, [modalState.isOpen, modalState.selectedIds, historicalChecks]);
@@ -75,7 +75,7 @@ export const SupervisorNoteModal = () => {
     const handleClose = () => {
         if (isSaving) return;
         setModalState({ isOpen: false, selectedIds: [] });
-        setReason('Unit Lockdown');
+        setReason('Unspecified');
         setAdditionalNotes('');
         setHasExistingComment(false);
     };

@@ -363,3 +363,9 @@ export const residentBadgeTextAtom = atomWithStorage<ResidentBadgeTextMode>(
 /** Toggle for Officer input style (Select vs Combo Box) */
 export const officerInputStyleAtom = atomWithStorage<'select' | 'combo'>('officer-input-style', 'select');
 
+/** Toggle for dimmed location breadcrumbs in tables (Group/Unit secondary color) */
+export const dimLocationBreadcrumbsAtom = atomWithStorage<boolean>(`${STORAGE_PREFIX}dim_location_breadcrumbs`, true);
+
+/** Toggle for badge truncation in tables (Show +N instead of all badges) */
+export const truncateBadgesAtom = atomWithStorage<boolean>(`${STORAGE_PREFIX}truncate_badges`, false);
+

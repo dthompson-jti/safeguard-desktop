@@ -8,7 +8,7 @@ export const GlobalStatusWidget: React.FC = () => {
 
     return (
         <div className={styles.container}>
-            <Tooltip content="Overdue">
+            <Tooltip content="Missed">
                 <div className={styles.item}>
                     <span className="material-symbols-rounded" style={{
                         fontSize: 20,

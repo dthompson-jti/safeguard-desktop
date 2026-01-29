@@ -3,13 +3,12 @@ import { Resident } from '../../types'; // Import from global types
 import { StatusBadge, StatusBadgeType } from './StatusBadge';
 import { Tooltip } from '../../components/Tooltip';
 import { useAtomValue } from 'jotai';
-import { residentBadgeColorModeAtom, residentBadgeTextAtom } from '../atoms';
+import { residentBadgeColorModeAtom, residentBadgeTextAtom, truncateBadgesAtom } from '../atoms';
 import { getBadgeLabel } from '../utils/badgeUtils';
 
 interface ResidentStatusGroupProps {
     residents: Resident[];
     view: 'table' | 'detail';
-    limit?: number; // For table view, defaults to 1
 }
 
 interface BadgeItem {
@@ -19,9 +18,10 @@ interface BadgeItem {
     priority: number;
 }
 
-export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ residents, view, limit = 1 }) => {
+export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ residents, view }) => {
     const colorMode = useAtomValue(residentBadgeColorModeAtom);
     const badgeTextMode = useAtomValue(residentBadgeTextAtom);
+    const truncateBadges = useAtomValue(truncateBadgesAtom);
     // 1. Flatten all statuses from all residents into a single list of simplified objects
     // We want to know: { label: string, status: StatusBadgeType, tooltip: string }
 
@@ -64,30 +64,19 @@ export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ reside
 
     if (allBadges.length === 0) return null;
 
-    // 3. Render based on View
-    if (view === 'detail') {
-        return (
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-                {allBadges.map((badge, i) => (
-                    <StatusBadge
-                        key={i}
-                        status={badge.status}
-                        label={badge.label}
-                        fill
-                        tooltip={badge.tooltip}
-                        colorMode={colorMode}
-                    />
-                ))}
-            </div>
-        );
-    }
-
-    // Table View
-    const visibleBadges = allBadges.slice(0, limit);
+    // 3. Render
+    const limit = 1;
+    const shouldTruncate = view === 'table' && truncateBadges && allBadges.length > limit;
+    const visibleBadges = shouldTruncate ? allBadges.slice(0, limit) : allBadges;
     const hiddenCount = allBadges.length - limit;
 
     return (
-        <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+        <div style={{
+            display: 'flex',
+            gap: view === 'detail' ? '8px' : '4px',
+            flexWrap: 'wrap',
+            alignItems: 'center'
+        }}>
             {visibleBadges.map((badge, i) => (
                 <StatusBadge
                     key={i}
@@ -98,7 +87,7 @@ export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ reside
                     colorMode={colorMode}
                 />
             ))}
-            {hiddenCount > 0 && (
+            {shouldTruncate && (
                 <Tooltip content={renderTooltipContent(allBadges.slice(limit))}>
                     <div>
                         <StatusBadge
@@ -114,8 +103,6 @@ export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ reside
         </div>
     );
 };
-
-
 
 const renderTooltipContent = (badges: BadgeItem[]) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>

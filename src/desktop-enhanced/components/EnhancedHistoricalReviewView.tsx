@@ -1,5 +1,5 @@
 // src/desktop-enhanced/components/EnhancedHistoricalReviewView.tsx
-import { useMemo, useCallback, useState, useEffect } from 'react';
+import { useMemo, useCallback, useState, useEffect, useRef } from 'react';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { ColumnDef, RowSelectionState } from '@tanstack/react-table';
 import {
@@ -13,7 +13,8 @@ import {
     isDetailPanelOpenAtom,
     residentDisplayModeAtom,
     residentBadgeTextAtom,
-    resetFiltersAtom
+    resetFiltersAtom,
+    dimLocationBreadcrumbsAtom
 } from '../../desktop/atoms';
 import { HistoricalCheck } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
@@ -52,6 +53,7 @@ export const EnhancedHistoricalReviewView = () => {
     const filter = useAtomValue(desktopFilterAtom);
     const displayMode = useAtomValue(residentDisplayModeAtom);
     const badgeTextMode = useAtomValue(residentBadgeTextAtom);
+    const dimBreadcrumbs = useAtomValue(dimLocationBreadcrumbsAtom);
     const setModalState = useSetAtom(supervisorNoteModalAtom);
     const refreshCount = useAtomValue(historicalRefreshAtom);
     const resetFilters = useSetAtom(resetFiltersAtom);
@@ -156,37 +158,50 @@ export const EnhancedHistoricalReviewView = () => {
         }
     }, [selectedRows, loadedData, setDetailRecord, setSelectedRows]);
 
-    const handleRowClick = useCallback((row: HistoricalCheck, event: React.MouseEvent) => {
+    /**
+     * INVARIANT: Stable Anchor Pattern
+     * We use a ref to track the last "true" click (single or meta) to serve as 
+     * the anchor for subsequent Shift-click range expansions.
+     */
+    const lastClickedRowRef = useRef<string | null>(null);
+    const handleRowClick = useCallback((row: HistoricalCheck, event: React.MouseEvent, visualIds: string[]) => {
         const isMeta = event.ctrlKey || event.metaKey;
         const isShift = event.shiftKey;
 
         setSelectedRows((_prev: Set<string>) => {
             const next = new Set(_prev);
+
             if (isMeta) {
                 if (next.has(row.id)) next.delete(row.id);
                 else next.add(row.id);
-            } else if (isShift && _prev.size > 0) {
-                const lastId = Array.from(_prev).pop();
-                if (lastId) {
-                    const allIds = loadedData.map((r: HistoricalCheck) => r.id);
-                    const startIdx = allIds.indexOf(lastId);
-                    const endIdx = allIds.indexOf(row.id);
-                    const range = allIds.slice(Math.min(startIdx, endIdx), Math.max(startIdx, endIdx) + 1);
+                lastClickedRowRef.current = row.id;
+            } else if (isShift && lastClickedRowRef.current) {
+                // INVARIANT: Visual Order Range
+                // Range selection MUST use visualIds (sorted/filtered) from DataTable 
+                // to match the user's spatial perception of the list.
+                const startIdx = visualIds.indexOf(lastClickedRowRef.current);
+                const endIdx = visualIds.indexOf(row.id);
+
+                if (startIdx !== -1 && endIdx !== -1) {
+                    const range = visualIds.slice(Math.min(startIdx, endIdx), Math.max(startIdx, endIdx) + 1);
                     range.forEach((id: string) => next.add(id));
                 }
+                // Important: Don't update anchor on shift-click, so it stays fixed for multiple expansions
             } else {
                 // Toggle behavior: if clicking the only selected row, clear it
                 if (next.has(row.id) && next.size === 1) {
                     next.delete(row.id);
+                    lastClickedRowRef.current = null;
                 } else {
                     next.clear();
                     next.add(row.id);
+                    lastClickedRowRef.current = row.id;
                 }
             }
 
             return next;
         });
-    }, [loadedData, setSelectedRows]);
+    }, [setSelectedRows]);
 
     // Determine if we are in "Edit" mode (any selected item has a comment)
     const isEditMode = useMemo(() => {
@@ -259,7 +274,7 @@ export const EnhancedHistoricalReviewView = () => {
                                     }
 
                                     const badges = (
-                                        <ResidentStatusGroup residents={[r]} view="table" limit={1} />
+                                        <ResidentStatusGroup residents={[r]} view="table" />
                                     );
 
                                     return (
@@ -295,9 +310,15 @@ export const EnhancedHistoricalReviewView = () => {
                 },
                 cell: ({ row }) => (
                     <div className={styles.locationCell}>
-                        <span style={{ color: 'var(--surface-fg-primary)' }}>{row.original.group}</span>
+                        <span style={{
+                            color: dimBreadcrumbs ? 'var(--surface-fg-secondary)' : 'var(--surface-fg-primary)',
+                            fontWeight: dimBreadcrumbs ? 'var(--font-weight-regular)' : 'var(--font-weight-medium)'
+                        }}>{row.original.group}</span>
                         <span className="material-symbols-rounded" style={{ color: 'var(--surface-fg-quaternary)', fontSize: '16px' }}>navigate_next</span>
-                        <span style={{ color: 'var(--surface-fg-primary)' }}>{row.original.unit}</span>
+                        <span style={{
+                            color: dimBreadcrumbs ? 'var(--surface-fg-secondary)' : 'var(--surface-fg-primary)',
+                            fontWeight: dimBreadcrumbs ? 'var(--font-weight-regular)' : 'var(--font-weight-medium)'
+                        }}>{row.original.unit}</span>
                         <span className="material-symbols-rounded" style={{ color: 'var(--surface-fg-quaternary)', fontSize: '16px' }}>navigate_next</span>
                         <span style={{ color: 'var(--surface-fg-primary)' }}>{row.original.location}</span>
                     </div>
@@ -467,7 +488,7 @@ export const EnhancedHistoricalReviewView = () => {
                 ),
             },
         ],
-        [handleOpenNoteModal, displayMode, badgeTextMode]
+        [handleOpenNoteModal, displayMode, badgeTextMode, dimBreadcrumbs]
     );
 
     const handleResetAll = () => {

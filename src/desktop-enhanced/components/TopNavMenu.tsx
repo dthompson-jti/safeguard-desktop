@@ -1,7 +1,7 @@
 import * as Popover from '@radix-ui/react-popover';
 import { useAtom } from 'jotai';
 import { desktopEnhancedTreeLayoutAtom } from '../atoms';
-import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, residentBadgeColorModeAtom } from '../../desktop/atoms';
+import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, residentBadgeColorModeAtom, dimLocationBreadcrumbsAtom, truncateBadgesAtom } from '../../desktop/atoms';
 
 import { Switch } from '../../components/Switch';
 import styles from './TopNavMenu.module.css';
@@ -12,6 +12,8 @@ export const TopNavMenu = () => {
     const [residentBadgeText, setResidentBadgeText] = useAtom(residentBadgeTextAtom);
     const [badgeColorMode, setBadgeColorMode] = useAtom(residentBadgeColorModeAtom);
     const [autoOpenPanel, setAutoOpenPanel] = useAtom(autoOpenDetailPanelAtom);
+    const [truncateBadges, setTruncateBadges] = useAtom(truncateBadgesAtom);
+    const [dimBreadcrumbs, setDimBreadcrumbs] = useAtom(dimLocationBreadcrumbsAtom);
 
     return (
         <Popover.Root>
@@ -74,6 +76,17 @@ export const TopNavMenu = () => {
                         />
                     </div>
 
+                    <div className={styles.menuRow}>
+                        <div className={styles.menuRowText}>
+                            <span>Truncate more than 1 badge</span>
+                        </div>
+                        <Switch
+                            checked={truncateBadges}
+                            onCheckedChange={setTruncateBadges}
+                            id="truncate-badges-toggle"
+                        />
+                    </div>
+
                     <div className={styles.divider} />
 
                     <div className={styles.sectionHeader}>Badge Color Mode</div>
@@ -122,6 +135,19 @@ export const TopNavMenu = () => {
                             checked={autoOpenPanel}
                             onCheckedChange={setAutoOpenPanel}
                             id="auto-open-toggle"
+                        />
+                    </div>
+
+                    <div className={styles.divider} />
+
+                    <div className={styles.menuRow}>
+                        <div className={styles.menuRowText}>
+                            <span className={styles.label}>Dim group/unit in location</span>
+                        </div>
+                        <Switch
+                            checked={dimBreadcrumbs}
+                            onCheckedChange={setDimBreadcrumbs}
+                            id="dim-breadcrumbs-toggle"
                         />
                     </div>
 

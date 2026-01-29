@@ -27,8 +27,8 @@ interface DataTableProps<T> {
     isLoading?: boolean;
     hasMore?: boolean;
     onLoadMore?: () => void;
-    onRowClick?: (row: T, event: React.MouseEvent) => void;
-    onRowDoubleClick?: (row: T, event: React.MouseEvent) => void;
+    onRowClick?: (row: T, event: React.MouseEvent, visualIds: string[]) => void;
+    onRowDoubleClick?: (row: T, event: React.MouseEvent, visualIds: string[]) => void;
     initialSorting?: SortingState;
     emptyState?: React.ReactNode;
 }
@@ -315,8 +315,26 @@ export function DataTable<T>({
                                 key={row.id}
                                 className={styles.tr}
                                 data-state={row.getIsSelected() ? 'checked' : 'unchecked'}
-                                onClick={(e) => onRowClick?.(row.original, e)}
-                                onDoubleClick={(e) => onRowDoubleClick?.(row.original, e)}
+                                onMouseDown={(e) => {
+                                    // INVARIANT: Native Selection Suppression
+                                    // Prevent browser's default range selection behavior which causes blue flickers
+                                    // during rapid Shift+Click row selection.
+                                    if (e.shiftKey) {
+                                        e.preventDefault();
+                                    }
+                                }}
+                                onClick={(e) => {
+                                    if (onRowClick) {
+                                        const visualIds = table.getRowModel().rows.map(r => r.id);
+                                        onRowClick(row.original, e, visualIds);
+                                    }
+                                }}
+                                onDoubleClick={(e) => {
+                                    if (onRowDoubleClick) {
+                                        const visualIds = table.getRowModel().rows.map(r => r.id);
+                                        onRowDoubleClick(row.original, e, visualIds);
+                                    }
+                                }}
                             >
                                 {row.getVisibleCells().map((cell, cellIndex) => {
                                     const isPinned = cell.column.getIsPinned();

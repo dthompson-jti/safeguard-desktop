@@ -76,6 +76,7 @@ export interface LiveCheckRow {
 
 /** Supervisor note reason options */
 export const SUPERVISOR_NOTE_REASONS = [
+    'Unspecified',
     'Unit Lockdown',
     'Medical Emergency',
     'Court Appearance',

@@ -15,13 +15,13 @@ const formatTime = (due: Date, nowTime: number): string => {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = Math.floor(totalMinutes % 60);
 
-    if (totalMinutes < 1) return 'Overdue';
+    if (totalMinutes < 1) return 'Missed';
 
     const parts = [];
     if (hours > 0) parts.push(`${hours}h`);
     if (minutes > 0) parts.push(`${minutes}m`);
 
-    return `Overdue ${parts.join(' ')}`;
+    return `Missed ${parts.join(' ')}`;
   }
 
   // --- Upcoming Logic ---
@@ -102,13 +102,13 @@ export const useCountdown = (dueTime: Date, status: SafetyCheckStatus): string =
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
 
-    if (totalMinutes < 1) return 'Overdue';
+    if (totalMinutes < 1) return 'Missed';
 
     const parts = [];
     if (hours > 0) parts.push(`${hours}h`);
     if (minutes > 0) parts.push(`${minutes}m`);
 
-    return `Overdue ${parts.join(' ')}`;
+    return `Missed ${parts.join(' ')}`;
   }
 
   return formatTime(dueTime, nowTime);

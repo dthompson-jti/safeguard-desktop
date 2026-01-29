@@ -116,6 +116,16 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 *   **Critical Rule:** Always define explicit `color` on `.itemLabel` classes. Inherited colors can cause faded text.
 *   **Anti-Pattern:** Do not use `--surface-fg-tertiary` for field labels—it's too faint.
 
+### 9. Multi-Select Behavior
+*   **Directive:** All data tables supporting multi-select must implement the **Stable Anchor** and **Visual Order** patterns.
+*   **Stable Anchor Logic:** Use a `lastClickedRowRef` to track the "anchor" of a range selection.
+    *   **Single Click / Ctrl+Click:** Update the anchor.
+    *   **Shift+Click:** Keep the original anchor; select everything from anchor to new target.
+*   **Visual Order Awareness:** Range selection MUST be calculated against the table's current visual state (sorted and filtered), not the raw data array.
+    *   View components must receive a `visualIds: string[]` parameter from the `DataTable` during click events.
+*   **Native Selection Suppression:** Intercept Shift-clicks in `onMouseDown` with `e.preventDefault()` to prevent blue text highlighting "flickers" during range selection.
+*   **UI Isolation:** Apply `user-select: none` to interactive primitives (checkboxes, action buttons) to prevent them from interfering with intentional text drag-selection.
+
 ### 26. Desktop-First Architecture
 *   **The Problem:** Desktop requires different patterns than mobile (Tree Views vs Stacked Lists).(
 *   **The Strategy:** Use `PRD-desktop-enhanced.md` as the source of truth for the Desktop V2 experience.

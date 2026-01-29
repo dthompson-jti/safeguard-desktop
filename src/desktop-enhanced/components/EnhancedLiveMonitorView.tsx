@@ -2,7 +2,7 @@
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { ColumnDef, RowSelectionState, Updater } from '@tanstack/react-table';
-import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom, residentDisplayModeAtom, residentBadgeTextAtom, isDetailPanelOpenAtom } from '../../desktop/atoms';
+import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom, residentDisplayModeAtom, residentBadgeTextAtom, isDetailPanelOpenAtom, dimLocationBreadcrumbsAtom } from '../../desktop/atoms';
 import { LiveCheckRow } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
@@ -14,8 +14,9 @@ import styles from '../../desktop/components/DataTable.module.css';
 
 export const EnhancedLiveMonitorView = () => {
     const filter = useAtomValue(desktopFilterAtom);
-    const displayMode = useAtomValue(residentDisplayModeAtom);
+    const residentDisplayMode = useAtomValue(residentDisplayModeAtom);
     const badgeTextMode = useAtomValue(residentBadgeTextAtom);
+    const dimBreadcrumbs = useAtomValue(dimLocationBreadcrumbsAtom);
     // Pagination State
     const [loadedData, setLoadedData] = useState<LiveCheckRow[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +62,7 @@ export const EnhancedLiveMonitorView = () => {
                         <div className={styles.residentCell}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-0p5)', width: '100%' }}>
                                 {row.original.residents.map((r, i) => {
-                                    if (displayMode === 'chip') {
+                                    if (residentDisplayMode === 'chip') {
                                         return (
                                             <ResidentChip
                                                 key={i}
@@ -74,12 +75,12 @@ export const EnhancedLiveMonitorView = () => {
                                     }
 
                                     const badges = (
-                                        <ResidentStatusGroup residents={[r]} view="table" limit={1} />
+                                        <ResidentStatusGroup residents={[r]} view="table" />
                                     );
 
                                     return (
                                         <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 'var(--spacing-2)', height: '24px', width: '100%' }}>
-                                            {displayMode === 'left-badge' ? (
+                                            {residentDisplayMode === 'left-badge' ? (
                                                 <div style={{ display: 'flex', gap: 'var(--spacing-2)', alignItems: 'center' }}>
                                                     <span style={{ fontWeight: 500, color: 'var(--surface-fg-primary)' }}>{r.name}</span>
                                                     {badges}
@@ -113,9 +114,15 @@ export const EnhancedLiveMonitorView = () => {
 
                     return (
                         <div className={styles.locationCell}>
-                            <span style={{ color: 'var(--surface-fg-primary)' }}>{row.original.group}</span>
+                            <span style={{
+                                color: dimBreadcrumbs ? 'var(--surface-fg-secondary)' : 'var(--surface-fg-primary)',
+                                fontWeight: dimBreadcrumbs ? 'var(--font-weight-regular)' : 'var(--font-weight-medium)'
+                            }}>{row.original.group}</span>
                             <span className="material-symbols-rounded" style={{ color: 'var(--surface-fg-quaternary)', fontSize: '16px' }}>navigate_next</span>
-                            <span style={{ color: 'var(--surface-fg-primary)' }}>{row.original.unit}</span>
+                            <span style={{
+                                color: dimBreadcrumbs ? 'var(--surface-fg-secondary)' : 'var(--surface-fg-primary)',
+                                fontWeight: dimBreadcrumbs ? 'var(--font-weight-regular)' : 'var(--font-weight-medium)'
+                            }}>{row.original.unit}</span>
                             <span className="material-symbols-rounded" style={{ color: 'var(--surface-fg-quaternary)', fontSize: '16px' }}>navigate_next</span>
                             <span style={{ color: 'var(--surface-fg-primary)' }}>{row.original.location}</span>
                         </div>
@@ -181,7 +188,7 @@ export const EnhancedLiveMonitorView = () => {
             },
 
         ],
-        [displayMode, badgeTextMode]
+        [residentDisplayMode, badgeTextMode, dimBreadcrumbs]
     );
 
     const [selectedRows, setSelectedRows] = useAtom(selectedLiveRowsAtom);

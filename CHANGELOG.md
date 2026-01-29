@@ -7,6 +7,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
+- **Badge Truncation Configuration**:
+    - Added a main menu toggle "**Truncate more than 1 badge**" to control table density.
+    - When enabled, multiple risk badges for a resident are collapsed into a single badge and a `+N` counter with a detailed tooltip.
+    - Simplified `ResidentStatusGroup` to handle conditional truncation logic based on global state.
+- **Location Breadcrumb Configuration**:
+    - Added a main menu toggle "**Dim group/unit in location**" to improve scanning of room numbers.
+    - When enabled, the Group and Unit path segments use secondary foreground colors and regular font weights.
+- **Terminology Update**: Changed "**Overdue**" to "**Missed**" for all live view safety checks to align with operational language.
+    - Updated Tree View tooltips for missed checks.
+    - Updated Global Status Widget tooltips.
+    - Updated countdown timer strings (e.g., "Missed 5m").
+    - Standardized internal mock data labels.
+- **Supervisor Review Refinement**:
+    - **New Default Reason**: Introduced "**Unspecified**" as a new selectable reason for missed checks.
+    - **Default Selection**: Standardized the "Add supervisor review" modal to default to "Unspecified" for all new reviews, reducing initial friction for officers.
+    - **UI Consistency**: Updated the fallback logic to ensure "Unspecified" is selected when no matching reason exists in an existing note.
+- **Multi-Select Behavior Improvements**:
+    - **Stable Anchor Logic**: Implemented `lastClickedRowRef` to ensure Shift+Click expansion/contraction behaves predictably relative to the first non-modifier click point.
+    - **Visual Order Aware**: Refactored range selection to use the `DataTable`'s current visual sorting and filtering state instead of raw data order.
+    - **Flicker Suppression**: Added `mousedown` interception to prevent native browser text selection and blue highlighting during multi-select operations.
+    - **UI Isolation**: Applied `user-select: none` to checkboxes and action buttons to keep them distinct from text drag-selection.
 - **Semantic Type Migration**:
     - **Neutral Removal**: Completely removed the `neutral` semantic type across the application (Toasts, Badges, Timers).
     - **Info Adoption**: Migrated all informational states to use the `info` semantic type for better consistency and explicit intent.

@@ -133,6 +133,7 @@ SR badge displayed in Resident column for high-risk residents, consistent with L
 1. Select rows with pending review
 2. Click "Add Note" action
 3. Modal opens with reason dropdown:
+   - Unspecified (Default)
    - Unit Lockdown
    - Medical Emergency
    - Court Appearance

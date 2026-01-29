@@ -68,12 +68,12 @@ const generateData = (): LiveCheckRow[] => {
     const data: LiveCheckRow[] = [];
 
     // 1. Critical Overdue Checks
-    data.push(createLiveCheck('live-1', 'Jeff Siemens', '102', 'overdue', 'Overdue 5m', {
+    data.push(createLiveCheck('live-1', 'Jeff Siemens', '102', 'overdue', 'Missed 5m', {
         lastCheckTime: minutesAgo(35),
         group: 'Alpha',
         unit: 'A',
     }));
-    data.push(createLiveCheck('live-2', 'Brett Corbin', '102', 'overdue', 'Overdue 3m', {
+    data.push(createLiveCheck('live-2', 'Brett Corbin', '102', 'overdue', 'Missed 3m', {
         hasHighRisk: true,
         riskType: 'Suicide Watch',
         lastCheckTime: minutesAgo(33),

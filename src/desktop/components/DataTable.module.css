@@ -373,7 +373,8 @@
     font-weight: var(--font-weight-medium);
     color: var(--surface-fg-secondary);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.1s ease-in-out;
+    user-select: none;
 }
 
 @media (hover: hover) {
@@ -518,6 +519,7 @@
     cursor: pointer;
     transition: all 0.1s ease-in-out;
     margin: 0;
+    user-select: none;
 }
 
 @media (hover: hover) {

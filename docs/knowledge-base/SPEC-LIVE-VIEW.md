@@ -8,7 +8,7 @@
 ## Purpose
 
 Allows supervisors to monitor:
-- **Overdue checks** requiring immediate attention (red alert)
+- **Missed checks** requiring immediate attention (red alert)
 - **Due checks** in the grace window (amber warning)
 - **Upcoming checks** scheduled for the near future (info)
 
@@ -26,7 +26,7 @@ Allows supervisors to monitor:
 │ ┌─────┬────────────┬──────────┬─────────┬────────────┐          ││
 │ │ ☐   │ Resident   │ Scheduled│ Room    │ Status     │          ││
 │ ├─────┼────────────┼──────────┼─────────┼────────────┤          ││
-│ │ ☐   │ J. Wilson  │ 6:20 PM  │ A1-101  │ 🔴 Overdue │          ││
+│ │ ☐   │ J. Wilson  │ 6:20 PM  │ A1-101  │ 🔴 Missed   │          ││
 │ │ ☐   │ M. Garcia  │ 6:42 PM  │ B2-205  │ 🟡 Due     │          ││
 │ │ ☐   │ R. Taylor  │ 7:15 PM  │ C3-301  │ ⚪ Upcoming│          ││
 │ └─────┴────────────┴──────────┴─────────┴────────────┘          ││
@@ -110,7 +110,7 @@ Displayed in header tabs and Global Status Widget:
 
 | Badge | Calculation |
 |-------|-------------|
-| 🔔 Overdue | `liveData.filter(c => c.status === 'overdue').length` |
+| 🔔 Missed | `liveData.filter(c => c.status === 'overdue').length` |
 | ⏰ Due | `liveData.filter(c => c.status === 'due').length` |
 
 ---

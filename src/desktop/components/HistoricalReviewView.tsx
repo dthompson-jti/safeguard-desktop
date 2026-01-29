@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useState, useEffect } from 'react';
+import { useMemo, useCallback, useState, useEffect, useRef } from 'react';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { ColumnDef, RowSelectionState } from '@tanstack/react-table';
 import {
@@ -105,7 +105,8 @@ export const HistoricalReviewView = () => {
 
     const setDetailRecord = useSetAtom(activeDetailRecordAtom);
 
-    const handleRowClick = useCallback((row: HistoricalCheck, event: React.MouseEvent) => {
+    const lastClickedRowRef = useRef<string | null>(null);
+    const handleRowClick = useCallback((row: HistoricalCheck, event: React.MouseEvent, visualIds: string[]) => {
         const isMeta = event.ctrlKey || event.metaKey;
         const isShift = event.shiftKey;
 
@@ -114,13 +115,13 @@ export const HistoricalReviewView = () => {
             if (isMeta) {
                 if (next.has(row.id)) next.delete(row.id);
                 else next.add(row.id);
-            } else if (isShift && prev.size > 0) {
-                const lastId = Array.from(prev).pop();
-                if (lastId) {
-                    const allIds = loadedData.map((r: HistoricalCheck) => r.id);
-                    const startIdx = allIds.indexOf(lastId);
-                    const endIdx = allIds.indexOf(row.id);
-                    const range = allIds.slice(
+                lastClickedRowRef.current = row.id;
+            } else if (isShift && lastClickedRowRef.current) {
+                const startIdx = visualIds.indexOf(lastClickedRowRef.current);
+                const endIdx = visualIds.indexOf(row.id);
+
+                if (startIdx !== -1 && endIdx !== -1) {
+                    const range = visualIds.slice(
                         Math.min(startIdx, endIdx),
                         Math.max(startIdx, endIdx) + 1
                     );
@@ -129,6 +130,7 @@ export const HistoricalReviewView = () => {
             } else {
                 next.clear();
                 next.add(row.id);
+                lastClickedRowRef.current = row.id;
             }
             return next;
         });
@@ -150,7 +152,7 @@ export const HistoricalReviewView = () => {
         };
         setIsPanelOpen(true);
         setDetailRecord(panelData);
-    }, [loadedData, setSelectedRows, setDetailRecord, setIsPanelOpen]);
+    }, [setSelectedRows, setDetailRecord, setIsPanelOpen]);
 
     const handleOpenNoteModal = useCallback((checkId: string) => {
         setModalState({
@@ -193,14 +195,15 @@ export const HistoricalReviewView = () => {
                 header: 'Resident',
                 ...COLUMN_WIDTHS.RESIDENT,
                 accessorFn: (row) => row.residents.map((r) => r.name).join(', '),
-                cell: ({ row }) => (
+                cell: ({ row, table }) => (
                     <a
                         href="#"
                         className={styles.linkText}
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            handleRowClick(row.original, e);
+                            const visualIds = table.getRowModel().rows.map(r => r.id);
+                            handleRowClick(row.original, e, visualIds);
                         }}
                     >
                         {row.original.residents.map((r) => r.name).join(', ')}
