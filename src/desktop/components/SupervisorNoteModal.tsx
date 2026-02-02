@@ -226,7 +226,7 @@ export const SupervisorNoteModal = () => {
                     <div className={styles.field}>
                         <label className={styles.label}>
                             Reason for missed check(s)
-                            {requireReason && <span style={{ color: 'var(--color-critical-default)', marginLeft: '4px' }}>*</span>}
+                            {requireReason && <span style={{ color: 'var(--surface-fg-alert-primary)', marginLeft: '4px' }}>*</span>}
                         </label>
                         <div className={styles.selectFieldContainer}>
                             <Select
