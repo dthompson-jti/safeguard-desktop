@@ -1,7 +1,7 @@
 import * as Popover from '@radix-ui/react-popover';
 import { useAtom } from 'jotai';
 import { desktopEnhancedTreeLayoutAtom } from '../atoms';
-import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, residentBadgeColorModeAtom, dimLocationBreadcrumbsAtom, truncateBadgesAtom, tableFontWeightAtom, requireSupervisorNoteReasonAtom, reasonSelectionModeAtom } from '../../desktop/atoms';
+import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, residentBadgeColorModeAtom, truncateBadgesAtom, reasonSelectionModeAtom } from '../../desktop/atoms';
 
 import { Switch } from '../../components/Switch';
 import styles from './TopNavMenu.module.css';
@@ -13,9 +13,6 @@ export const TopNavMenu = () => {
     const [badgeColorMode, setBadgeColorMode] = useAtom(residentBadgeColorModeAtom);
     const [autoOpenPanel, setAutoOpenPanel] = useAtom(autoOpenDetailPanelAtom);
     const [truncateBadges, setTruncateBadges] = useAtom(truncateBadgesAtom);
-    const [dimBreadcrumbs, setDimBreadcrumbs] = useAtom(dimLocationBreadcrumbsAtom);
-    const [tableFontWeight, setTableFontWeight] = useAtom(tableFontWeightAtom);
-    const [requireReason, setRequireReason] = useAtom(requireSupervisorNoteReasonAtom);
     const [reasonSelectionMode, setReasonSelectionMode] = useAtom(reasonSelectionModeAtom);
 
     return (
@@ -141,40 +138,7 @@ export const TopNavMenu = () => {
                         />
                     </div>
 
-                    <div className={styles.divider} />
 
-                    <div className={styles.menuRow}>
-                        <div className={styles.menuRowText}>
-                            <span className={styles.label}>Dim group/unit in location</span>
-                        </div>
-                        <Switch
-                            checked={dimBreadcrumbs}
-                            onCheckedChange={setDimBreadcrumbs}
-                            id="dim-breadcrumbs-toggle"
-                        />
-                    </div>
-
-                    <div className={styles.menuRow}>
-                        <div className={styles.menuRowText}>
-                            <span className={styles.label}>Regular table text weight</span>
-                        </div>
-                        <Switch
-                            checked={tableFontWeight === 'regular'}
-                            onCheckedChange={(checked) => setTableFontWeight(checked ? 'regular' : 'medium')}
-                            id="table-weight-toggle"
-                        />
-                    </div>
-
-                    <div className={styles.menuRow}>
-                        <div className={styles.menuRowText}>
-                            <span className={styles.label}>Reason required for missed check</span>
-                        </div>
-                        <Switch
-                            checked={requireReason}
-                            onCheckedChange={setRequireReason}
-                            id="require-reason-toggle"
-                        />
-                    </div>
 
                     <div className={styles.divider} />
 

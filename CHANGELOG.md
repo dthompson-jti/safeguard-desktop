@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **UI Adjustments**:
     - Simplified regular search placeholder to "**Find records**".
     - Restored the "**X**" (close) icon to the Advanced Search panel header.
+    - **Menu Cleanup**: Removed configuration toggles for "**Reason required**", "**Table font weight**", and "**Dimmed breadcrumbs**". These behaviors are now enforced defaults.
 
 ### Changed
 - **Default Application Settings**: Updated the prototype's factory defaults to align with operational preferences:
