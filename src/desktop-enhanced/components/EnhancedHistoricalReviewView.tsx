@@ -479,7 +479,7 @@ export const EnhancedHistoricalReviewView = () => {
                 ),
             },
         ],
-        [loadedData, displayMode, badgeTextMode, dimBreadcrumbs, tableFontWeight]
+        [loadedData, displayMode, badgeTextMode, dimBreadcrumbs, tableFontWeight, handleOpenNoteModal]
     );
 
 

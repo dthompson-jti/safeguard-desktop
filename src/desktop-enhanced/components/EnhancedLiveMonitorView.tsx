@@ -194,7 +194,7 @@ export const EnhancedLiveMonitorView = () => {
             },
 
         ],
-        [loadedData, residentDisplayMode, badgeTextMode, dimBreadcrumbs, tableFontWeight]
+        [residentDisplayMode, badgeTextMode, dimBreadcrumbs, tableFontWeight]
     );
 
     const [selectedRows, setSelectedRows] = useAtom(selectedLiveRowsAtom);

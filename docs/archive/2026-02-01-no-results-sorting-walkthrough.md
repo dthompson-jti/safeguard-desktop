@@ -23,7 +23,8 @@ I have updated the "no results" state to a two-line design as per Figma and adde
 
 ### Modals
 - **[SupervisorNoteModal.tsx](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/components/SupervisorNoteModal.tsx)**: Moved the "Updating N records" notification from the modal header to an info banner within the modal body, positioned above the form fields.
-- **[SupervisorNoteModal.module.css](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/components/SupervisorNoteModal.module.css)**: Implemented `.infoBanner` using semantic info tokens (`--surface-bg-info`, `--surface-fg-info-primary`, `--surface-border-info_subtle`).
+- **[SupervisorNoteModal.module.css](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/components/SupervisorNoteModal.module.css)**: Implemented `.infoBanner` using semantic info tokens.
+- **[SupervisorNoteModal.tsx](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/components/SupervisorNoteModal.tsx)**: Updated required field asterisk to use `var(--surface-fg-alert-primary)`.
 - **[DesktopToolbar.tsx](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/components/DesktopToolbar.tsx)**: Updated the regular search placeholder to "Find records".
 - **[AdvancedSearch.tsx](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/components/AdvancedSearch.tsx)**: Reverted the close button to a standard "X" icon.
 - **[DesktopHeader.tsx](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop/components/DesktopHeader.tsx)** & **[DesktopEnhancedApp.tsx](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/src/desktop-enhanced/DesktopEnhancedApp.tsx)**: Hidden the Export button (commented out) across all views.
