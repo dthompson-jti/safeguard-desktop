@@ -49,19 +49,10 @@ export const LiveMonitorView = () => {
 
     // Filter and sort loaded data
     const liveRows = useMemo(() => {
-        let rows = [...loadedData];
+        const rows = [...loadedData];
 
-        // Apply search filter
-        if (filter.search) {
-            const searchLower = filter.search.toLowerCase();
-            rows = rows.filter((row) => {
-                const matchesResident = row.residents.some((r) =>
-                    r.name.toLowerCase().includes(searchLower)
-                );
-                const matchesLocation = row.location.toLowerCase().includes(searchLower);
-                return matchesResident || matchesLocation;
-            });
-        }
+        // Search is handled by the data loader
+
 
         // Sort by Schedule (Status) -> Location -> Risk
         rows.sort((a, b) => {
@@ -84,7 +75,7 @@ export const LiveMonitorView = () => {
         });
 
         return rows;
-    }, [filter.search, loadedData]);
+    }, [loadedData]);
 
     const columns: ColumnDef<LiveCheckRow>[] = useMemo(
         () => [

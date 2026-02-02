@@ -3,7 +3,7 @@
 import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { STORAGE_PREFIX } from '../config';
-import { DesktopView, DesktopFilter, HistoricalCheck } from './types';
+import { DesktopView, DesktopFilter, HistoricalCheck, LiveCheckRow } from './types';
 import { Resident } from '../types';
 import { enhancedMockData } from '../desktop-enhanced/data/mockData';
 // We'll need access to live data for the polymorphic resolver. 
@@ -144,12 +144,6 @@ export const historicalChecksAtom = atom<HistoricalCheck[]>(enhancedMockData.his
 
 /** Counter changed to trigger re-fetches in views */
 export const historicalRefreshAtom = atom(0);
-
-/** 
- * Push granular updates to historical rows (Sticky Row support) 
- * Payload: { id, changes }[]
- */
-export const historicalRowUpdateAtom = atom<{ id: string; changes: Partial<HistoricalCheck> }[] | null>(null);
 
 /** Derived: filtered historical checks */
 export const filteredHistoricalChecksAtom = atom((get) => {
@@ -319,11 +313,11 @@ export const desktopTabCountsAtom = atom((get) => {
     get(historicalRefreshAtom);
 
     // Live counts - Strictly active overdue
-    const overdue = enhancedMockData.liveData.filter(c => c.status === 'overdue').length;
-    const due = enhancedMockData.liveData.filter(c => c.status === 'due').length;
+    const overdue = enhancedMockData.liveData.filter((c: LiveCheckRow) => c.status === 'overdue').length;
+    const due = enhancedMockData.liveData.filter((c: LiveCheckRow) => c.status === 'due').length;
 
     // Historical count (missed / need comment)
-    const unreviewed = enhancedMockData.historicalData.filter(c =>
+    const unreviewed = enhancedMockData.historicalData.filter((c: HistoricalCheck) =>
         c.status === 'missed' && !c.supervisorNote
     ).length;
 
@@ -393,4 +387,7 @@ export const requireSupervisorNoteReasonAtom = atomWithStorage<boolean>(`${STORA
 export type ReasonSelectionMode = 'ghost' | 'none' | 'inline';
 /** Mode for clearing reason selection: 'ghost' (blank item), 'none' (explicit item), or 'inline' (X button) */
 export const reasonSelectionModeAtom = atomWithStorage<ReasonSelectionMode>(`${STORAGE_PREFIX}reason_selection_mode`, 'none');
+
+/** Global state to track if the current view has zero results (for header title sync) */
+export const isNoResultsAtom = atom(false);
 

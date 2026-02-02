@@ -8,9 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 ### Added
+- **Search Restoration**: Restored the "Has the words" free-text input to the Advanced Search panel (top left) for broad matching across names and locations.
+- **No Results UI**: Implemented a two-line design for empty search/filter states (Title + Message) using tertiary typography tokens.
+- **Header Synchronization**: The application header now dynamically updates to "No search results" when filtered data returns zero records.
+- **Multi-Edit Info Banner**: Relocated the batch record count in `SupervisorNoteModal` from the header to a semantic info banner in the modal body, positioned above form fields.
 - **Export Popover**: Implemented "Export" menu in the Enhanced View Desktop Header using a `Popover` component with options for Excel, XML, CSV, PDF, and RTF.
 - **Popover Alignment**: Added `align` prop (start/center/end) to the shared `Popover` component to support precise right alignment with triggers.
-- **Live Monitor Sorting**: Updated default Live View sorting to prioritize Status (Overdue > Due > Upcoming) followed by Schedule time.
+- **Live Monitor Sorting**: Updated default Live View sorting to prioritize **Scheduled time** (ascending), ensuring immediate and overdue checks appear at the top.
 - **Advanced Search Filters**:
     - **Resident Dropdown**: Replaced free-text input with a searchable resident dropdown in Advanced Search.
     - **Reviewer**: Added a dedicated "Reviewer" dropdown filter.
@@ -49,8 +53,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - Updated Global Status Widget tooltips.
     - Updated countdown timer strings (e.g., "Missed 5m").
     - Standardized internal mock data labels.
-- **Supervisor Review Refinement**:
-    - **New Default Reason**: Introduced "**Unspecified**" as a new selectable reason for missed checks.
+    - [x] Verify Export button appearance
+    - [ ] Verify Live View default sort
+    - [ ] Verify Advanced Search Resident dropdown
+    - [ ] Verify Advanced Search Reviewer dropdown for missed checks.
     - **Default Selection**: Standardized the "Add supervisor review" modal to default to "Unspecified" for all new reviews, reducing initial friction for officers.
     - **UI Consistency**: Updated the fallback logic to ensure "Unspecified" is selected when no matching reason exists in an existing note.
 - **Multi-Select Behavior Improvements**:

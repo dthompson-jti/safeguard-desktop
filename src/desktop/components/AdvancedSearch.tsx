@@ -41,7 +41,7 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
 
     // Local state for pending changes
     const [localFilter, setLocalFilter] = useState({
-        // search: filter.search, // Deprecated in UI
+        search: filter.search,
         resident: filter.resident || '',
         reviewer: filter.reviewer || '',
         officer: filter.officer || 'any',
@@ -59,7 +59,7 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
 
     const handleSearch = () => {
         updateFilter({
-            search: '', // Clear generic search if we are using specific fields
+            search: localFilter.search,
             resident: localFilter.resident,
             reviewer: localFilter.reviewer,
             officer: localFilter.officer === 'any' ? '' : localFilter.officer,
@@ -94,6 +94,15 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
             <div className={styles.grid}>
                 {/* Row 1 */}
                 <div className={styles.fieldGroup}>
+                    <label className={styles.label}>Has the words</label>
+                    <input
+                        className={styles.input}
+                        value={localFilter.search}
+                        onChange={(e) => handleChange('search', e.target.value)}
+                        placeholder="Enter words found in the record"
+                    />
+                </div>
+                <div className={styles.fieldGroup}>
                     <label className={styles.label}>Resident</label>
                     <SearchableSelect
                         value={localFilter.resident}
@@ -106,6 +115,8 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
                         ]}
                     />
                 </div>
+
+                {/* Row 2 */}
                 <div className={styles.fieldGroup}>
                     <label className={styles.label}>Officer</label>
                     {officerStyle === 'combo' ? (
@@ -132,8 +143,6 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
                         />
                     )}
                 </div>
-
-                {/* Row 2 */}
                 <div className={styles.fieldGroup}>
                     <label className={styles.label}>Reviewer</label>
                     <SearchableSelect
@@ -147,6 +156,8 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
                         ]}
                     />
                 </div>
+
+                {/* Row 3 */}
                 <div className={styles.fieldGroup}>
                     <label className={styles.label}>Status</label>
                     <Select
@@ -172,7 +183,7 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
                     </Select>
                 </div>
 
-                {/* Row 3 */}
+                {/* Row 4 */}
                 <div className={styles.fieldGroup}>
                     <label className={styles.label}>Date range</label>
                     <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 'var(--spacing-2)' }}>
@@ -210,8 +221,6 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
                         ))}
                     </Select>
                 </div>
-
-                {/* Row 4 (Removed Comments) */}
             </div>
 
             <div className={styles.footer}>

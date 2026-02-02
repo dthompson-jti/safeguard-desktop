@@ -438,9 +438,26 @@ export const generateEnhancedData = () => {
 };
 
 const cachedData = generateEnhancedData();
-export const enhancedMockData = cachedData;
+
 export const TOTAL_LIVE_RECORDS = cachedData.liveData.length;
 export const TOTAL_HISTORICAL_RECORDS = cachedData.historicalData.length;
+
+export { cachedData as enhancedMockData };
+
+// Helper to check if a search term matches any property of a record
+const matchesSearch = (text: string, search: string) => {
+    return text.toLowerCase().includes(search.toLowerCase());
+};
+
+const isSpecialRiskSearch = (s: string) => {
+    const lower = s.toLowerCase();
+    return lower === 'sr' || lower === 'special risk' || lower === 'suicide risk' || lower === 'special' || lower === 'suicide' || lower === 'high risk';
+};
+
+const isMedicalWatchSearch = (s: string) => {
+    const lower = s.toLowerCase();
+    return lower === 'mw' || lower === 'medical watch' || lower === 'medical' || lower === 'watch';
+};
 
 // Paginated data loaders for table views
 export const loadEnhancedLivePage = (
@@ -454,22 +471,24 @@ export const loadEnhancedLivePage = (
             if (filter) {
                 if (filter.search) {
                     const s = filter.search.toLowerCase();
-                    const isSR = s === 'sr' || s === 'special risk' || s === 'suicide risk' || s === 'special' || s === 'suicide' || s === 'high risk';
-                    const isMW = s === 'mw' || s === 'medical watch' || s === 'medical' || s === 'watch';
+                    const isSR = isSpecialRiskSearch(s);
+                    const isMW = isMedicalWatchSearch(s);
 
-                    filtered = filtered.filter(row =>
-                        row.residents.some(r => r.name.toLowerCase().includes(s)) ||
-                        row.location.toLowerCase().includes(s) ||
-                        (row.lastCheckOfficer && row.lastCheckOfficer.toLowerCase().includes(s)) ||
-                        row.status.toLowerCase().includes(s) ||
+                    filtered = filtered.filter((row: LiveCheckRow) =>
+                        row.residents.some((r) => matchesSearch(r.name, s)) ||
+                        matchesSearch(row.location, s) ||
+                        matchesSearch(row.group, s) ||
+                        matchesSearch(row.unit, s) ||
+                        (row.lastCheckOfficer && matchesSearch(row.lastCheckOfficer, s)) ||
+                        matchesSearch(row.status, s) ||
                         (isSR && row.hasHighRisk) ||
                         (isMW && row.location.includes('MW'))
                     );
                 }
-                if (filter.group && filter.group !== 'all') filtered = filtered.filter(r => r.group === filter.group);
-                if (filter.unit && filter.unit !== 'all') filtered = filtered.filter(r => r.unit === filter.unit);
+                if (filter.group && filter.group !== 'all') filtered = filtered.filter((r: LiveCheckRow) => r.group === filter.group);
+                if (filter.unit && filter.unit !== 'all') filtered = filtered.filter((r: LiveCheckRow) => r.unit === filter.unit);
                 if (filter.statusFilter && filter.statusFilter !== 'all') {
-                    filtered = filtered.filter(r => r.status === filter.statusFilter);
+                    filtered = filtered.filter((r: LiveCheckRow) => r.status === filter.statusFilter);
                 }
             }
             const data = filtered.slice(cursor, cursor + pageSize);
@@ -490,36 +509,38 @@ export const loadEnhancedHistoricalPage = (
             if (filter) {
                 if (filter.search) {
                     const s = filter.search.toLowerCase();
-                    const isSR = s === 'sr' || s === 'special risk' || s === 'suicide risk' || s === 'special' || s === 'suicide' || s === 'high risk';
-                    const isMW = s === 'mw' || s === 'medical watch' || s === 'medical' || s === 'watch';
+                    const isSR = isSpecialRiskSearch(s);
+                    const isMW = isMedicalWatchSearch(s);
 
-                    filtered = filtered.filter(row =>
-                        row.residents.some(r => r.name.toLowerCase().includes(s)) ||
-                        row.location.toLowerCase().includes(s) ||
-                        row.officerName.toLowerCase().includes(s) ||
-                        (row.supervisorNote && row.supervisorNote.toLowerCase().includes(s)) ||
-                        (row.officerNote && row.officerNote.toLowerCase().includes(s)) ||
-                        row.status.toLowerCase().includes(s) ||
+                    filtered = filtered.filter((row: HistoricalCheck) =>
+                        row.residents.some((r) => matchesSearch(r.name, s)) ||
+                        matchesSearch(row.location, s) ||
+                        matchesSearch(row.group, s) ||
+                        matchesSearch(row.unit, s) ||
+                        matchesSearch(row.officerName, s) ||
+                        (row.supervisorNote && matchesSearch(row.supervisorNote, s)) ||
+                        (row.officerNote && matchesSearch(row.officerNote, s)) ||
+                        matchesSearch(row.status, s) ||
                         (isSR && row.hasHighRisk) ||
                         (isMW && row.location.includes('MW'))
                     );
                 }
-                if (filter.group && filter.group !== 'all') filtered = filtered.filter(r => r.group === filter.group);
-                if (filter.unit && filter.unit !== 'all') filtered = filtered.filter(r => r.unit === filter.unit);
+                if (filter.group && filter.group !== 'all') filtered = filtered.filter((r: HistoricalCheck) => r.group === filter.group);
+                if (filter.unit && filter.unit !== 'all') filtered = filtered.filter((r: HistoricalCheck) => r.unit === filter.unit);
                 if (filter.historicalStatusFilter && filter.historicalStatusFilter !== 'all') {
                     if (filter.historicalStatusFilter === 'missed-all') {
-                        filtered = filtered.filter(r => r.status === 'missed');
+                        filtered = filtered.filter((r: HistoricalCheck) => r.status === 'missed');
                     } else if (filter.historicalStatusFilter === 'missed-not-reviewed') {
-                        filtered = filtered.filter(r => r.status === 'missed' && !r.supervisorNote);
+                        filtered = filtered.filter((r: HistoricalCheck) => r.status === 'missed' && !r.supervisorNote);
                     } else if (filter.historicalStatusFilter === 'missed-reviewed') {
-                        filtered = filtered.filter(r => r.status === 'missed' && !!r.supervisorNote);
+                        filtered = filtered.filter((r: HistoricalCheck) => r.status === 'missed' && !!r.supervisorNote);
                     } else if (filter.historicalStatusFilter === 'completed') {
-                        filtered = filtered.filter(r => r.status === 'completed');
+                        filtered = filtered.filter((r: HistoricalCheck) => r.status === 'completed');
                     }
                 }
                 if (filter.startDate || filter.endDate) {
                     const checkDate = (iso: string) => iso.split('T')[0];
-                    filtered = filtered.filter(r => {
+                    filtered = filtered.filter((r: HistoricalCheck) => {
                         if (filter.startDate) {
                             const date = checkDate(r.scheduledTime);
                             if (date < filter.startDate) return false;
@@ -534,18 +555,18 @@ export const loadEnhancedHistoricalPage = (
 
                 // Advanced Fields
                 if (filter.officer) {
-                    filtered = filtered.filter(r =>
+                    filtered = filtered.filter((r: HistoricalCheck) =>
                         r.officerName.toLowerCase().includes(filter.officer.toLowerCase())
                     );
                 }
                 if (filter.startDate) {
-                    filtered = filtered.filter(r => r.scheduledTime.split('T')[0] >= filter.startDate!);
+                    filtered = filtered.filter((r: HistoricalCheck) => r.scheduledTime.split('T')[0] >= filter.startDate!);
                 }
                 if (filter.endDate) {
-                    filtered = filtered.filter(r => r.scheduledTime.split('T')[0] <= filter.endDate!);
+                    filtered = filtered.filter((r: HistoricalCheck) => r.scheduledTime.split('T')[0] <= filter.endDate!);
                 }
                 if (filter.enhancedObservation && filter.enhancedObservation !== 'any') {
-                    filtered = filtered.filter(r => {
+                    filtered = filtered.filter((r: HistoricalCheck) => {
                         if (filter.enhancedObservation === 'has-any') return !!r.hasHighRisk || r.location.includes('MW');
                         if (filter.enhancedObservation === 'sr') return !!r.hasHighRisk;
                         if (filter.enhancedObservation === 'mw') return r.location.includes('MW'); // Mock logic
@@ -553,14 +574,14 @@ export const loadEnhancedHistoricalPage = (
                     });
                 }
                 if (filter.commentFilter && filter.commentFilter !== 'any') {
-                    filtered = filtered.filter(r => {
+                    filtered = filtered.filter((r: HistoricalCheck) => {
                         if (filter.commentFilter === 'has') return !!r.supervisorNote;
                         if (filter.commentFilter === 'none') return !r.supervisorNote;
                         return true;
                     });
                 }
                 if (filter.commentReason && filter.commentReason !== 'any') {
-                    filtered = filtered.filter(r =>
+                    filtered = filtered.filter((r: HistoricalCheck) =>
                         r.supervisorNote && r.supervisorNote.startsWith(filter.commentReason)
                     );
                 }
@@ -578,7 +599,7 @@ export const loadEnhancedHistoricalPage = (
 export const updateHistoricalCheck = (ids: string[], updates: Partial<HistoricalCheck>): Promise<void> => {
     return new Promise((resolve) => {
         setTimeout(() => {
-            cachedData.historicalData = cachedData.historicalData.map(check =>
+            cachedData.historicalData = cachedData.historicalData.map((check: HistoricalCheck) =>
                 ids.includes(check.id) ? { ...check, ...updates } : check
             );
             resolve();

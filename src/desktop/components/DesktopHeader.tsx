@@ -32,6 +32,7 @@ export const DesktopHeader = ({ onTogglePanel, isPanelOpen }: DesktopHeaderProps
             <div className={styles.rightSection}>
                 {view === 'historical' && (
                     <>
+                        {/* 
                         <button
                             className="btn"
                             data-variant="secondary"
@@ -40,6 +41,7 @@ export const DesktopHeader = ({ onTogglePanel, isPanelOpen }: DesktopHeaderProps
                         >
                             Export
                         </button>
+                        */}
 
                         <Button
                             variant="secondary"

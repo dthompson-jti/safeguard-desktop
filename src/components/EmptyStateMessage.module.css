@@ -6,7 +6,8 @@
   justify-content: center;
   text-align: center;
   padding: var(--spacing-8) var(--spacing-4);
-  color: var(--surface-fg-secondary);
+  color: var(--surface-fg-tertiary);
+  gap: 0;
 }
 
 .placeholderIcon {
@@ -21,14 +22,27 @@
     'opsz' 64;
 }
 
+.emptyStateTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--surface-fg-tertiary);
+}
+
 .emptyStateMessage {
   margin: 0;
-  font-size: 0.9em;
-  line-height: 1.5;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
   color: var(--surface-fg-tertiary);
 }
 
 .emptyStateQuery {
   font-weight: 600;
   color: var(--surface-fg-primary);
+}
+
+.actionContainer {
+  margin-top: var(--spacing-4);
 }

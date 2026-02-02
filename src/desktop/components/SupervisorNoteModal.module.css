@@ -4,6 +4,32 @@
     font-size: var(--font-size-md);
     font-weight: var(--font-weight-semibold);
     color: var(--surface-fg-primary);
+    white-space: nowrap;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-3);
+    overflow: hidden;
+}
+
+.infoBanner {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3) var(--spacing-4);
+    background-color: var(--surface-bg-info);
+    border: 1px solid var(--surface-border-info_subtle);
+    border-radius: var(--radius-md);
+    color: var(--surface-fg-info-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.infoBanner span:first-child {
+    font-size: 20px;
+    color: var(--surface-fg-info-secondary);
 }
 
 .body {

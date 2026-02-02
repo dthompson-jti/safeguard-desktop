@@ -8,13 +8,13 @@ import {
     desktopFilterAtom,
     supervisorNoteModalAtom,
     historicalRefreshAtom,
-    historicalRowUpdateAtom,
     PanelData,
     isDetailPanelOpenAtom,
     residentDisplayModeAtom,
     residentBadgeTextAtom,
     dimLocationBreadcrumbsAtom,
-    tableFontWeightAtom
+    tableFontWeightAtom,
+    isNoResultsAtom
 } from '../../desktop/atoms';
 import { HistoricalCheck } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
@@ -25,6 +25,7 @@ import { ResidentChip } from '../../desktop/components/ResidentChip';
 import { ResidentStatusGroup } from '../../desktop/components/ResidentStatusGroup';
 import { Tooltip } from '../../components/Tooltip';
 import { Button } from '../../components/Button';
+import { EmptyStateMessage } from '../../components/EmptyStateMessage';
 import { loadEnhancedHistoricalPage } from '../data/mockData';
 import { COLUMN_WIDTHS } from '../../desktop/components/tableConstants';
 import styles from '../../desktop/components/DataTable.module.css';
@@ -49,6 +50,7 @@ export const EnhancedHistoricalReviewView = () => {
     const [hasMore, setHasMore] = useState(true);
     const [cursor, setCursor] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
+    const setIsNoResults = useSetAtom(isNoResultsAtom);
 
     const filter = useAtomValue(desktopFilterAtom);
     const displayMode = useAtomValue(residentDisplayModeAtom);
@@ -60,7 +62,6 @@ export const EnhancedHistoricalReviewView = () => {
 
 
     // Initial load & Re-fetch on refreshCount change
-    const rowUpdate = useAtomValue(historicalRowUpdateAtom);
 
     // Initial load & Re-fetch on refreshCount change
     useEffect(() => {
@@ -71,23 +72,12 @@ export const EnhancedHistoricalReviewView = () => {
             setHasMore(nextCursor !== null);
             setTotalCount(totalCount);
             setIsLoading(false);
+
+            // Sync no results state
+            setIsNoResults(data.length === 0);
         });
-    }, [filter, refreshCount]);
+    }, [filter, refreshCount, setIsNoResults]);
 
-    // Sticky Row Update Listener
-    useEffect(() => {
-        if (!rowUpdate) return;
-
-        setLoadedData((prev) =>
-            prev.map(row => {
-                const update = rowUpdate.find(u => u.id === row.id);
-                if (update) {
-                    return { ...row, ...update.changes };
-                }
-                return row;
-            })
-        );
-    }, [rowUpdate]);
 
     const handleLoadMore = useCallback(() => {
         if (isLoading || !hasMore) return;
@@ -489,15 +479,16 @@ export const EnhancedHistoricalReviewView = () => {
                 ),
             },
         ],
-        [handleOpenNoteModal, displayMode, badgeTextMode, dimBreadcrumbs]
+        [loadedData, displayMode, badgeTextMode, dimBreadcrumbs, tableFontWeight]
     );
 
 
 
     const emptyState = (
-        <div className={styles.emptyState}>
-            <p>No records found matching your current filters.</p>
-        </div>
+        <EmptyStateMessage
+            title="No results found"
+            message="Try adjusting your search or filter settings"
+        />
     );
 
     return (

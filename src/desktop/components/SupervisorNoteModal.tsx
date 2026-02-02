@@ -7,7 +7,6 @@ import {
     historicalChecksAtom,
     selectedHistoryRowsAtom,
     historicalRefreshAtom,
-    historicalRowUpdateAtom,
     activeDetailRecordAtom,
     requireSupervisorNoteReasonAtom,
     reasonSelectionModeAtom,
@@ -20,6 +19,13 @@ import { Select, SelectItem } from '../../components/Select';
 import { Button } from '../../components/Button';
 import styles from './SupervisorNoteModal.module.css';
 
+/**
+ * SupervisorNoteModal
+ * 
+ * ARCHITECTURAL INVARIANT:
+ * - Multi-edit state ("Updating N records") MUST be displayed in an info banner within the modal body.
+ * - The banner uses semantic info tokens (`--surface-bg-info`, etc.) and is positioned above form fields.
+ */
 export const SupervisorNoteModal = () => {
     const [modalState, setModalState] = useAtom(supervisorNoteModalAtom);
     const historicalChecks = useAtomValue(historicalChecksAtom);
@@ -33,7 +39,6 @@ export const SupervisorNoteModal = () => {
     const [reason, setReason] = useState<SupervisorNoteReason | ''>('Unspecified'); // Strict mode needs empty str
     const [additionalNotes, setAdditionalNotes] = useState('');
     const [isSaving, setIsSaving] = useState(false);
-    const setRowUpdate = useSetAtom(historicalRowUpdateAtom);
 
     // Initial load / Edit mode logic
     const [hasExistingComment, setHasExistingComment] = useState(false);
@@ -42,10 +47,18 @@ export const SupervisorNoteModal = () => {
     useMemo(() => {
         if (!modalState.isOpen) return;
 
-        // Find the check(s)
-        const selectedChecks = historicalChecks.filter((c: { id: string }) => modalState.selectedIds.includes(c.id));
+        const isMulti = modalState.selectedIds.length > 1;
 
-        // Check if any have a note
+        if (isMulti) {
+            // Simplified: always empty for multiple
+            setHasExistingComment(false);
+            setReason('');
+            setAdditionalNotes('');
+            return;
+        }
+
+        // Find the check (single selection)
+        const selectedChecks = historicalChecks.filter((c: { id: string }) => modalState.selectedIds.includes(c.id));
         const existingNoteCheck = selectedChecks.find((c: { supervisorNote?: string }) => !!c.supervisorNote);
 
         if (existingNoteCheck && existingNoteCheck.supervisorNote) {
@@ -68,7 +81,7 @@ export const SupervisorNoteModal = () => {
             setReason('');
             setAdditionalNotes('');
         }
-    }, [modalState.isOpen, modalState.selectedIds, historicalChecks, requireReason]);
+    }, [modalState.isOpen, modalState.selectedIds, historicalChecks]);
 
     const handleClose = () => {
         if (isSaving) return;
@@ -109,13 +122,6 @@ export const SupervisorNoteModal = () => {
             if (activeRecord && modalState.selectedIds.includes(activeRecord.id)) {
                 setActiveRecord({ ...activeRecord, ...updates });
             }
-
-            // Trigger local sticky update for batch
-            const batchUpdates = modalState.selectedIds.map(id => ({
-                id,
-                changes: updates
-            }));
-            setRowUpdate(batchUpdates);
 
             if (modalState.selectedIds.length > 1) {
                 setSelectedRows(new Set());
@@ -201,7 +207,9 @@ export const SupervisorNoteModal = () => {
             width="440px"
         >
             <Modal.Header>
-                <span className={styles.title}>{hasExistingComment ? "Edit supervisor review" : "Add supervisor review"}</span>
+                <div className={styles.headerLeft}>
+                    <span className={styles.title}>{hasExistingComment ? "Edit supervisor review" : "Add supervisor review"}</span>
+                </div>
                 <Button variant="tertiary" size="s" iconOnly aria-label="Close" onClick={handleClose} disabled={isSaving}>
                     <span className="material-symbols-rounded">close</span>
                 </Button>
@@ -209,6 +217,12 @@ export const SupervisorNoteModal = () => {
 
             <Modal.Content>
                 <div className={styles.body}>
+                    {modalState.selectedIds.length > 1 && (
+                        <div className={styles.infoBanner}>
+                            <span className="material-symbols-rounded">info</span>
+                            <span>Updating {modalState.selectedIds.length} records</span>
+                        </div>
+                    )}
                     <div className={styles.field}>
                         <label className={styles.label}>
                             Reason for missed check(s)

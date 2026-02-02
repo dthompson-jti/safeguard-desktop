@@ -13,7 +13,8 @@ import {
     selectedHistoryRowsAtom,
     selectedLiveRowsAtom,
     panelWidthAtom,
-    desktopViewAtom
+    desktopViewAtom,
+    isNoResultsAtom
 } from '../desktop/atoms';
 import { EnhancedLiveMonitorView as LiveMonitorView } from './components/EnhancedLiveMonitorView';
 import { EnhancedHistoricalReviewView as HistoricalReviewView } from './components/EnhancedHistoricalReviewView';
@@ -25,18 +26,19 @@ import { ToastMessage } from '../components/Toast';
 import { toastsAtom } from '../data/toastAtoms';
 import { Button } from '../components/Button';
 import { Tooltip } from '../components/Tooltip';
-import { Popover } from '../components/Popover';
+// import { Popover } from '../components/Popover';
 import styles from './DesktopEnhancedApp.module.css';
 
 export default function DesktopEnhancedApp() {
     // FIX: Use the specific enhanced view atom shared with ModeToggle
     const view = useAtomValue(desktopViewAtom);
+    const isNoResults = useAtomValue(isNoResultsAtom);
 
     const setFilter = useSetAtom(desktopFilterAtom);
 
     const activeRecord = useAtomValue(activeDetailRecordAtom);
     const [isPanelOpen, setIsPanelOpen] = useAtom(isDetailPanelOpenAtom);
-    const [isExportOpen, setIsExportOpen] = useState(false);
+    // const [isExportOpen, setIsExportOpen] = useState(false);
     const autoOpenPanel = useAtomValue(autoOpenDetailPanelAtom);
     const panelWidth = useAtomValue(panelWidthAtom);
 
@@ -110,10 +112,11 @@ export default function DesktopEnhancedApp() {
                             </div>
                             <div className={styles.navRow2}>
                                 <h2 className={styles.pageTitle}>
-                                    Safeguard checks – {view === 'live' ? 'Live view' : 'Historical view'}
+                                    {isNoResults ? 'No search results' : `Safeguard checks – ${view === 'live' ? 'Live view' : 'Historical view'}`}
                                 </h2>
 
                                 <div className={styles.row2Actions}>
+                                    {/* 
                                     <Popover
                                         open={isExportOpen}
                                         onOpenChange={setIsExportOpen}
@@ -150,6 +153,7 @@ export default function DesktopEnhancedApp() {
                                             </button>
                                         </div>
                                     </Popover>
+                                    */}
 
                                     <Tooltip content={showPanel ? "Close side panel" : "Open side panel"}>
                                         <Button

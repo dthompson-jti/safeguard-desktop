@@ -2,9 +2,10 @@
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { ColumnDef, RowSelectionState, Updater } from '@tanstack/react-table';
-import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom, residentDisplayModeAtom, residentBadgeTextAtom, isDetailPanelOpenAtom, dimLocationBreadcrumbsAtom, tableFontWeightAtom } from '../../desktop/atoms';
+import { desktopFilterAtom, selectedLiveRowsAtom, activeDetailRecordAtom, residentDisplayModeAtom, residentBadgeTextAtom, isDetailPanelOpenAtom, dimLocationBreadcrumbsAtom, tableFontWeightAtom, isNoResultsAtom } from '../../desktop/atoms';
 import { LiveCheckRow } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
+import { EmptyStateMessage } from '../../components/EmptyStateMessage';
 import { StatusBadge, StatusBadgeType } from '../../desktop/components/StatusBadge';
 import { ResidentChip } from '../../desktop/components/ResidentChip';
 import { ResidentStatusGroup } from '../../desktop/components/ResidentStatusGroup';
@@ -24,6 +25,7 @@ export const EnhancedLiveMonitorView = () => {
     const [hasMore, setHasMore] = useState(true);
     const [cursor, setCursor] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
+    const setIsNoResults = useSetAtom(isNoResultsAtom);
 
     // Initial load and filter reset
     useEffect(() => {
@@ -34,8 +36,11 @@ export const EnhancedLiveMonitorView = () => {
             setHasMore(nextCursor !== null);
             setTotalCount(totalCount);
             setIsLoading(false);
+
+            // Sync no results state
+            setIsNoResults(data.length === 0);
         });
-    }, [filter]);
+    }, [filter, setIsNoResults]);
 
     const handleLoadMore = useCallback(() => {
         if (isLoading || !hasMore) return;
@@ -189,7 +194,7 @@ export const EnhancedLiveMonitorView = () => {
             },
 
         ],
-        [residentDisplayMode, badgeTextMode, dimBreadcrumbs]
+        [loadedData, residentDisplayMode, badgeTextMode, dimBreadcrumbs, tableFontWeight]
     );
 
     const [selectedRows, setSelectedRows] = useAtom(selectedLiveRowsAtom);
@@ -252,6 +257,13 @@ export const EnhancedLiveMonitorView = () => {
     }, [setSelectedRows]);
 
 
+    const emptyState = (
+        <EmptyStateMessage
+            title="No results found"
+            message="Try adjusting your search or filter settings"
+        />
+    );
+
     return (
         <div style={{ display: 'contents', '--table-font-weight': tableFontWeight === 'regular' ? 'var(--font-weight-regular)' : 'var(--font-weight-medium)' } as React.CSSProperties}>
             <DataTable
@@ -267,7 +279,8 @@ export const EnhancedLiveMonitorView = () => {
                 onRowSelectionChange={handleRowSelectionChange}
                 onRowClick={handleRowClick}
                 onRowDoubleClick={() => setPanelOpen(true)}
-                initialSorting={[{ id: 'status', desc: false }]}
+                initialSorting={[{ id: 'scheduled', desc: false }]}
+                emptyState={emptyState}
             />
         </div>
     );
