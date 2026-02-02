@@ -12,13 +12,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **No Results UI**: Implemented a two-line design for empty search/filter states (Title + Message) using tertiary typography tokens.
 - **Header Synchronization**: The application header now dynamically updates to "No search results" when filtered data returns zero records.
 - **Multi-Edit Info Banner**: Relocated the batch record count in `SupervisorNoteModal` from the header to a semantic info banner in the modal body, positioned above form fields.
-- **Export Popover**: Implemented "Export" menu in the Enhanced View Desktop Header using a `Popover` component with options for Excel, XML, CSV, PDF, and RTF.
-- **Popover Alignment**: Added `align` prop (start/center/end) to the shared `Popover` component to support precise right alignment with triggers.
+- **Hidden Features**: Temporarily hidden the **Export** button/menu across all views (code maintained for future restoration).
+- **Stabilization & Debugging**:
+    - Resolved runtime evaluation error in `mockData.ts` caused by HMR/export syntax conflicts.
+    - Cleaned up deleted `historicalRowUpdateAtom` references across the codebase to resolve build and lint regressions.
+    - Fixed React Hook dependency warnings and unsafe type usages.
 - **Live Monitor Sorting**: Updated default Live View sorting to prioritize **Scheduled time** (ascending), ensuring immediate and overdue checks appear at the top.
 - **Advanced Search Filters**:
     - **Resident Dropdown**: Replaced free-text input with a searchable resident dropdown in Advanced Search.
     - **Reviewer**: Added a dedicated "Reviewer" dropdown filter.
     - **Data Source**: Integrated valid mock data lists for both new dropdowns.
+- **UI Adjustments**:
+    - Simplified regular search placeholder to "**Find records**".
+    - Restored the "**X**" (close) icon to the Advanced Search panel header.
 
 ### Changed
 - **Default Application Settings**: Updated the prototype's factory defaults to align with operational preferences:
