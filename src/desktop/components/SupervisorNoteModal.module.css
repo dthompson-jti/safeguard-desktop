@@ -9,7 +9,56 @@
 .body {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-6);
+    gap: var(--spacing-4);
+}
+
+.selectFieldContainer {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    /* Change from center to stretch */
+    width: 100%;
+}
+
+.fullWidth {
+    width: 100% !important;
+    max-width: none !important;
+    flex: 1 !important;
+}
+
+.inlineClearButton {
+    position: absolute;
+    right: 36px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 24px;
+    width: 24px;
+    z-index: 10;
+    pointer-events: auto;
+
+    /* Quaternary look: faint border, subtle bg */
+    background-color: var(--control-bg-secondary);
+    border: 1px solid var(--control-border-secondary-hover);
+    border-radius: var(--radius-sm);
+    color: var(--surface-fg-tertiary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.inlineClearButton:hover {
+    background-color: var(--control-bg-secondary-hover);
+    border-color: var(--surface-border-theme);
+    color: var(--color-critical-default);
+    box-shadow: var(--shadow-sm);
+}
+
+.inlineClearButton span {
+    font-size: 16px;
 }
 
 .field {

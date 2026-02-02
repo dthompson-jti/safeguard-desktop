@@ -1,7 +1,7 @@
 import * as Popover from '@radix-ui/react-popover';
 import { useAtom } from 'jotai';
 import { desktopEnhancedTreeLayoutAtom } from '../atoms';
-import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, residentBadgeColorModeAtom, dimLocationBreadcrumbsAtom, truncateBadgesAtom } from '../../desktop/atoms';
+import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, residentBadgeColorModeAtom, dimLocationBreadcrumbsAtom, truncateBadgesAtom, tableFontWeightAtom, requireSupervisorNoteReasonAtom, reasonSelectionModeAtom } from '../../desktop/atoms';
 
 import { Switch } from '../../components/Switch';
 import styles from './TopNavMenu.module.css';
@@ -14,6 +14,9 @@ export const TopNavMenu = () => {
     const [autoOpenPanel, setAutoOpenPanel] = useAtom(autoOpenDetailPanelAtom);
     const [truncateBadges, setTruncateBadges] = useAtom(truncateBadgesAtom);
     const [dimBreadcrumbs, setDimBreadcrumbs] = useAtom(dimLocationBreadcrumbsAtom);
+    const [tableFontWeight, setTableFontWeight] = useAtom(tableFontWeightAtom);
+    const [requireReason, setRequireReason] = useAtom(requireSupervisorNoteReasonAtom);
+    const [reasonSelectionMode, setReasonSelectionMode] = useAtom(reasonSelectionModeAtom);
 
     return (
         <Popover.Root>
@@ -151,6 +154,54 @@ export const TopNavMenu = () => {
                         />
                     </div>
 
+                    <div className={styles.menuRow}>
+                        <div className={styles.menuRowText}>
+                            <span className={styles.label}>Regular table text weight</span>
+                        </div>
+                        <Switch
+                            checked={tableFontWeight === 'regular'}
+                            onCheckedChange={(checked) => setTableFontWeight(checked ? 'regular' : 'medium')}
+                            id="table-weight-toggle"
+                        />
+                    </div>
+
+                    <div className={styles.menuRow}>
+                        <div className={styles.menuRowText}>
+                            <span className={styles.label}>Reason required for missed check</span>
+                        </div>
+                        <Switch
+                            checked={requireReason}
+                            onCheckedChange={setRequireReason}
+                            id="require-reason-toggle"
+                        />
+                    </div>
+
+                    <div className={styles.divider} />
+
+                    <div className={styles.sectionHeader}>Reason Selection Mode</div>
+                    <div className={styles.displayOptionsGrid}>
+                        <button
+                            className={styles.optionButton}
+                            data-active={reasonSelectionMode === 'ghost'}
+                            onClick={() => setReasonSelectionMode('ghost')}
+                        >
+                            <span>Ghost</span>
+                        </button>
+                        <button
+                            className={styles.optionButton}
+                            data-active={reasonSelectionMode === 'none'}
+                            onClick={() => setReasonSelectionMode('none')}
+                        >
+                            <span>None</span>
+                        </button>
+                        <button
+                            className={styles.optionButton}
+                            data-active={reasonSelectionMode === 'inline'}
+                            onClick={() => setReasonSelectionMode('inline')}
+                        >
+                            <span>Inline</span>
+                        </button>
+                    </div>
 
                 </Popover.Content>
             </Popover.Portal>

@@ -23,7 +23,7 @@ export const showResidentBadgesAtom = atomWithStorage<boolean>(`${STORAGE_PREFIX
 
 /** Color mode for resident badges */
 export type BadgeColorMode = 'warning' | 'info' | 'solid' | 'neutral-strong';
-export const residentBadgeColorModeAtom = atomWithStorage<BadgeColorMode>(`${STORAGE_PREFIX}badge_color_mode`, 'info');
+export const residentBadgeColorModeAtom = atomWithStorage<BadgeColorMode>(`${STORAGE_PREFIX}badge_color_mode`, 'neutral-strong');
 
 
 
@@ -46,6 +46,8 @@ export const FACTORY_FILTER_DEFAULTS: DesktopFilter = {
     enhancedObservation: 'any',
     commentFilter: 'any',
     commentReason: 'any',
+    resident: '',
+    reviewer: '',
 };
 
 
@@ -90,7 +92,9 @@ export const isFilterCustomizedAtom = atom((get) => {
         current.endDate !== saved.endDate ||
         current.enhancedObservation !== saved.enhancedObservation ||
         current.commentFilter !== saved.commentFilter ||
-        current.commentReason !== saved.commentReason
+        current.commentReason !== saved.commentReason ||
+        current.resident !== saved.resident ||
+        current.reviewer !== saved.reviewer
     );
 });
 
@@ -205,6 +209,17 @@ export const filteredHistoricalChecksAtom = atom((get) => {
             const hasNote = !!check.supervisorNote;
             if (filter.commentFilter === 'has' && !hasNote) return false;
             if (filter.commentFilter === 'none' && hasNote) return false;
+        }
+
+        // Resident Filter (Mock)
+        if (filter.resident) {
+            const resMatch = check.residents.some(r => r.name === filter.resident);
+            if (!resMatch) return false;
+        }
+
+        // Reviewer Filter (Mock)
+        if (filter.reviewer) {
+            if (check.supervisorName !== filter.reviewer) return false;
         }
 
         return true;
@@ -348,7 +363,7 @@ export type ResidentDisplayMode = 'left-badge' | 'chip' | 'right-badge';
  */
 export const residentDisplayModeAtom = atomWithStorage<ResidentDisplayMode>(
     `${STORAGE_PREFIX}resident_display_mode`,
-    'right-badge'
+    'left-badge'
 );
 
 export type ResidentBadgeTextMode = 'full' | 'short';
@@ -357,7 +372,7 @@ export type ResidentBadgeTextMode = 'full' | 'short';
  */
 export const residentBadgeTextAtom = atomWithStorage<ResidentBadgeTextMode>(
     `${STORAGE_PREFIX}resident_badge_text`,
-    'full'
+    'short'
 );
 
 /** Toggle for Officer input style (Select vs Combo Box) */
@@ -368,4 +383,14 @@ export const dimLocationBreadcrumbsAtom = atomWithStorage<boolean>(`${STORAGE_PR
 
 /** Toggle for badge truncation in tables (Show +N instead of all badges) */
 export const truncateBadgesAtom = atomWithStorage<boolean>(`${STORAGE_PREFIX}truncate_badges`, false);
+
+/** Toggle for table font weight: 'medium' (default) or 'regular' */
+export const tableFontWeightAtom = atomWithStorage<'medium' | 'regular'>(`${STORAGE_PREFIX}table_font_weight`, 'regular');
+
+/** Toggle for requiring a reason when adding a supervisor note */
+export const requireSupervisorNoteReasonAtom = atomWithStorage<boolean>(`${STORAGE_PREFIX}require_supervisor_note_reason`, true);
+
+export type ReasonSelectionMode = 'ghost' | 'none' | 'inline';
+/** Mode for clearing reason selection: 'ghost' (blank item), 'none' (explicit item), or 'inline' (X button) */
+export const reasonSelectionModeAtom = atomWithStorage<ReasonSelectionMode>(`${STORAGE_PREFIX}reason_selection_mode`, 'none');
 

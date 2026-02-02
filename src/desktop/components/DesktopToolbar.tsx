@@ -177,7 +177,7 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                 <SearchInput
                     value={filter.search}
                     onChange={handleSearchChange}
-                    placeholder="Find checks"
+                    placeholder="Search checks"
                     flavor="instant"
                     size="md"
                 />

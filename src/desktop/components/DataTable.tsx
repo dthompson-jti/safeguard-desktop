@@ -432,9 +432,7 @@ export function DataTable<T>({
                 {table.getRowModel().rows.length === 0 && !isLoading && data.length === 0 && (
                     emptyState || (
                         <div className={styles.emptyState}>
-                            <span className={`material-symbols-rounded ${styles.emptyIcon}`}>
-                                inbox
-                            </span>
+
                             <p>No data to display</p>
                         </div>
                     )

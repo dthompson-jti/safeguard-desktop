@@ -32,6 +32,12 @@
   transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.15s;
 }
 
+.selectTrigger[data-placeholder='true'] {
+  color: var(--control-fg-placeholder);
+  font-weight: 400;
+  /* Regular weight for placeholder to distinguish it */
+}
+
 /* === HOVER STATE: Simple border change, NO thick bottom === */
 /* Only apply "no shadow" if it's NOT a filter (skeuomorphic) variant */
 .selectTrigger:not([data-variant='filter']):hover:not(:disabled) {

@@ -7,6 +7,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
+### Added
+- **Export Popover**: Implemented "Export" menu in the Enhanced View Desktop Header using a `Popover` component with options for Excel, XML, CSV, PDF, and RTF.
+- **Popover Alignment**: Added `align` prop (start/center/end) to the shared `Popover` component to support precise right alignment with triggers.
+- **Live Monitor Sorting**: Updated default Live View sorting to prioritize Status (Overdue > Due > Upcoming) followed by Schedule time.
+- **Advanced Search Filters**:
+    - **Resident Dropdown**: Replaced free-text input with a searchable resident dropdown in Advanced Search.
+    - **Reviewer**: Added a dedicated "Reviewer" dropdown filter.
+    - **Data Source**: Integrated valid mock data lists for both new dropdowns.
+
+### Changed
+- **Default Application Settings**: Updated the prototype's factory defaults to align with operational preferences:
+    - **Resident Display Mode**: Defaults to "**Left**" (Name then badges, both left-aligned).
+    - **Resident Badge Text**: Defaults to "**Short**" (Acronyms like "SR", "MW").
+    - **Badge Color Mode**: Defaults to "**Mode B**" (Neutral Strong/Dark).
+    - **Table Font Weight**: Defaults to "**Regular**" for improved data density.
+    - **Supervisor Review Requirements**: Missed checks now require a reason by default.
+    - **Reason Selection Mode**: Defaults to "**None**" (Explicit clear option in dropdown).
+    - **Navigation Breadcrumbs**: Location breadcrumbs now default to "**Dimmed**" for better focus on room numbers.
+- **Resident Display - Left Mode**: Corrected the visual layout for "Left" mode; status badges now appear to the right of the resident's name, but the entire group is left-aligned within the cell.
+- **Fixed Prototype Stability**: Resolved critical syntax and structural errors in `mockData.ts` that were causing local development server failures.
+- Renamed "Require review reason" to "Reason required for missed check" in the main menu for better clarity.
+- Implemented "Placeholder Reversion" UX for missed check reasons: selecting the blank option resets the dropdown to its "Select a reason..." placeholder state.
+- Integrated UX research findings for clearing single-select dropdowns.
 - **Mock Data Scenarios & Lifecycle**:
     - **Refined Data Generation**: Implemented realistic unit-specific scenarios in `mockData.ts`:
         - **Maple Transitional**: Simulates neglected wing rounds (all rooms 🔴 Missed).

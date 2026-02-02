@@ -13,8 +13,8 @@ import {
     isDetailPanelOpenAtom,
     residentDisplayModeAtom,
     residentBadgeTextAtom,
-    resetFiltersAtom,
-    dimLocationBreadcrumbsAtom
+    dimLocationBreadcrumbsAtom,
+    tableFontWeightAtom
 } from '../../desktop/atoms';
 import { HistoricalCheck } from '../../desktop/types';
 import { DataTable } from '../../desktop/components/DataTable';
@@ -54,9 +54,10 @@ export const EnhancedHistoricalReviewView = () => {
     const displayMode = useAtomValue(residentDisplayModeAtom);
     const badgeTextMode = useAtomValue(residentBadgeTextAtom);
     const dimBreadcrumbs = useAtomValue(dimLocationBreadcrumbsAtom);
+    const tableFontWeight = useAtomValue(tableFontWeightAtom);
     const setModalState = useSetAtom(supervisorNoteModalAtom);
     const refreshCount = useAtomValue(historicalRefreshAtom);
-    const resetFilters = useSetAtom(resetFiltersAtom);
+
 
     // Initial load & Re-fetch on refreshCount change
     const rowUpdate = useAtomValue(historicalRowUpdateAtom);
@@ -281,12 +282,12 @@ export const EnhancedHistoricalReviewView = () => {
                                         <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 'var(--spacing-2)', height: '24px', width: '100%' }}>
                                             {displayMode === 'left-badge' ? (
                                                 <div style={{ display: 'flex', gap: 'var(--spacing-2)', alignItems: 'center' }}>
-                                                    <span style={{ fontWeight: 500, color: 'var(--surface-fg-primary)' }}>{r.name}</span>
+                                                    <span style={{ color: 'var(--surface-fg-primary)' }}>{r.name}</span>
                                                     {badges}
                                                 </div>
                                             ) : (
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                                                    <span style={{ fontWeight: 500, color: 'var(--surface-fg-primary)' }}>{r.name}</span>
+                                                    <span style={{ color: 'var(--surface-fg-primary)' }}>{r.name}</span>
                                                     {badges}
                                                 </div>
                                             )}
@@ -312,12 +313,12 @@ export const EnhancedHistoricalReviewView = () => {
                     <div className={styles.locationCell}>
                         <span style={{
                             color: dimBreadcrumbs ? 'var(--surface-fg-secondary)' : 'var(--surface-fg-primary)',
-                            fontWeight: dimBreadcrumbs ? 'var(--font-weight-regular)' : 'var(--font-weight-medium)'
+                            fontWeight: (tableFontWeight === 'regular' || dimBreadcrumbs) ? 'var(--font-weight-regular)' : 'var(--font-weight-medium)'
                         }}>{row.original.group}</span>
                         <span className="material-symbols-rounded" style={{ color: 'var(--surface-fg-quaternary)', fontSize: '16px' }}>navigate_next</span>
                         <span style={{
                             color: dimBreadcrumbs ? 'var(--surface-fg-secondary)' : 'var(--surface-fg-primary)',
-                            fontWeight: dimBreadcrumbs ? 'var(--font-weight-regular)' : 'var(--font-weight-medium)'
+                            fontWeight: (tableFontWeight === 'regular' || dimBreadcrumbs) ? 'var(--font-weight-regular)' : 'var(--font-weight-medium)'
                         }}>{row.original.unit}</span>
                         <span className="material-symbols-rounded" style={{ color: 'var(--surface-fg-quaternary)', fontSize: '16px' }}>navigate_next</span>
                         <span style={{ color: 'var(--surface-fg-primary)' }}>{row.original.location}</span>
@@ -491,40 +492,34 @@ export const EnhancedHistoricalReviewView = () => {
         [handleOpenNoteModal, displayMode, badgeTextMode, dimBreadcrumbs]
     );
 
-    const handleResetAll = () => {
-        resetFilters();
-    };
+
 
     const emptyState = (
         <div className={styles.emptyState}>
-            <span className={`material-symbols-rounded ${styles.emptyIcon}`}>
-                search_off
-            </span>
             <p>No records found matching your current filters.</p>
-            <Button variant="tertiary" size="s" onClick={handleResetAll}>
-                Clear all filters
-            </Button>
         </div>
     );
 
     return (
         <>
-            <DataTable
-                data={loadedData}
-                columns={columns}
-                enableRowSelection
-                rowSelection={rowSelection}
-                onRowSelectionChange={handleRowSelectionChange}
-                getRowId={(row) => row.id}
-                totalCount={totalCount}
-                isLoading={isLoading}
-                hasMore={hasMore}
-                onLoadMore={handleLoadMore}
-                onRowClick={handleRowClick}
-                onRowDoubleClick={() => setPanelOpen(true)}
-                initialSorting={[{ id: 'scheduled', desc: true }]}
-                emptyState={emptyState}
-            />
+            <div style={{ display: 'contents', '--table-font-weight': tableFontWeight === 'regular' ? 'var(--font-weight-regular)' : 'var(--font-weight-medium)' } as React.CSSProperties}>
+                <DataTable
+                    data={loadedData}
+                    columns={columns}
+                    enableRowSelection
+                    rowSelection={rowSelection}
+                    onRowSelectionChange={handleRowSelectionChange}
+                    getRowId={(row) => row.id}
+                    totalCount={totalCount}
+                    isLoading={isLoading}
+                    hasMore={hasMore}
+                    onLoadMore={handleLoadMore}
+                    onRowClick={handleRowClick}
+                    onRowDoubleClick={() => setPanelOpen(true)}
+                    initialSorting={[{ id: 'scheduled', desc: true }]}
+                    emptyState={emptyState}
+                />
+            </div>
             {selectedRows.size > 0 && (
                 <BulkActionFooter
                     selectedCount={selectedRows.size}

@@ -53,6 +53,9 @@ export interface DesktopFilter {
     enhancedObservation: 'any' | 'has-any' | 'sr' | 'mw';
     commentFilter: 'any' | 'has' | 'none';
     commentReason: string;
+    // New Filters
+    resident: string; // Name search
+    reviewer: string; // Supervisor name search
 }
 
 /** Derived live check for table display */

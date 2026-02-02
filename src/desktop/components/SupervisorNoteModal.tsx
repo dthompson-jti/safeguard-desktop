@@ -9,6 +9,8 @@ import {
     historicalRefreshAtom,
     historicalRowUpdateAtom,
     activeDetailRecordAtom,
+    requireSupervisorNoteReasonAtom,
+    reasonSelectionModeAtom,
 } from '../atoms';
 import { SUPERVISOR_NOTE_REASONS, SupervisorNoteReason } from '../types';
 import { addToastAtom } from '../../data/toastAtoms';
@@ -25,21 +27,16 @@ export const SupervisorNoteModal = () => {
     const setSelectedRows = useSetAtom(selectedHistoryRowsAtom);
     const setRefreshTrigger = useSetAtom(historicalRefreshAtom);
     const addToast = useSetAtom(addToastAtom);
+    const requireReason = useAtomValue(requireSupervisorNoteReasonAtom);
+    const selectionMode = useAtomValue(reasonSelectionModeAtom);
 
-    const [reason, setReason] = useState<SupervisorNoteReason>('Unspecified');
+    const [reason, setReason] = useState<SupervisorNoteReason | ''>('Unspecified'); // Strict mode needs empty str
     const [additionalNotes, setAdditionalNotes] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const setRowUpdate = useSetAtom(historicalRowUpdateAtom);
 
     // Initial load / Edit mode logic
     const [hasExistingComment, setHasExistingComment] = useState(false);
-
-    // Detect if we are editing an existing comment
-    useState(() => {
-        // We use a simple effect-like logic in render or useEffect. 
-        // Using useEffect to avoid state update loops during render.
-        // Actually best to do this when modalState.isOpen changes.
-    });
 
     // Sync state when modal opens
     useMemo(() => {
@@ -67,15 +64,16 @@ export const SupervisorNoteModal = () => {
             }
         } else {
             setHasExistingComment(false);
-            setReason('Unspecified');
+            // Always start with empty string (placeholder) when no existing comment
+            setReason('');
             setAdditionalNotes('');
         }
-    }, [modalState.isOpen, modalState.selectedIds, historicalChecks]);
+    }, [modalState.isOpen, modalState.selectedIds, historicalChecks, requireReason]);
 
     const handleClose = () => {
         if (isSaving) return;
         setModalState({ isOpen: false, selectedIds: [] });
-        setReason('Unspecified');
+        setReason('');
         setAdditionalNotes('');
         setHasExistingComment(false);
     };
@@ -86,9 +84,10 @@ export const SupervisorNoteModal = () => {
         if (isSaving) return;
         setIsSaving(true);
 
+        const currentReason = reason || 'Unspecified';
         const note = additionalNotes
-            ? `${reason} - ${additionalNotes}`
-            : reason;
+            ? `${currentReason} - ${additionalNotes}`
+            : currentReason;
 
         const updates = {
             supervisorNote: note,
@@ -172,7 +171,7 @@ export const SupervisorNoteModal = () => {
             addToast({
                 title: 'Supervisor review removed',
                 message: `Cleared from ${modalState.selectedIds.length} check${modalState.selectedIds.length !== 1 ? 's' : ''}`,
-                icon: 'delete',
+                icon: 'info',
                 variant: 'info',
             });
 
@@ -184,6 +183,15 @@ export const SupervisorNoteModal = () => {
             setIsSaving(false);
         }
     };
+
+    // For the prototype, we want to see the options even in strict mode if they are the chosen pattern
+    // However, we must avoid duplicates.
+    const visibleReasons = SUPERVISOR_NOTE_REASONS.filter(r => r !== 'Unspecified');
+
+    // Validation for Save button
+    const isReasonMissing = requireReason && !reason;
+    const isOtherMissingNote = reason === 'Other' && !additionalNotes.trim();
+    const isSaveDisabled = isSaving || isReasonMissing || isOtherMissingNote;
 
     return (
         <Modal
@@ -202,17 +210,50 @@ export const SupervisorNoteModal = () => {
             <Modal.Content>
                 <div className={styles.body}>
                     <div className={styles.field}>
-                        <label className={styles.label}>Reason for missed check(s)</label>
-                        <Select
-                            value={reason}
-                            onValueChange={(val) => setReason(val as SupervisorNoteReason)}
-                            placeholder="Select a reason..."
-                            disabled={isSaving}
-                        >
-                            {SUPERVISOR_NOTE_REASONS.map((r) => (
-                                <SelectItem key={r} value={r}>{r}</SelectItem>
-                            ))}
-                        </Select>
+                        <label className={styles.label}>
+                            Reason for missed check(s)
+                            {requireReason && <span style={{ color: 'var(--color-critical-default)', marginLeft: '4px' }}>*</span>}
+                        </label>
+                        <div className={styles.selectFieldContainer}>
+                            <Select
+                                value={reason}
+                                onValueChange={(val) => {
+                                    if (val === '_clear' || val === 'none') setReason('');
+                                    else setReason(val as SupervisorNoteReason);
+                                }}
+                                placeholder="Select a reason..."
+                                disabled={isSaving}
+                                triggerClassName={styles.fullWidth}
+                            >
+                                {selectionMode === 'ghost' && (
+                                    <SelectItem value="_clear">{"\u00A0"}</SelectItem>
+                                )}
+                                {selectionMode === 'none' && (
+                                    <SelectItem value="_clear">None</SelectItem>
+                                )}
+                                {visibleReasons.map((r) => (
+                                    <SelectItem key={r} value={r}>
+                                        {r}
+                                    </SelectItem>
+                                ))}
+                                {(!requireReason && selectionMode === 'inline') && (
+                                    <SelectItem value="_clear">{"\u00A0"}</SelectItem>
+                                )}
+                            </Select>
+
+                            {selectionMode === 'inline' && reason && (
+                                <Button
+                                    variant="quaternary"
+                                    size="s"
+                                    iconOnly
+                                    className={styles.inlineClearButton}
+                                    onClick={() => setReason('')}
+                                    aria-label="Clear reason"
+                                >
+                                    <span className="material-symbols-rounded">close</span>
+                                </Button>
+                            )}
+                        </div>
                     </div>
 
                     <div className={styles.field}>
@@ -251,7 +292,7 @@ export const SupervisorNoteModal = () => {
                         onClick={() => { void handleSave(); }}
                         size="m"
                         loading={isSaving}
-                        disabled={reason === 'Other' && !additionalNotes.trim()}
+                        disabled={isSaveDisabled}
                     >
                         Save
                     </Button>

@@ -1,5 +1,8 @@
 # High-Craft CSS Principles
 
+> [!NOTE]
+> For the core Journal Design System documentation (tokens, Figma, and technical standards), see the [**Design System Overview**](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/docs/design-system/OVERVIEW.md).
+
 This document codifies the core principles and patterns for writing CSS in the Safety Check App project. Adhering to these guidelines is essential for maintaining a consistent, robust, and high-craft user interface.
 
 ---

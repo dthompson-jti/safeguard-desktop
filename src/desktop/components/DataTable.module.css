@@ -197,7 +197,7 @@
 .td {
     padding: var(--spacing-2) var(--spacing-4);
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--table-font-weight, var(--font-weight-medium));
     color: var(--surface-fg-primary);
     vertical-align: middle;
     min-height: var(--control-min-touch);
@@ -256,7 +256,7 @@
 
 /* Timer cell */
 .timerCell {
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--table-font-weight, var(--font-weight-medium));
     font-variant-numeric: tabular-nums;
 }
 
@@ -442,7 +442,7 @@
     align-items: center;
     gap: var(--spacing-1);
     color: var(--surface-fg-success-primary);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--table-font-weight, var(--font-weight-medium));
     font-size: var(--font-size-sm);
 }
 
@@ -831,11 +831,11 @@
 
 .primaryText {
     color: var(--surface-fg-primary);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--table-font-weight, var(--font-weight-medium));
 }
 
 .secondaryText {
     color: var(--surface-fg-primary);
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--table-font-weight, var(--font-weight-medium));
 }

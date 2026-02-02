@@ -8,9 +8,10 @@ interface PopoverProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   variant?: 'default' | 'tooltip';
+  align?: 'start' | 'center' | 'end';
 }
 
-export const Popover = ({ trigger, children, open, onOpenChange, variant = 'default' }: PopoverProps) => {
+export const Popover = ({ trigger, children, open, onOpenChange, variant = 'default', align = 'center' }: PopoverProps) => {
   const contentClassName = variant === 'tooltip' ? 'popover-content-tooltip' : 'popover-content';
 
   return (
@@ -21,6 +22,7 @@ export const Popover = ({ trigger, children, open, onOpenChange, variant = 'defa
           className={contentClassName}
           sideOffset={5}
           collisionPadding={8}
+          align={align}
         >
           {children}
         </RadixPopover.Content>

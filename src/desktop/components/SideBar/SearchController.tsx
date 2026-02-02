@@ -28,7 +28,7 @@ export const SearchController: React.FC = () => {
                     <SearchInput
                         value={query}
                         onChange={setQuery}
-                        placeholder="Find nav items"
+                        placeholder="Search nav items"
                         flavor="instant"
                         size="sm"
                     />

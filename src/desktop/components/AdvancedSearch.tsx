@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import { desktopFilterAtom, updateFilterAtom, resetFiltersAtom, officerInputStyleAtom } from '../atoms';
 import { SUPERVISOR_NOTE_REASONS } from '../types';
-import { OFFICER_NAMES } from '../../desktop-enhanced/data/mockData';
+import { OFFICER_NAMES, RESIDENT_NAMES, REVIEWER_NAMES } from '../../desktop-enhanced/data/mockData';
 import { Button } from '../../components/Button';
 import { SearchableSelect } from '../../components/SearchableSelect';
 import { ComboBox } from '../../components/ComboBox';
@@ -41,7 +41,9 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
 
     // Local state for pending changes
     const [localFilter, setLocalFilter] = useState({
-        search: filter.search,
+        // search: filter.search, // Deprecated in UI
+        resident: filter.resident || '',
+        reviewer: filter.reviewer || '',
         officer: filter.officer || 'any',
         historicalStatusFilter: filter.historicalStatusFilter,
         enhancedObservation: filter.enhancedObservation,
@@ -57,7 +59,9 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
 
     const handleSearch = () => {
         updateFilter({
-            search: localFilter.search,
+            search: '', // Clear generic search if we are using specific fields
+            resident: localFilter.resident,
+            reviewer: localFilter.reviewer,
             officer: localFilter.officer === 'any' ? '' : localFilter.officer,
             historicalStatusFilter: localFilter.historicalStatusFilter,
             enhancedObservation: localFilter.enhancedObservation,
@@ -90,13 +94,16 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
             <div className={styles.grid}>
                 {/* Row 1 */}
                 <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Has the words</label>
-                    <input
-                        type="text"
-                        className={styles.input}
-                        placeholder="Enter a term that matches any field in the record"
-                        value={localFilter.search}
-                        onChange={(e) => handleChange('search', e.target.value)}
+                    <label className={styles.label}>Resident</label>
+                    <SearchableSelect
+                        value={localFilter.resident}
+                        onValueChange={(val) => handleChange('resident', val)}
+                        placeholder="All residents"
+                        triggerClassName={styles.selectTrigger}
+                        options={[
+                            { value: '', label: 'All residents' },
+                            ...RESIDENT_NAMES.map(name => ({ value: name, label: name }))
+                        ]}
                     />
                 </div>
                 <div className={styles.fieldGroup}>
@@ -127,6 +134,19 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
                 </div>
 
                 {/* Row 2 */}
+                <div className={styles.fieldGroup}>
+                    <label className={styles.label}>Reviewer</label>
+                    <SearchableSelect
+                        value={localFilter.reviewer}
+                        onValueChange={(val) => handleChange('reviewer', val)}
+                        placeholder="All reviewers"
+                        triggerClassName={styles.selectTrigger}
+                        options={[
+                            { value: '', label: 'All reviewers' },
+                            ...REVIEWER_NAMES.map(name => ({ value: name, label: name }))
+                        ]}
+                    />
+                </div>
                 <div className={styles.fieldGroup}>
                     <label className={styles.label}>Status</label>
                     <Select

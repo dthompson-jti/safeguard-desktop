@@ -22,7 +22,7 @@ const FACILITY_CONFIG = [
     }
 ];
 
-const RESIDENT_NAMES = [
+export const RESIDENT_NAMES = [
     'James Wilson', 'Maria Garcia', 'Robert Taylor', 'Linda Johnson', 'Michael Brown',
     'Elizabeth Davis', 'William Miller', 'Susan Wilson', 'David Moore', 'Jessica Taylor',
     'John Anderson', 'Karen Thomas', 'Christopher Jackson', 'Nancy White', 'Matthew Harris',
@@ -86,6 +86,10 @@ const RESIDENT_NAMES = [
 export const OFFICER_NAMES = [
     'Brett Corbin', 'Jeff Siemens', 'Jalpa Mazmudar',
     'Sarah Jenkins', 'John Doe', 'Alice Miller', 'Robert Smith'
+];
+
+export const REVIEWER_NAMES = [
+    'Dave Thompson', 'Sarah Jenkins', 'Jeff Siemens', 'Robert Smith', 'Admin User'
 ];
 
 const NOTE_SNIPPETS = [
@@ -172,8 +176,14 @@ const ROOMS: RoomDef[] = ((): RoomDef[] => {
                         hasMedicalWatch = true;
                         otherRisks = ['Flight Risk', 'Assaultive']; // Total 4 statuses test
                     }
-                    // Override for Flight Risk test (Single + Other)
+                    // Override for Bobby Ferguson
                     if (name === 'Bobby Ferguson') {
+                        hasHighRisk = true;
+                        hasMedicalWatch = true;
+                        otherRisks = undefined;
+                    }
+                    // Override for Flight Risk test (Single + Other) - Removed for Bobby
+                    if (name === 'Bobby Ferguson' && !hasMedicalWatch) {
                         hasHighRisk = true;
                         otherRisks = ['Flight Risk'];
                     }
@@ -258,12 +268,11 @@ export const generateEnhancedData = () => {
         const rand = seededRandom(seed);
 
         // --- SCENARIO OVERRIDES ---
-        if (room.unit === 'Maple Transitional') {
-            // Maple Transitional: Entire unit missed rounds (20-50m overdue)
-            targetDelta = 20 + Math.floor(seededRandom(seed) * 30);
-        } else if (room.unit === 'Oak Integrated' && roomIdx % 5 === 0) {
-            // Oak Integrated: 2 residents have a volley of missed checks (40m overdue -> Missed (3))
-            targetDelta = 40;
+        if (room.group === 'Maple' || room.unit === 'Oak Integrated' || room.unit === 'Maple Transitional') {
+            // Maple group and Oak Integrated: No missed checks (Upcoming or Due)
+            targetDelta = rand < 0.6
+                ? -Math.floor(seededRandom(seed + 1) * 10 + 1) // Upcoming
+                : Math.floor(seededRandom(seed + 1) * 5);      // Due
         } else if (profile.tier === 'punctual') {
             // Punctual: Forced to Upcoming (-15 to -6m)
             // NO Warning (Due soon), NO Alert (Missed)
@@ -376,17 +385,12 @@ export const generateEnhancedData = () => {
                 let isMissed = randomVal < (profile.missedProb * decayFactor);
 
                 // --- HISTORICAL SCENARIO OVERRIDES ---
-                if (room.unit === 'Cedar Assessment') {
+                if (room.unit === 'Maple Transitional' || room.unit === 'Oak Enhanced') {
+                    // Maple Transitional & Oak Enhanced: No missed checks in history
+                    isMissed = false;
+                } else if (room.unit === 'Cedar Assessment') {
                     // Cedar Assessment: Sporadic missed checks across residents
                     isMissed = (resSeed % 15 === 0);
-                } else if (room.unit === 'Oak Enhanced' && roomIdx % 5 === 0) {
-                    // Oak Enhanced: "Volley" of missed checks followed by a completed one
-                    // We'll make indices 4, 5, 6 missed (recent history)
-                    // Note: slotTime increases, so higher slotIndex is closer to "now"
-                    const volleyIndices = [4, 5, 6];
-                    if (volleyIndices.includes(slotIndex)) {
-                        isMissed = true;
-                    }
                 }
 
                 const status: 'completed' | 'missed' = isMissed ? 'missed' : 'completed';
@@ -427,10 +431,6 @@ export const generateEnhancedData = () => {
                 slotTime = new Date(slotTime.getTime() + CHECK_INTERVAL_MINS * MS_PER_MINUTE);
                 slotIndex++;
             }
-
-            // NOTE: Per instructions, missed checks accruing in Live view (overdue)
-            // are NOT shown in history until the most recent check is completed.
-            // Therefore, we no longer inject live missed checks here.
         });
     });
 

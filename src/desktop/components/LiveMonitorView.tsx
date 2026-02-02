@@ -63,19 +63,23 @@ export const LiveMonitorView = () => {
             });
         }
 
-        // Sort by Location: Group -> Unit -> Room
+        // Sort by Schedule (Status) -> Location -> Risk
         rows.sort((a, b) => {
+            // 1. Status Priority: Overdue > Due > Upcoming
+            const statusOrder: Record<string, number> = { overdue: 0, due: 1, upcoming: 2 };
+            const statusDiff = (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99);
+            if (statusDiff !== 0) return statusDiff;
+
+            // 2. Location (Group -> Unit -> Room)
             const locA = `${a.group} ${a.unit} ${a.location}`;
             const locB = `${b.group} ${b.unit} ${b.location}`;
             const locDiff = locA.localeCompare(locB);
             if (locDiff !== 0) return locDiff;
 
-            const statusOrder: Record<string, number> = { overdue: 0, due: 1, upcoming: 2 };
-            const statusDiff = (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99);
-            if (statusDiff !== 0) return statusDiff;
-            // High risk residents bubble to top
+            // 3. High Risk to top (if all else equal)
             if (a.hasHighRisk && !b.hasHighRisk) return -1;
             if (!a.hasHighRisk && b.hasHighRisk) return 1;
+
             return 0;
         });
 

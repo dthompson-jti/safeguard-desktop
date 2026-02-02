@@ -64,8 +64,10 @@ export const Select = ({ children, value, onValueChange, placeholder, disabled, 
       <RadixSelect.Trigger
         ref={triggerRef}
         className={`${styles.selectTrigger} ${triggerClassName || ''}`}
+        style={triggerClassName?.includes('fullWidth') ? { width: '100%' } : {}}
         aria-label={placeholder}
         data-variant={variant}
+        data-placeholder={!value || value === ''}
       >
         <RadixSelect.Value placeholder={placeholder}>
           {valueLabel}

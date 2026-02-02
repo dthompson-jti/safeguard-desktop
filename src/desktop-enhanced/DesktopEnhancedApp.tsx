@@ -25,7 +25,7 @@ import { ToastMessage } from '../components/Toast';
 import { toastsAtom } from '../data/toastAtoms';
 import { Button } from '../components/Button';
 import { Tooltip } from '../components/Tooltip';
-
+import { Popover } from '../components/Popover';
 import styles from './DesktopEnhancedApp.module.css';
 
 export default function DesktopEnhancedApp() {
@@ -36,6 +36,7 @@ export default function DesktopEnhancedApp() {
 
     const activeRecord = useAtomValue(activeDetailRecordAtom);
     const [isPanelOpen, setIsPanelOpen] = useAtom(isDetailPanelOpenAtom);
+    const [isExportOpen, setIsExportOpen] = useState(false);
     const autoOpenPanel = useAtomValue(autoOpenDetailPanelAtom);
     const panelWidth = useAtomValue(panelWidthAtom);
 
@@ -113,6 +114,43 @@ export default function DesktopEnhancedApp() {
                                 </h2>
 
                                 <div className={styles.row2Actions}>
+                                    <Popover
+                                        open={isExportOpen}
+                                        onOpenChange={setIsExportOpen}
+                                        align="end"
+                                        trigger={
+                                            <Button
+                                                variant="secondary"
+                                                size="s"
+                                            >
+                                                Export
+                                            </Button>
+                                        }
+                                    >
+                                        <div className="menuPopover">
+                                            <button className="menuItem" onClick={() => console.log('Export Excel')}>
+                                                <span className="material-symbols-rounded">table_view</span>
+                                                Excel
+                                            </button>
+                                            <button className="menuItem" onClick={() => console.log('Export XML')}>
+                                                <span className="material-symbols-rounded">code</span>
+                                                XML
+                                            </button>
+                                            <button className="menuItem" onClick={() => console.log('Export CSV')}>
+                                                <span className="material-symbols-rounded">description</span>
+                                                CSV
+                                            </button>
+                                            <button className="menuItem" onClick={() => console.log('Export PDF')}>
+                                                <span className="material-symbols-rounded">picture_as_pdf</span>
+                                                PDF
+                                            </button>
+                                            <button className="menuItem" onClick={() => console.log('Export RTF')}>
+                                                <span className="material-symbols-rounded">text_snippet</span>
+                                                RTF
+                                            </button>
+                                        </div>
+                                    </Popover>
+
                                     <Tooltip content={showPanel ? "Close side panel" : "Open side panel"}>
                                         <Button
                                             variant="secondary"
