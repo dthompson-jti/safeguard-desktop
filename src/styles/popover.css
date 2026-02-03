@@ -3,7 +3,7 @@
 .popover-content {
   background-color: var(--surface-bg-primary);
   color: var(--surface-fg-primary);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-container);
   border: 1px solid var(--surface-border-secondary);
   box-shadow: var(--surface-shadow-xl);
   z-index: var(--z-dropdown);

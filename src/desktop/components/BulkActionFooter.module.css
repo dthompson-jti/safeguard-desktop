@@ -15,7 +15,7 @@
     background: var(--surface-bg-brand-solid);
     color: var(--control-fg-on-solid);
 
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-toolbar);
     border: 2px solid var(--surface-border-theme);
 
     padding: var(--spacing-2);
@@ -37,7 +37,7 @@
     height: var(--control-height-sm);
     min-height: var(--control-height-sm);
     max-height: var(--control-height-sm);
-    border-radius: 10px;
+    border-radius: var(--radius-button-sm);
     margin: 0;
 }
 

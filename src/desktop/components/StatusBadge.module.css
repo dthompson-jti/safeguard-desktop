@@ -5,7 +5,7 @@
     align-items: center;
     gap: var(--spacing-1);
     padding: var(--spacing-0p5) var(--spacing-2);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-badge);
     font-size: var(--font-size-xs);
     font-weight: 600;
     line-height: var(--line-height-tight);
@@ -18,7 +18,7 @@
     width: 24px;
     height: 24px;
     justify-content: center;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-badge);
     flex-shrink: 0;
 }
 

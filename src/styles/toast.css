@@ -35,7 +35,7 @@
   min-width: 320px;
   max-width: 440px;
   padding: var(--spacing-3);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-container);
   gap: var(--spacing-3);
 
   display: flex;

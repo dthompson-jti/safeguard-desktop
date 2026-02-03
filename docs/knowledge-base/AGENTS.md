@@ -131,6 +131,22 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 *   **The Strategy:** Use `PRD-desktop-enhanced.md` as the source of truth for the Desktop V2 experience.
 *   **Key Files:** `src/desktop-enhanced/Layout.tsx`, `src/desktop-enhanced/components/*`.
 
+### 27. Semantic Radii Token Hierarchy
+*   **The Rule:** Never use primitive radius tokens (`--radius-md`, etc.) directly in component CSS. Use the semantic hierarchy:
+    | Category | Semantic Token | Primitive | Value | Use Case |
+    | :--- | :--- | :--- | :--- | :--- |
+    | **Toolbar** | `--radius-toolbar` | `radius-2xl` | 16px | Floating action bars, high-elevation objects |
+    | **Structural** | `--radius-modal` | `radius-xl` | 12px | Root-level dialogs, system modals |
+    | | `--radius-container` | `radius-xl` | 12px | Menus, Popovers, Select dropdowns, Toasts |
+    | | `--radius-card` | `radius-xl` | 12px | Dashboard cards, navigation panels |
+    | **Interactive** | `--radius-input` | `radius-md` | 8px | Form fields, select triggers, search bars |
+    | | `--radius-button-md` | `radius-md` | 8px | Standard action buttons |
+    | | `--radius-button-lg` | `radius-lg` | 10px | Modal primary actions (Desktop Medium) |
+    | **Dense** | `--radius-button-sm` | `radius-sm` | 6px | Small buttons, segmented items |
+    | | `--radius-badge` | `radius-sm` | 6px | Non-pill chips, status labels |
+    | | `--radius-pill` | `radius-full` | 9999px | Status lozenges, pill-shaped counters |
+*   **Documentation:** Full mapping available in `docs/design-system/SEMANTIC_RADII.md`.
+
 ## CSS Architecture
 *   **Directive:** Prefer CSS Modules (`*.module.css`) for feature-specific styles. Use Global CSS (`src/styles/*.css`) only for reusable design patterns (buttons, lists, inputs).
 

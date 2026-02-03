@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 ### Added
+- **Journal Design System Documentation**:
+    - **Overview**: Infrastructure-focused summary of the system status and integration.
+    - **Tokens**: Architectural breakdown of Primitive vs. Semantic layers.
+    - **CSS Principles**: Professional standards for implementation and migration compliance.
+    - Updated `SPEC-CSS.md` to reference the new system documentation.
 - **Search Restoration**: Restored the "Has the words" free-text input to the Advanced Search panel (top left) for broad matching across names and locations.
 - **No Results UI**: Implemented a two-line design for empty search/filter states (Title + Message) using tertiary typography tokens.
 - **Header Synchronization**: The application header now dynamically updates to "No search results" when filtered data returns zero records.
@@ -27,6 +32,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - Restored the "**X**" (close) icon to the Advanced Search panel header.
     - **Menu Cleanup**: Removed configuration toggles for "**Reason required**", "**Table font weight**", and "**Dimmed breadcrumbs**". These behaviors are now enforced defaults.
     - **Form Styling**: Updated the mandatory field asterisk (`*`) to use the semantic `var(--surface-fg-alert-primary)` token.
+- **Radii Standardization**:
+    - Implemented a hierarchical semantic radii system: **Toolbar** (16px), **Structural** (12px), **Interactive** (8px), and **Dense** (6px).
+    - Mapped all component `border-radius` properties to semantic tokens (e.g., `--radius-input`, `--radius-container`, `--radius-button-md`).
+    - Standardized Popovers, Menus, Modals, Toasts, and the Bulk Action Bar.
+    - Added developer documentation at `docs/design-system/SEMANTIC_RADII.md`.
+    - Aligned primitive radii variables in `primitives.css` with Figma (radius-xs: 4px).
 
 ### Changed
 - **Default Application Settings**: Updated the prototype's factory defaults to align with operational preferences:
