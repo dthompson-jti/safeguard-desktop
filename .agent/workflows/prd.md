@@ -4,21 +4,36 @@ description: Create a Product Requirements Document (PRD) for a large feature or
 
 # PRD Workflow
 
-Create a comprehensive PRD for a large feature.
+Create a Product Requirements Document (PRD) for a large feature or epic.
 
-## Steps
+## Goal
+A comprehensive, approved PRD in `docs/working/PRD-[feature-name].md` defining user stories, state matrix, and success criteria.
 
-1. **Discovery**: Clarify the user problem and scope.
-2. **Design Options**: Generate 4-6 distinct approaches using forced diversity.
-3. **Specification**: Document state matrix, user flows, ASCII wireframes, accessibility requirements.
-4. **Validation**: Identify UX risks and define done criteria.
-5. **Review**: Request user approval before proceeding to architecture.
+## Inputs required (ask if missing)
+- Feature description or user request
+- Target audience / persona
+- Relevant existing documentation references
 
-## Artifacts Produced
-- `PRD-[EPIC-NAME].md` in `docs/working/`
-- `implementation_plan.md` artifact
-- `task.md` artifact
+## Safety + scope
+- Do NOT: Implement code or draft technical architectures.
+- Only touch: `docs/working/` and `task.md`.
+- Output: `docs/working/PRD-[name].md`.
+
+## Skill routing (explicit)
+- Use skill: `plan-prd` for market research, user stories, and requirements mapping.
+- Load `plan-prd` and follow its `SKILL.md` exactly.
+
+## Procedure
+1. **Context Loading**: 
+   - run: view_file .agent/skills/plan-prd/SKILL.md
+   - Identify existing product context in `docs/knowledge-base/VISION.md`.
+
+2. **Reconnaissance**: Scan for similar existing features to ensure pattern consistency.
+
+3. **Drafting**: Use `plan-prd` to generate the PRD in `docs/working/`.
+
+4. **Review**: Notify user and request approval.
+   - **MUST**: Present the "Reasoning" behind key requirement decisions.
 
 ## Notes
-- Uses the `plan/prd` skill
-- After approval, proceed to `/architect`
+- After approval, proceed to `/architect`.

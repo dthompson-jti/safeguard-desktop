@@ -6,25 +6,29 @@ description: Identify refactoring opportunities without fixing.
 
 Identify code smells and refactoring opportunities.
 
-## Steps
+## Goal
+A prioritized list of refactoring targets with effort/impact estimates.
 
-1. **Project Invariants**: Check `docs/knowledge-base/SPEC-*.md` and `RULES-*.md` for code style constraints.
+## Inputs required (ask if missing)
+- Target directory or component
 
-2. **Target**: Identify scope.
+## Safety + scope
+- Do NOT: Apply fixes.
+- Only touch: `brain/` finding reports.
 
-3. **Audit**: Check for duplication, complexity, pattern violations, dead code per the `audit/refactor-opportunities` skill.
+## Skill routing (explicit)
+- Use skill: `audit-refactor-opportunities`.
 
-4. **Report**: Prioritized list with effort estimates.
+## Procedure
+1. **Reconnaissance**:
+   - run: view_file .agent/skills/audit-refactor-opportunities/SKILL.md
+   - Scan target area for duplication, complexity, and pattern violations.
 
-## Suggested Next Steps
+2. **Analysis**: Identify "Monolithic Components" and "Prop-Drilling" clusters.
 
-Review findings above. When ready:
-- `/quick-fix` — for atomic fixes (≤30 lines, ≤5 files)
-- `/refactor` — for behavior-preserving restructuring
+3. **Prioritization**: Categorize opportunities by "Refactor ROI" (Effort vs. Impact).
 
-## Artifacts Produced
-- Findings report
+4. **Reporting**: Present to user with suggested next steps (`/quick-fix` or `/refactor`).
 
 ## Notes
-- Uses the `audit/refactor-opportunities` skill
-- Identify only — fixes go through `/refactor` or `/quick-fix`
+- Good for "Tech Debt" assessment tasks.

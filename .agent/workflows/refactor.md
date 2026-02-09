@@ -4,19 +4,37 @@ description: Code restructuring without behavior change.
 
 # Refactor Workflow
 
-Restructure code while preserving behavior.
+Code restructuring without behavior change.
 
-## Steps
+## Goal
+Improved code quality, maintainability, or readability while preserving 100% functional parity.
 
-1. **Scope**: Define refactoring goal and behavior invariants.
-2. **Safety Net**: List existing tests and manual verifications.
-3. **Plan**: List atomic transformation steps.
-4. **Execute**: Apply changes one at a time with verification.
-5. **Verify**: Confirm all invariants hold.
+## Inputs required (ask if missing)
+- Target file/directory
+- Refactor objective (e.g., "Extract component", "Flatten structure")
 
-## Artifacts Produced
-- `task.md` artifact
+## Safety + scope
+- Do NOT: Change feature behavior.
+- Do NOT: Add new dependencies.
+- Only touch: Target area and its immediate dependants.
+
+## Skill routing (explicit)
+- Use skill: `implement-refactor`.
+
+## Procedure
+1. **Reconnaissance**:
+   - run: view_file .agent/skills/implement-refactor/SKILL.md
+   - Map all references to the target code.
+
+2. **Execution**: Apply changes in small, logical steps.
+
+3. **Invariant Check**: Verify that "Zero Hex Tolerance" is maintained.
+
+4. **Technical Verification**: 
+   - Run `npm run lint` and `npm run build`.
+   - Run relevant unit tests.
+
+5. **Summarize**: Document the "Before" vs "After" structure in `walkthrough.md`.
 
 ## Notes
-- Uses the `implement/refactor` skill
-- NO behavior changes — if bug found, note but don't fix
+- If behavior change is required, use `/plan` instead.

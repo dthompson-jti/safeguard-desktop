@@ -4,23 +4,39 @@ description: Debug a bug with systematic root cause analysis.
 
 # Debug Workflow
 
-Systematic debugging for bugs.
+Systematic debugging with hypothesis testing and reproduction rigor.
 
-## Steps
+## Goal
+Validated fix with a passing reproduction test and zero regressions.
 
-1. **Reproduce**: Document steps to reproduce, expected vs actual.
-2. **Hypothesize**: Generate 3-4 hypotheses with confidence levels.
-3. **Investigate**: Test hypotheses methodically.
-4. **Fix**: Plan and implement fix with regression analysis.
-5. **Verify**: User confirms fix in browser.
+## Inputs required (ask if missing)
+- Bug description and steps to reproduce.
+- Environment details (if specialized).
 
-## Escalation
-If bug is elusive or touches >5 files, the `debug/deep` skill is used automatically.
+## Safety + scope
+- Do NOT: Implement a fix without a failing reproduction test.
+- Do NOT: Use browser tool for verification.
 
-## Artifacts Produced
-- `task.md` artifact
-- `DEBUG-PLAN-*.md` (optional for complex bugs)
+## Skill routing (explicit)
+- Use skill: `debug-standard` for reproducible logic/UI bugs.
+- Use skill: `debug-deep` for intermittent, state-heavy, or complex concurrency issues.
+
+## Procedure
+1. **Reproduction**:
+   - run: view_file .agent/skills/debug-standard/SKILL.md
+   - **MANDATORY**: Create a `repro.test.ts` (or similar) that fails.
+
+2. **Hypothesis**: Generate 3-4 hypotheses before looking at code.
+
+3. **Investigation**:
+   - run: view_file .agent/skills/debug-standard/SKILL.md (or `debug-deep`)
+   - Confirm root cause with evidence (@filename:line).
+
+4. **Fix & Verify**:
+   - Apply fix.
+   - Verify reproduction test passes.
+   - Run `npm run lint` and `npm run build`.
 
 ## Notes
-- Uses `debug/standard` or `debug/deep` skills
-- Do NOT use browser for testing
+- "Standard" bugs involve obvious logic/UI failures.
+- "Deep" bugs involve race conditions, HMR issues, or complex React state.

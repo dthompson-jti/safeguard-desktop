@@ -4,18 +4,30 @@ description: Atomic fix for small bugs or tweaks (≤30 lines, ≤5 files).
 
 # Quick Fix Workflow
 
-Atomic code changes for small-scope fixes.
+Atomic fix for small bugs or tweaks.
 
-## Steps
+## Goal
+Rapid resolution of small issues with 100% technical verification.
 
-1. **Scope Check**: Confirm ≤30 lines, ≤5 files. If larger, escalate to `/plan`.
-2. **High-Risk Gate**: If touching config/security paths, stop and notify.
-3. **Implement**: Make the change with lint/build verification.
-4. **User Review**: Ask user to verify in browser.
+## Inputs required (ask if missing)
+- Brief description of the issue
+- Location (if known)
 
-## Artifacts Produced
-- `task.md` artifact
+## Safety + scope
+- Do NOT: Exceed 30 lines or 5 files. (Use `/plan` if larger).
+- Do NOT: Use browser tool for verification.
+
+## Skill routing (explicit)
+- Use skill: `implement-quick-fix`.
+
+## Procedure
+1. **Diagnosis**: Perform a quick `grep` or `view_file` to locate the issue.
+2. **Execution**: 
+   - run: view_file .agent/skills/implement-quick-fix/SKILL.md
+   - Apply the fix.
+3. **Verification**: 
+   - Run `npm run lint` and `npm run build`.
+4. **Summarize**: Brief explanation of what was fixed.
 
 ## Notes
-- Uses the `implement/quick-fix` skill
-- Do NOT use browser for testing
+- "Standard bugs" should use `/debug`. `/quick-fix` is for "I know exactly what to change".

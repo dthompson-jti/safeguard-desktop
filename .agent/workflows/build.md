@@ -6,23 +6,38 @@ description: Implement a feature from an approved plan.
 
 Implement a feature from an approved implementation plan.
 
-## Scale Note
+## Goal
+Feature fully implemented, verified (lint/build), and documented in `walkthrough.md`.
 
-This workflow is for implementing approved plans. For atomic fixes (≤30 lines, ≤5 files), use `/quick-fix` instead.
+## Inputs required (ask if missing)
+- Approved `implementation_plan.md`
+- Running development server (`npm run dev`)
 
-## Steps
+## Safety + scope
+- Do NOT: Deviate from approved plan without user consent.
+- Do NOT: Use browser tool for verification.
+- Only touch: Files specified in the implementation plan.
 
-1. **Pre-Flight**: Load plan, view files, confirm dev server running.
-2. **Execute**: Implement changes phase by phase, running lint/build after each.
-3. **Self-Correction**: Hostile QA review, fix issues silently.
-4. **User Review**: Stop and ask user to verify in browser.
-5. **Cleanup**: Remove dead code, add invariant comments.
-6. **Wrap-Up**: Call `/wrap-up` to finalize.
+## Skill routing (explicit)
+- Use skill: `implement-flight-check` for pre-implementation verification.
+- Use skill: `implement-feature` for actual building.
 
-## Artifacts Produced
-- `task.md` artifact (updated throughout)
-- `walkthrough.md` artifact (via `/wrap-up`)
+## Procedure
+1. **Pre-Flight**:
+   - run: view_file .agent/skills/implement-flight-check/SKILL.md
+   - Execute flight check to ensure env is ready.
+
+2. **Phase-by-Phase Execution**:
+   - run: view_file .agent/skills/implement-feature/SKILL.md
+   - Implement changes phase by phase.
+   - Run `npm run lint` and `npm run build` after each phase.
+
+3. **Self-Correction**: Perform "Hostile QA" review of your own code.
+
+4. **User Review Gate**: **STOP** and ask user to verify in browser.
+
+5. **Wrap-Up**: 
+   - run: Call `/wrap-up` to finalize documentation and cleanup.
 
 ## Notes
-- Uses the `implement/feature` skill
-- Do NOT use browser for testing — user tests manually
+- For small tweaks, use `/quick-fix`.

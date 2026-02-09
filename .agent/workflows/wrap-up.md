@@ -1,47 +1,38 @@
 ---
-description: Wrap-up
+description: Wrap-up session with verification, cleanup, and documentation.
 ---
 
 # Wrap-Up Workflow
 
-Finalize work session with verification, cleanup, and documentation.
+Finalize the work session with rigorous technical and documentation checks.
 
-## Steps
+## Goal
+Session finalized with artifacts archived, changelog updated, and 100% technical verification.
 
-// turbo
-1. **Verify (Technical)**: Run `npm run lint` and `npm run build`. Fix any errors.
+## Inputs required (ask if missing)
+- None (Global finalization)
 
-2. **Verify (Functional Intent)**: Beyond lint/build, verify project-specific rules are satisfied:
-   - Grep for patterns that should/shouldn't exist
-   - Confirm stylistic mandates from `docs/knowledge-base/` are honored
-   - Example: If project has "No Bold" rule, verify no `font-weight: 700` remains
+## Skill routing (explicit)
+- Use skill: `implement-session-wrap-up`.
 
-3. **Cleanup**: 
-   - Remove dead code
-   - Remove console.log statements
-   - Add architectural invariant comments
+## Procedure
+1. **Load Skill**:
+   - run: view_file .agent/skills/implement-session-wrap-up/SKILL.md
 
-4. **Document**: Update `walkthrough.md` artifact with:
-   - Changes made
-   - Testing performed
-   - Key decisions
+2. **Technical Gate**: 
+   - IF `npm run lint` OR `npm run build` fails: **STOP** and notify user.
 
-5. **Changelog & Specs**: 
-   - Update `CHANGELOG.md` with summary
-   - **Knowledge Base Alignment**: 
-     - Update relevant `docs/knowledge-base/*.md` files for architectural or token changes
-     - **Constraint Propagation**: Ensure any new performance "contracts" or UI patterns (e.g. resize logic) are added to `AGENTS.md` and relevant specs.
-     - **Terminology Audit**: If refactoring terms, run a `grep_search` across `docs/` to ensure NO instances of the old term remain.
+3. **Pattern & Rule Codification**:
+   - IF a new pattern or architectural decision was made:
+     - IDENTIFY the relevant `.agent/rules/*.md` file (or create one).
+     - UPDATE the rule to codify the new standard to prevent future regressions.
+   - ELSE: Verify that existing project rules in `.agent/rules/` are still accurate.
 
-6. **Archive Artifacts**: 
-   - Move completed `implementation_plan.md` to `docs/archive/` with dated filename
-   - Move audit reports to `docs/archive/` if applicable
+4. **Cleanup & Archival**: 
+   - Move completed plans to `docs/archive/`.
+   - Update `./CHANGELOG.md` with the session summary.
 
-## Artifacts Produced
-- `walkthrough.md` artifact (updated)
-- `CHANGELOG.md` (updated)
-- `docs/knowledge-base/*.md` (if specs changed)
+5. **Summarize**: Create final `walkthrough.md` entry.
 
 ## Notes
-- This is the standard session finalization
-- Always run after `/build` or significant changes
+- This is the mandatory "Exit Protocol" for all major feature work.
