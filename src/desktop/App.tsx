@@ -12,16 +12,15 @@ import { SupervisorNoteModal } from './components/SupervisorNoteModal';
 import { DetailPanel } from './components/DetailPanel';
 import { ToastContainer } from '../components/ToastContainer';
 import { ToastMessage } from '../components/Toast';
+import { useAppFont } from '../hooks/useAppFont';
 import styles from './App.module.css';
-
-
-
 
 /**
  * Desktop Application Root
  * Supervisor dashboard with Live Monitor and Historical Review views.
  */
 export default function App() {
+    useAppFont(); // Sync font selection to document element
     const view = useAtomValue(desktopViewAtom);
     const toasts = useAtomValue(toastsAtom);
     const activeRecord = useAtomValue(activeDetailRecordAtom);

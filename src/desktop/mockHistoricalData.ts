@@ -56,12 +56,19 @@ const createCheck = (
     const unitSuffix = Math.floor(roomNum / 100) % 4 + 1;
     const unit = options.unit || `${UNIT_PREFIXES[groupIdx]}${unitSuffix}`;
 
+    const scheduledISO = `2024-12-17T${scheduledTime}:00`;
+    const actualISO = actualTime ? `2024-12-17T${actualTime}:00` : null;
+
     return {
         id,
         residents: [{ id: `res-${id}`, name: residentName, location }],
         location,
-        scheduledTime: `2024-12-17T${scheduledTime}:00`,
-        actualTime: actualTime ? `2024-12-17T${actualTime}:00` : null,
+        scheduledStartTime: scheduledISO,
+        scheduledEndTime: scheduledISO,
+        completedTime: actualISO,
+        missedTime: status === 'missed' ? scheduledISO : null,
+        scheduledTime: scheduledISO,
+        actualTime: actualISO,
         varianceMinutes,
         status,
         group,
@@ -231,13 +238,18 @@ export function loadHistoricalChecksPage(
                     if (filter.group !== 'all' && check.group !== filter.group) return false;
                     if (filter.unit !== 'all' && check.unit !== filter.unit) return false;
 
-                    // Use historicalStatusFilter for filtering
-                    if (filter.historicalStatusFilter === 'missed-not-reviewed') {
-                        if (check.status !== 'missed' || check.supervisorNote) return false;
-                    } else if (filter.historicalStatusFilter === 'missed-reviewed') {
-                        if (check.status !== 'missed' || !check.supervisorNote) return false;
-                    } else if (filter.historicalStatusFilter === 'completed') {
-                        if (check.status !== 'completed') return false;
+                    // Use historicalStatusFilter for filtering (multi-select)
+                    if (filter.historicalStatusFilter && filter.historicalStatusFilter.length > 0) {
+                        const activeFilters = filter.historicalStatusFilter;
+                        let matches = false;
+
+                        if (activeFilters.includes('missed-not-reviewed') && check.status === 'missed' && !check.supervisorNote) matches = true;
+                        if (activeFilters.includes('missed-reviewed') && check.status === 'missed' && check.supervisorNote) matches = true;
+                        if (activeFilters.includes('completed') && check.status === 'completed' && check.varianceMinutes <= 5) matches = true;
+                        if (activeFilters.includes('completed-late') && check.status === 'completed' && check.varianceMinutes > 5) matches = true;
+                        if (activeFilters.includes('missed-all') && check.status === 'missed') matches = true;
+
+                        if (!matches) return false;
                     }
 
                     if (filter.dateStart || filter.dateEnd) {
@@ -286,12 +298,19 @@ export function loadHistoricalChecksPage(
                         status = 'completed';
                     }
 
+                    const scheduledISO = `2024-12-17T${scheduledTime}:00`;
+                    const actualISO = actualTime ? `2024-12-17T${actualTime}:00` : null;
+
                     return {
                         id: `gen-hist-${idx}`,
                         residents: [{ id: `res-gen-h-${idx}`, name: `Historical Resident ${idx}`, location: `Room ${idx % 100}` }],
                         location: `Room ${idx % 100}`,
-                        scheduledTime: `2024-12-17T${scheduledTime}:00`,
-                        actualTime: actualTime ? `2024-12-17T${actualTime}:00` : null,
+                        scheduledStartTime: scheduledISO,
+                        scheduledEndTime: scheduledISO,
+                        completedTime: actualISO,
+                        missedTime: status === 'missed' ? scheduledISO : null,
+                        scheduledTime: scheduledISO,
+                        actualTime: actualISO,
                         varianceMinutes,
                         status,
                         group: (idx % 3 === 0) ? 'Alpha' : (idx % 3 === 1) ? 'Bravo' : 'Charlie',

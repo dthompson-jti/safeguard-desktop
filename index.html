@@ -54,9 +54,29 @@
 
   <!-- Async font loading: Low priority, non-blocking -->
   <link rel="preload" href="/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- Google Fonts: Atkinson Hyperlegible -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+
   <!-- Material Symbols: Load async (low priority) since we use SVGs for critical path -->
   <link rel="preload" href="/fonts/MaterialSymbolsRounded.woff2" as="font" type="font/woff2" crossorigin
     fetchpriority="low">
+
+  <!-- Font state persistence helper: Prevents FOUC by applying selection before paint -->
+  <script>
+    (function () {
+      try {
+        const stored = localStorage.getItem('sc_desktop_v1_font');
+        if (stored) {
+          // Remove any existing font class (optional if we only ever set one)
+          document.documentElement.setAttribute('data-font', JSON.parse(stored));
+        }
+      } catch (e) { }
+    })();
+  </script>
 
   <!-- Start Single Page Apps for GitHub Pages -->
   <script type="text/javascript">

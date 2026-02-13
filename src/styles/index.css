@@ -46,3 +46,15 @@
 :root {
   --font-family-sans: 'Inter', sans-serif;
 }
+
+[data-font="atkinson"] {
+  --font-family-sans: 'Atkinson Hyperlegible', sans-serif;
+}
+
+[data-font="hyperlegible"] {
+  --font-family-sans: 'Hyperlegible Sans', sans-serif;
+}
+
+body {
+  font-family: var(--font-family-sans);
+}

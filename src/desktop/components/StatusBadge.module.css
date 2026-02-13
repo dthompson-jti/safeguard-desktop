@@ -7,7 +7,7 @@
     padding: var(--spacing-0p5) var(--spacing-2);
     border-radius: var(--radius-badge);
     font-size: var(--font-size-xs);
-    font-weight: 600;
+    font-weight: 500;
     line-height: var(--line-height-tight);
     border: 1px solid transparent;
     white-space: nowrap;
@@ -24,11 +24,11 @@
 
 .icon {
     font-size: var(--icon-size-sm) !important;
-    font-variation-settings: 'opsz' 14, 'wght' 600;
+    font-variation-settings: 'opsz' 14, 'wght' 500;
 }
 
 .iconFilled {
-    font-variation-settings: 'FILL' 1, 'wght' 600 !important;
+    font-variation-settings: 'FILL' 1, 'wght' 500 !important;
 }
 
 /* Label has no specific styles - inherits from badge */

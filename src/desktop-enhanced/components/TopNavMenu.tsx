@@ -1,7 +1,7 @@
 import * as Popover from '@radix-ui/react-popover';
 import { useAtom } from 'jotai';
 import { desktopEnhancedTreeLayoutAtom } from '../atoms';
-import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, residentBadgeColorModeAtom, truncateBadgesAtom, reasonSelectionModeAtom } from '../../desktop/atoms';
+import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, residentBadgeColorModeAtom, truncateBadgesAtom, reasonSelectionModeAtom, appFontAtom } from '../../desktop/atoms';
 
 import { Switch } from '../../components/Switch';
 import styles from './TopNavMenu.module.css';
@@ -14,6 +14,7 @@ export const TopNavMenu = () => {
     const [autoOpenPanel, setAutoOpenPanel] = useAtom(autoOpenDetailPanelAtom);
     const [truncateBadges, setTruncateBadges] = useAtom(truncateBadgesAtom);
     const [reasonSelectionMode, setReasonSelectionMode] = useAtom(reasonSelectionModeAtom);
+    const [appFont, setAppFont] = useAtom(appFontAtom);
 
     return (
         <Popover.Root>
@@ -138,7 +139,35 @@ export const TopNavMenu = () => {
                         />
                     </div>
 
+                    <div className={styles.divider} />
 
+                    <div className={styles.sectionHeader}>Typography</div>
+                    <div className={styles.displayOptionsGrid}>
+                        <button
+                            className={styles.optionButton}
+                            data-active={appFont === 'inter'}
+                            onClick={() => setAppFont('inter')}
+                            title="Inter (Default)"
+                        >
+                            <span>Inter</span>
+                        </button>
+                        <button
+                            className={styles.optionButton}
+                            data-active={appFont === 'atkinson'}
+                            onClick={() => setAppFont('atkinson')}
+                            title="Atkinson"
+                        >
+                            <span>Atkinson</span>
+                        </button>
+                        <button
+                            className={styles.optionButton}
+                            data-active={appFont === 'hyperlegible'}
+                            onClick={() => setAppFont('hyperlegible')}
+                            title="Hyperlegible Sans"
+                        >
+                            <span>Hyperlegible</span>
+                        </button>
+                    </div>
 
                     <div className={styles.divider} />
 

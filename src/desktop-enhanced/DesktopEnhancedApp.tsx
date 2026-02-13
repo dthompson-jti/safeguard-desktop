@@ -27,9 +27,11 @@ import { toastsAtom } from '../data/toastAtoms';
 import { Button } from '../components/Button';
 import { Tooltip } from '../components/Tooltip';
 // import { Popover } from '../components/Popover';
+import { useAppFont } from '../hooks/useAppFont';
 import styles from './DesktopEnhancedApp.module.css';
 
 export default function DesktopEnhancedApp() {
+    useAppFont(); // Sync font selection to document element
     // FIX: Use the specific enhanced view atom shared with ModeToggle
     const view = useAtomValue(desktopViewAtom);
     const isNoResults = useAtomValue(isNoResultsAtom);
