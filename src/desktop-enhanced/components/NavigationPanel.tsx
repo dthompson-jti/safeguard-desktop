@@ -70,7 +70,7 @@ export const NavigationPanel: React.FC = () => {
                                 aria-label="Menu"
                                 className={styles.menuBtnOverride}
                             >
-                                <span className="material-symbols-rounded">more_horiz</span>
+                                <span className="material-symbols-rounded">more_vert</span>
                             </Button>
                         }
                     >

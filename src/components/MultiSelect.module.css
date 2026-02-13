@@ -1,0 +1,181 @@
+/* src/components/MultiSelect.module.css */
+
+/* Styles are a direct copy of Select.module.css for consistency, with class names adapted. */
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-1);
+  font-family: var(--font-family-sans);
+  width: auto;
+  min-width: 0;
+  height: 36px;
+  padding: 0 var(--spacing-3);
+  border-radius: var(--radius-input);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  letter-spacing: -0.21px;
+  white-space: nowrap;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.15s;
+
+  /* === BASE STATE (Secondary) === */
+  background-color: var(--control-bg-secondary);
+  border: 1px solid var(--control-border-secondary);
+  color: var(--surface-fg-primary);
+  box-shadow: none;
+}
+
+/* === ACTIVE / CUSTOMIZED FILTER STATE === */
+/* Mirroring .activeSelectTrigger for absolute parity */
+.trigger[data-active='true'] {
+  background-color: var(--control-bg-selected) !important;
+  border: 1px solid var(--control-border-selected) !important;
+  color: var(--control-fg-selected) !important;
+  /* 1px physical + 1px inset = 2px visual */
+  box-shadow: inset 0 0 0 1px var(--control-border-selected) !important;
+  /* Sharp right corners for split button join */
+  border-radius: var(--radius-md) 0 0 var(--radius-md) !important;
+  transition: none !important;
+}
+
+.trigger[data-active='true'] .icon {
+  color: var(--control-fg-selected) !important;
+}
+
+@media (hover: hover) {
+
+  /* High-Fidelity Skeuomorphic Hover (Default Filter) */
+  .trigger[data-variant='filter']:not([data-active='true']):hover:not(:disabled) {
+    background-color: var(--control-bg-secondary-hover);
+    border-color: var(--control-border-secondary-hover);
+    /* 1px physical + 2px inset shadow = 3px visual bottom lip */
+    box-shadow: inset 0 -2px 0 0 var(--control-border-secondary-hover) !important;
+  }
+
+  /* High-Fidelity Skeuomorphic Hover (Active Filter) */
+  .trigger[data-active='true']:hover:not(:disabled) {
+    background-color: var(--control-bg-selected-hover) !important;
+    border-color: var(--control-border-selected-hover) !important;
+    color: var(--control-fg-selected-hover) !important;
+    /* 1px physical + 1px all-around + 2px bottom = 2px sides, 4px visual bottom total */
+    box-shadow: inset 0 0 0 1px var(--control-border-selected-hover), inset 0 -2px 0 0 var(--control-border-selected-hover) !important;
+  }
+}
+
+/* High-Fidelity Skeuomorphic Active/Open (Default Filter) */
+.trigger[data-variant='filter']:not([data-active='true']):active:not(:disabled),
+.trigger[data-variant='filter']:not([data-active='true'])[data-state='open'] {
+  background-color: var(--control-bg-secondary-pressed);
+  border-color: var(--control-border-secondary-pressed);
+  /* Refined Pressed State: 3px visual bottom */
+  box-shadow: inset 0 -2px 0 0 var(--control-border-secondary-pressed) !important;
+}
+
+/* High-Fidelity Skeuomorphic Active/Open (Active Filter) */
+.trigger[data-active='true']:active:not(:disabled),
+.trigger[data-active='true'][data-state='open'] {
+  background-color: var(--control-bg-selected-pressed) !important;
+  border-color: var(--control-border-selected-pressed) !important;
+  color: var(--control-fg-selected-hover) !important;
+  /* 2px sides, 4px visual bottom total (darker tokens) */
+  box-shadow: inset 0 0 0 1px var(--control-border-selected-pressed), inset 0 -2px 0 0 var(--control-border-selected-pressed) !important;
+}
+
+.trigger[data-placeholder='true']:not([data-active='true']) {
+  color: var(--control-fg-placeholder);
+  font-weight: 400;
+}
+
+.trigger:not([data-variant='filter']):not([data-active='true']):hover:not(:disabled) {
+  background-color: var(--control-bg-secondary-hover);
+  border-color: var(--control-border-secondary-hover);
+  color: var(--surface-fg-primary);
+  box-shadow: none;
+}
+
+.trigger:not([data-variant='filter']):not([data-active='true']):active:not(:disabled),
+.trigger:not([data-variant='filter']):not([data-active='true'])[data-state='open'] {
+  background-color: var(--control-bg-secondary-pressed);
+  border-color: var(--control-border-secondary-pressed);
+  color: var(--surface-fg-primary);
+  box-shadow: none;
+}
+
+.trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.trigger:focus-visible {
+  border-color: var(--surface-border-theme);
+  box-shadow: 0 0 0 2px var(--control-focus-ring-standard);
+  z-index: 10;
+  /* Ensure focus ring is on top */
+}
+
+.icon {
+  color: var(--surface-fg-tertiary);
+  transition: transform 0.2s ease, color 0.15s;
+  display: flex;
+  align-items: center;
+}
+
+.trigger[data-state='open'] .icon {
+  transform: rotate(180deg);
+}
+
+.content {
+  min-width: var(--radix-popover-trigger-width);
+  width: max-content;
+}
+
+.list {
+  max-height: 256px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0p5);
+  overflow-y: auto;
+}
+
+/* MultiSelect-specific styles */
+.item {
+  text-align: left;
+  width: 100%;
+}
+
+.itemLabel {
+  flex: 1;
+}
+
+.footer {
+  border-top: 1px solid var(--surface-border-subtle);
+  margin: var(--spacing-1) calc(var(--spacing-0p5) * -1) 0;
+  padding-top: var(--spacing-1);
+}
+
+.clearButton {
+  width: 100%;
+  padding: var(--spacing-2);
+  background: none;
+  border: none;
+  color: var(--surface-fg-tertiary);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  border-radius: var(--radius-s);
+  transition: background-color 0.2s, color 0.15s;
+}
+
+@media (hover: hover) {
+  .clearButton:hover {
+    background-color: var(--surface-bg-secondary);
+    color: var(--surface-fg-secondary);
+  }
+}

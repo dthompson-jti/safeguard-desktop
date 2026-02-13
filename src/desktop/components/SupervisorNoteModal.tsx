@@ -107,10 +107,19 @@ export const SupervisorNoteModal = () => {
             supervisorName: 'Dave Thompson', // Mock logged-in user
             reviewDate: new Date().toISOString(),
             reviewStatus: 'verified' as const,
+            supervisorReview: {
+                id: `rev-${modalState.selectedIds[0]}-${Date.now()}`,
+                safetyCheckId: modalState.selectedIds[0],
+                reason: currentReason,
+                notes: additionalNotes,
+                reviewedById: 'u-dthompson',
+                reviewedDate: new Date().toISOString()
+            }
         };
 
         try {
             await updateHistoricalCheck(modalState.selectedIds, updates);
+            // ... rest remains same but logic should ideally use the object
             setHistoricalChecks((checks) =>
                 checks.map((check) =>
                     modalState.selectedIds.includes(check.id) ? { ...check, ...updates } : check

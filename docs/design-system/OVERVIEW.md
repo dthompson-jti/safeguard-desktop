@@ -40,6 +40,8 @@ Specifications can be extracted from Figma using the following methods:
 
 ## Documentation Index
 
-1. [**Tokens**](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/docs/design-system/TOKENS.md): detailed technical breakdown.
-2. [**CSS Principles**](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/docs/design-system/CSS_PRINCIPLES.md): Technical standards for implementation.
-3. [**Technical Specification**](file:///c:/Users/dthompson/Documents/CODE/safeguard-desktop/docs/knowledge-base/SPEC-CSS.md): Detailed layout contracts and layering systems.
+1. [**Tokens**](./TOKENS.md): Detailed technical breakdown of the architecture.
+2. [**Semantic Radii**](./SEMANTIC_RADII.md): Standardization contract for corner roundness.
+3. [**Dark Mode**](./DARK_MODE.md): Elevation and contrast strategy for dark environments.
+4. [**CSS Principles**](./CSS_PRINCIPLES.md): Technical standards for professional implementation.
+5. [**Technical Specification**](../knowledge-base/SPEC-CSS.md): Detailed layout contracts and layering systems.

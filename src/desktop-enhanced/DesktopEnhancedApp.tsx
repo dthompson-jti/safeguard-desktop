@@ -68,7 +68,7 @@ export default function DesktopEnhancedApp() {
         if (view === 'historical') {
             setFilter(prev => ({
                 ...prev,
-                historicalStatusFilter: 'missed-not-reviewed',
+                historicalStatusFilter: ['missed-not-reviewed'],
                 // Time range "Last 24h" (mock values)
                 dateStart: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                 dateEnd: new Date().toISOString().split('T')[0],

@@ -302,12 +302,26 @@ export const DetailPanel = ({ record, selectedCount = 0, onResizeStart, onResize
                                 />
                                 <LabelValueRow
                                     label="Scheduled"
-                                    value={formatTime(record.timeScheduled)}
+                                    value={formatTime(record.scheduledEndTime || record.timeScheduled)}
                                 />
                                 {!isLive && (
                                     <LabelValueRow
                                         label="Actual"
-                                        value={record.timeActual ? formatTime(record.timeActual) : <span style={{ color: 'var(--control-fg-placeholder)' }}>—</span>}
+                                        value={
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                {formatTime(record.completedTime || record.timeActual)}
+                                                {record.roomIdMethod && (
+                                                    <span style={{
+                                                        fontSize: 'var(--font-size-sm)',
+                                                        color: 'var(--surface-fg-tertiary)',
+                                                        fontWeight: 'var(--font-weight-regular)',
+                                                        whiteSpace: 'nowrap'
+                                                    }}>
+                                                        (via {record.roomIdMethod === 'QR_CODE' ? 'QR code' : record.roomIdMethod === 'NFC' ? 'NFC' : record.roomIdMethod.replace('_', ' ').toLowerCase()})
+                                                    </span>
+                                                )}
+                                            </div>
+                                        }
                                     />
                                 )}
                                 {!isLive && (
@@ -324,6 +338,7 @@ export const DetailPanel = ({ record, selectedCount = 0, onResizeStart, onResize
                                 )}
                             </div>
                         </div>
+
 
                         {/* SECTION 3: SUPERVISOR COMMENT - HIDDEN IN LIVE VIEW */}
                         {!isLive && (

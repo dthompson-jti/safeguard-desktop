@@ -39,7 +39,7 @@ export const UserMenu = ({ displayName }: UserMenuProps) => {
     };
 
     const handleThemeChange = (value: string) => {
-        setTheme(value as 'light' | 'dark-a' | 'dark-b' | 'dark-c');
+        setTheme(value as 'light' | 'dark');
     };
 
     const handleHueChange = (hue: number) => {
@@ -64,9 +64,9 @@ export const UserMenu = ({ displayName }: UserMenuProps) => {
                     id="user-menu-appearance"
                     options={[
                         { value: 'light', label: 'Light' },
-                        { value: 'dark-c', label: 'Dark' },
+                        { value: 'dark', label: 'Dark' },
                     ]}
-                    value={theme === 'light' ? 'light' : 'dark-c'}
+                    value={theme === 'light' ? 'light' : 'dark'}
                     onValueChange={handleThemeChange}
                     layout="row"
                 />

@@ -1,4 +1,3 @@
-// src/data/mock/checkData.ts
 import { SafetyCheck, Resident } from '../../types';
 import { mockResidents } from './residentData';
 
@@ -20,12 +19,18 @@ export const generateInitialChecks = (): SafetyCheck[] => {
 
   // Helper to create checks from the table data for consistency.
   const createCheck = (location: string, offsetMinutes: number = 0, specialClassifications: { type: string, details: string, residentId: string }[] = []) => {
+    const scheduledEndTime = inNMinutes(offsetMinutes);
+    const scheduledStartTime = inNMinutes(offsetMinutes - DEFAULT_INTERVAL);
+
     return {
       id: `chk_${location.toLowerCase().replace(/[\s']/g, '_')}`,
+      correlationGuid: `guid-init-${location.toLowerCase().replace(/[\s']/g, '_')}`,
       type: 'scheduled',
       residents: residentsByLocation[location] || [],
       status: 'pending', // Will be recalculated by atoms based on dueDate
-      dueDate: inNMinutes(offsetMinutes),
+      scheduledStartTime,
+      scheduledEndTime,
+      dueDate: scheduledEndTime,
       specialClassifications,
       generationId: 1,
       baseInterval: DEFAULT_INTERVAL,
@@ -165,9 +170,12 @@ export const generateInitialChecks = (): SafetyCheck[] => {
 
     return {
       id: `chk_stress_b_${i}`,
+      correlationGuid: `guid-stress-b-${i}`,
       type: 'scheduled',
       residents: finalResidents,
       status: 'pending', // Will be recalculated by atoms based on dueDate
+      scheduledStartTime: new Date(dueTimeMs - DEFAULT_INTERVAL * 60 * 1000).toISOString(),
+      scheduledEndTime: new Date(dueTimeMs).toISOString(),
       dueDate: new Date(dueTimeMs).toISOString(),
       specialClassifications: [],
       generationId: 1,
@@ -179,23 +187,48 @@ export const generateInitialChecks = (): SafetyCheck[] => {
   const historyChecks = [
     {
       id: 'chk_completed_1',
+      correlationGuid: 'guid-hist-1',
       type: 'scheduled',
       residents: [mockResidents[0]],
       status: 'complete',
+      scheduledStartTime: inNMinutes(-45),
+      scheduledEndTime: inNMinutes(-30),
+      completedTime: inNMinutes(-32),
       dueDate: inNMinutes(-30),
       lastChecked: inNMinutes(-32),
       generationId: 1,
-      baseInterval: DEFAULT_INTERVAL
+      baseInterval: DEFAULT_INTERVAL,
+      roomIdMethod: 'NFC'
     } as SafetyCheck,
     {
       id: 'chk_completed_2',
+      correlationGuid: 'guid-hist-2',
       type: 'scheduled',
       residents: [mockResidents[1]],
       status: 'complete',
+      scheduledStartTime: inNMinutes(-75),
+      scheduledEndTime: inNMinutes(-60),
+      completedTime: inNMinutes(-61),
       dueDate: inNMinutes(-60),
       lastChecked: inNMinutes(-61),
       generationId: 1,
-      baseInterval: DEFAULT_INTERVAL
+      baseInterval: DEFAULT_INTERVAL,
+      roomIdMethod: 'QR_CODE'
+    } as SafetyCheck,
+    {
+      id: 'chk_completed_3',
+      correlationGuid: 'guid-hist-3',
+      type: 'scheduled',
+      residents: [mockResidents[2]],
+      status: 'completed-late',
+      scheduledStartTime: inNMinutes(-105),
+      scheduledEndTime: inNMinutes(-90),
+      completedTime: inNMinutes(-88), // Late by 2 mins
+      dueDate: inNMinutes(-90),
+      lastChecked: inNMinutes(-88),
+      generationId: 1,
+      baseInterval: DEFAULT_INTERVAL,
+      roomIdMethod: 'MANUAL_ENTRY'
     } as SafetyCheck,
   ];
 

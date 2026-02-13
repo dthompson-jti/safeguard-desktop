@@ -1,7 +1,6 @@
-// src/desktop-enhanced/data/mockData.ts
-// AUDIT: This file generates unified data for both Live and Historical views
-
 import { LiveCheckRow, HistoricalCheck, DesktopFilter } from '../../desktop/types';
+import { SafetyCheckReview } from '../../types';
+import { getStableHash, getOperationalState, getActiveStory } from './simulationConfig';
 
 const FACILITY_CONFIG = [
     {
@@ -259,39 +258,37 @@ export const generateEnhancedData = () => {
     ROOMS.forEach((room, roomIdx) => {
         const officer = OFFICER_NAMES[roomIdx % OFFICER_NAMES.length];
 
-        // For Live view, we want a realistic yet controlled distribution.
-        // Force states based on profile to ensure 75% are "Good"
+        // --- SIMULATION MODE ---
+        // 1. Get baseline operational state (Time of Day etc)
+        const opState = getOperationalState(now.toISOString());
+        // 2. Get unit-specific story (Lockdown etc)
+        const storyMode = getActiveStory(room.unit, now.toISOString());
+
         const profile = getUnitProfile(room.group, room.unit);
 
         let targetDelta: number;
-        const seed = roomIdx * 123 + 456;
-        const rand = seededRandom(seed);
+        // Use a stable seed for this specific window/room
+        const windowStartTime = new Date(now);
+        windowStartTime.setMinutes(roomIdx, 0, 0); // Spreading rooms across the hour
+        const stableSeed = getStableHash(room.id + windowStartTime.toDateString());
+        const rand = seededRandom(stableSeed);
 
-        // --- SCENARIO OVERRIDES ---
-        if (room.group === 'Maple' || room.unit === 'Oak Integrated' || room.unit === 'Maple Transitional') {
-            // Maple group and Oak Integrated: No missed checks (Upcoming or Due)
-            targetDelta = rand < 0.6
-                ? -Math.floor(seededRandom(seed + 1) * 10 + 1) // Upcoming
-                : Math.floor(seededRandom(seed + 1) * 5);      // Due
-        } else if (profile.tier === 'punctual') {
-            // Punctual: Forced to Upcoming (-15 to -6m)
-            // NO Warning (Due soon), NO Alert (Missed)
-            targetDelta = -Math.floor(seededRandom(seed + 1) * 10 + 6);
+        // Lockdown Story: Cluster rooms into Overdue
+        if (storyMode === 'LOCKDOWN') {
+            targetDelta = 25 + (stableSeed % 15); // Forced Overdue
+        } else if (opState.mode === 'SHIFT_CHANGE' && rand < 0.3) {
+            targetDelta = 10 + (stableSeed % 10); // Shift change jank
+        } else if (profile.tier === 'punctual' || opState.mode === 'NIGHT') {
+            // Night or Punctual: Mostly Upcoming
+            targetDelta = -10 - (stableSeed % 20);
         } else if (profile.tier === 'good') {
-            // Good: Upcoming or Due (-10 to 4m)
-            // NO Alert (Missed)
-            targetDelta = rand < 0.6
-                ? -Math.floor(seededRandom(seed + 1) * 10 + 1) // Upcoming
-                : Math.floor(seededRandom(seed + 1) * 5);      // Due
+            // Good: Upcoming or Due
+            targetDelta = rand < 0.7 ? -10 : 2;
         } else {
-            // Critical: Balanced mix including alerts
-            if (rand < 0.2) {
-                targetDelta = -Math.floor(seededRandom(seed + 1) * 10 + 1); // Upcoming
-            } else if (rand < 0.5) {
-                targetDelta = Math.floor(seededRandom(seed + 1) * 5);       // Due
-            } else {
-                targetDelta = Math.floor(seededRandom(seed + 1) * 40 + 5);  // Overdue
-            }
+            // Critical: Balanced mix
+            if (rand < 0.2) targetDelta = -15;
+            else if (rand < 0.5) targetDelta = 2;
+            else targetDelta = 20;
         }
 
         const scheduledTime = new Date(now.getTime() - targetDelta * MS_PER_MINUTE);
@@ -355,9 +352,12 @@ export const generateEnhancedData = () => {
             missedCheckCount,
             originalCheck: {
                 id: `check-${room.id}`,
+                correlationGuid: `guid-live-${room.id}`,
                 type: 'scheduled',
                 status: liveStatus === 'upcoming' ? 'pending' : (liveStatus === 'due' ? 'due' : 'missed'),
                 residents: room.residents,
+                scheduledStartTime: scheduledTime.toISOString(),
+                scheduledEndTime: scheduledTime.toISOString(),
                 dueDate: scheduledTime.toISOString(),
                 generationId: 1,
                 baseInterval: 15
@@ -377,42 +377,71 @@ export const generateEnhancedData = () => {
                 const checkId = `hist-${room.id}-${resIdx}-${slotIndex}`;
                 const scheduledTimeISO = slotTime.toISOString();
 
-                const checkAgeHours = (now.getTime() - slotTime.getTime()) / (60 * 60 * 1000);
-                const decayFactor = Math.exp(-checkAgeHours / 12);
-
-                const resSeed = slotIndex + roomIdx * 1000 + resIdx * 50;
+                // --- SLOT LEVEL SIMULATION ---
+                const slotOpState = getOperationalState(scheduledTimeISO);
+                const slotStory = getActiveStory(room.unit, scheduledTimeISO);
+                const resSeed = getStableHash(resident.id + scheduledTimeISO);
                 const randomVal = seededRandom(resSeed);
-                let isMissed = randomVal < (profile.missedProb * decayFactor);
 
-                // --- HISTORICAL SCENARIO OVERRIDES ---
-                if (room.unit === 'Maple Transitional' || room.unit === 'Oak Enhanced') {
-                    // Maple Transitional & Oak Enhanced: No missed checks in history
-                    isMissed = false;
-                } else if (room.unit === 'Cedar Assessment') {
-                    // Cedar Assessment: Sporadic missed checks across residents
-                    isMissed = (resSeed % 15 === 0);
+                const checkAgeHours = (now.getTime() - slotTime.getTime()) / (60 * 60 * 1000);
+                const decayFactor = Math.exp(-checkAgeHours / 24); // More historical data visibility
+
+                // Missed Logic: Influenced by Story, Cadence, and Unit Profile
+                let isMissed = false;
+                if (slotStory === 'LOCKDOWN') {
+                    isMissed = true;
+                } else {
+                    const baseProb = profile.missedProb * slotOpState.missedProbabilityScale;
+                    isMissed = randomVal < (baseProb * decayFactor);
                 }
 
-                const status: 'completed' | 'missed' = isMissed ? 'missed' : 'completed';
-                const variance = isMissed ? Infinity : Math.floor(seededRandom(resSeed + 1) * 10) - 2;
+                // Variance Logic: Influenced by Cadence
+                const variance = isMissed
+                    ? Infinity
+                    : Math.floor((seededRandom(resSeed + 1) * 10 - 2) * slotOpState.varianceMultiplier);
+
+                const status: 'completed' | 'missed' | 'completed-late' = isMissed
+                    ? 'missed'
+                    : (variance > 0 ? 'completed-late' : 'completed');
+
                 const actualTime = isMissed ? null : new Date(slotTime.getTime() + variance * MS_PER_MINUTE).toISOString();
                 const officerNote = (slotIndex % 4 === 0) ? NOTE_SNIPPETS[slotIndex % NOTE_SNIPPETS.length] : undefined;
 
                 const commentRandomVal = seededRandom(resSeed + 2);
-                const commentThreshold = checkAgeHours < 4 ? 0.95 : (profile.commentFailProb * decayFactor);
+                const commentThreshold = checkAgeHours < 4 ? 0.95 : (profile.commentFailProb * decayFactor * slotOpState.noteProbabilityScale);
                 const shouldHaveComment = commentRandomVal > commentThreshold;
 
-                const supervisorNote = isMissed
-                    ? (shouldHaveComment ? 'Reviewed and documented.' : undefined)
-                    : undefined;
+                // IA Alignment: correlationGuid links events (STABLE HASH)
+                const correlationGuid = `guid-${getStableHash(room.id + resident.id + scheduledTimeISO)}`;
 
-                const supervisorName = supervisorNote ? 'Dave Thompson' : undefined;
-                const reviewDate = supervisorNote ? new Date(slotTime.getTime() + 60 * MS_PER_MINUTE).toISOString() : undefined;
+                // IA Alignment: Supervisor Review Entity
+                let supervisorReview: SafetyCheckReview | undefined = undefined;
+                if (isMissed && shouldHaveComment) {
+                    const reason = slotStory === 'LOCKDOWN' ? 'Unit Lockdown' : (randomVal < 0.5 ? 'Medical Emergency' : 'Staff Shortage');
+                    supervisorReview = {
+                        id: `rev-${checkId}`,
+                        safetyCheckId: checkId,
+                        reason,
+                        notes: `Reviewed and documented. Delay caused by ${reason.toLowerCase()}.`,
+                        reviewedById: 'u-dthompson',
+                        reviewedDate: new Date(slotTime.getTime() + 60 * MS_PER_MINUTE).toISOString()
+                    };
+                }
 
+                const supervisorNote = supervisorReview?.notes;
+                const supervisorName = supervisorReview ? 'Dave Thompson' : undefined;
+                const reviewDate = supervisorReview?.reviewedDate;
+
+                // 1. ADD THE BASE RECORD (MISSED or COMPLETED)
                 historicalData.push({
                     id: checkId,
-                    residents: [resident], // Single resident
+                    correlationGuid,
+                    residents: [resident],
                     location: room.location,
+                    scheduledStartTime: slotTime.toISOString(),
+                    scheduledEndTime: slotTime.toISOString(),
+                    completedTime: actualTime,
+                    missedTime: isMissed ? slotTime.toISOString() : null,
                     scheduledTime: scheduledTimeISO,
                     actualTime,
                     status,
@@ -422,11 +451,41 @@ export const generateEnhancedData = () => {
                     officerName: isMissed ? '' : officer,
                     officerNote,
                     supervisorNote,
+                    supervisorReview,
                     supervisorName,
                     reviewDate,
-                    reviewStatus: isMissed ? (supervisorNote ? 'verified' : 'pending') : 'verified',
+                    reviewStatus: isMissed ? (supervisorReview ? 'verified' : 'pending') : 'verified',
                     hasHighRisk: (roomIdx + resIdx) % 7 === 0,
+                    roomIdMethod: isMissed ? undefined : (resSeed % 3 === 0 ? 'NFC' : (resSeed % 3 === 1 ? 'QR_CODE' : 'MANUAL_ENTRY')),
                 });
+
+                // 2. INJECT CORRECTION CHAIN (Simulation of late completion after a miss)
+                // 10% chance if missed, to show it was eventually settled
+                if (isMissed && randomVal < 0.1) {
+                    const correctionVariance = 17 + (resSeed % 10); // 17-26 mins late
+                    const correctionTime = new Date(slotTime.getTime() + correctionVariance * MS_PER_MINUTE).toISOString();
+                    historicalData.push({
+                        id: `${checkId}-corrected`,
+                        correlationGuid, // SHARED GUID
+                        residents: [resident],
+                        location: room.location,
+                        scheduledStartTime: slotTime.toISOString(),
+                        scheduledEndTime: slotTime.toISOString(),
+                        completedTime: correctionTime,
+                        missedTime: null,
+                        scheduledTime: scheduledTimeISO,
+                        actualTime: correctionTime,
+                        status: 'completed-late',
+                        varianceMinutes: correctionVariance,
+                        group: room.group,
+                        unit: room.unit,
+                        officerName: officer,
+                        officerNote: 'Verification of missed window.',
+                        hasHighRisk: (roomIdx + resIdx) % 7 === 0,
+                        roomIdMethod: 'MANUAL_ENTRY',
+                        reviewStatus: 'verified'
+                    });
+                }
 
                 slotTime = new Date(slotTime.getTime() + CHECK_INTERVAL_MINS * MS_PER_MINUTE);
                 slotIndex++;
@@ -527,16 +586,34 @@ export const loadEnhancedHistoricalPage = (
                 }
                 if (filter.group && filter.group !== 'all') filtered = filtered.filter((r: HistoricalCheck) => r.group === filter.group);
                 if (filter.unit && filter.unit !== 'all') filtered = filtered.filter((r: HistoricalCheck) => r.unit === filter.unit);
-                if (filter.historicalStatusFilter && filter.historicalStatusFilter !== 'all') {
-                    if (filter.historicalStatusFilter === 'missed-all') {
-                        filtered = filtered.filter((r: HistoricalCheck) => r.status === 'missed');
-                    } else if (filter.historicalStatusFilter === 'missed-not-reviewed') {
-                        filtered = filtered.filter((r: HistoricalCheck) => r.status === 'missed' && !r.supervisorNote);
-                    } else if (filter.historicalStatusFilter === 'missed-reviewed') {
-                        filtered = filtered.filter((r: HistoricalCheck) => r.status === 'missed' && !!r.supervisorNote);
-                    } else if (filter.historicalStatusFilter === 'completed') {
-                        filtered = filtered.filter((r: HistoricalCheck) => r.status === 'completed');
-                    }
+                if (filter.historicalStatusFilter && filter.historicalStatusFilter.length > 0) {
+                    filtered = filtered.filter((r: HistoricalCheck) => {
+                        const activeFilters = filter.historicalStatusFilter;
+
+                        // Handle "All" equivalent
+                        if (activeFilters.includes('all')) return true;
+
+                        // Missed Filter
+                        if (activeFilters.includes('missed-all')) {
+                            if (r.status === 'missed') return true;
+                        }
+                        if (activeFilters.includes('missed-not-reviewed')) {
+                            if (r.status === 'missed' && !r.supervisorNote) return true;
+                        }
+                        if (activeFilters.includes('missed-reviewed')) {
+                            if (r.status === 'missed' && !!r.supervisorNote) return true;
+                        }
+
+                        // Completed Filter
+                        if (activeFilters.includes('completed')) {
+                            if (r.status === 'completed') return true;
+                        }
+                        if (activeFilters.includes('completed-late')) {
+                            if (r.status === 'completed-late') return true;
+                        }
+
+                        return false;
+                    });
                 }
                 if (filter.startDate || filter.endDate) {
                     const checkDate = (iso: string) => iso.split('T')[0];

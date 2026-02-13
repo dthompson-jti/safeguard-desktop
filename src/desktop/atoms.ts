@@ -3,7 +3,7 @@
 import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { STORAGE_PREFIX } from '../config';
-import { DesktopView, DesktopFilter, HistoricalCheck, LiveCheckRow } from './types';
+import { DesktopView, DesktopFilter, HistoricalCheck, LiveCheckRow, HistoricalStatusFilter } from './types';
 import { Resident } from '../types';
 import { enhancedMockData } from '../desktop-enhanced/data/mockData';
 // We'll need access to live data for the polymorphic resolver. 
@@ -36,7 +36,7 @@ export const FACTORY_FILTER_DEFAULTS: DesktopFilter = {
     search: '',
     showMissedOnly: false,
     statusFilter: 'all',
-    historicalStatusFilter: 'missed-not-reviewed',
+    historicalStatusFilter: ['missed-not-reviewed'],
     timeRangePreset: 'last-24h',
     dateStart: null,
     dateEnd: null,
@@ -53,9 +53,37 @@ export const FACTORY_FILTER_DEFAULTS: DesktopFilter = {
 
 
 /** Desktop filter state (Session - Persisted) */
-export const desktopFilterAtom = atomWithStorage<DesktopFilter>(
+const desktopFilterAtomRaw = atomWithStorage<DesktopFilter>(
     `${STORAGE_PREFIX}filter_session`,
     FACTORY_FILTER_DEFAULTS
+);
+
+/** 
+ * Wrapper atom to handle migration of legacy storage data (string -> array)
+ * This prevents app crashes when users with old data load the new version.
+ */
+export const desktopFilterAtom = atom<DesktopFilter, [update: DesktopFilter | ((prev: DesktopFilter) => DesktopFilter)], void>(
+    (get) => {
+        const value = get(desktopFilterAtomRaw);
+        // Runtime check for legacy string value
+        if (typeof value.historicalStatusFilter === 'string') {
+            // Migration logic: convert legacy string to array
+            const legacyValue = value.historicalStatusFilter as unknown as string;
+            let newValue: HistoricalStatusFilter[] = [];
+
+            if (legacyValue === 'all') newValue = []; // Empty array = All
+            else if (legacyValue === 'missed-all') newValue = ['missed-not-reviewed', 'missed-reviewed'];
+            else newValue = [legacyValue as HistoricalStatusFilter];
+
+            return { ...value, historicalStatusFilter: newValue };
+        }
+        return value;
+    },
+    (get, set, update) => {
+        const current = get(desktopFilterAtomRaw);
+        const next = typeof update === 'function' ? update(current) : update;
+        set(desktopFilterAtomRaw, next);
+    }
 );
 
 /** Keys of filters that have been explicitly modified by the user */
@@ -84,7 +112,8 @@ export const isFilterCustomizedAtom = atom((get) => {
         current.search !== saved.search ||
         current.showMissedOnly !== saved.showMissedOnly ||
         current.statusFilter !== saved.statusFilter ||
-        current.historicalStatusFilter !== saved.historicalStatusFilter ||
+        (current.historicalStatusFilter.length !== saved.historicalStatusFilter.length ||
+            !current.historicalStatusFilter.every((v: HistoricalStatusFilter) => saved.historicalStatusFilter.includes(v))) ||
         current.timeRangePreset !== saved.timeRangePreset ||
         (current.timeRangePreset === 'custom' && (current.dateStart !== saved.dateStart || current.dateEnd !== saved.dateEnd)) ||
         current.officer !== saved.officer ||
@@ -167,17 +196,27 @@ export const filteredHistoricalChecksAtom = atom((get) => {
             if (unitFromLocation !== filter.unit) return false;
         }
 
-        // Combined Historical Status Filter
-        if (filter.historicalStatusFilter !== 'all') {
-            if (filter.historicalStatusFilter === 'missed-all') {
-                if (check.status !== 'missed') return false;
-            } else if (filter.historicalStatusFilter === 'missed-not-reviewed') {
-                if (check.status !== 'missed' || check.supervisorNote) return false;
-            } else if (filter.historicalStatusFilter === 'missed-reviewed') {
-                if (check.status !== 'missed' || !check.supervisorNote) return false;
-            } else if (filter.historicalStatusFilter === 'completed') {
-                if (check.status !== 'completed') return false;
+        // Combined Historical Status Filter (Multi-select)
+        // Empty array means "All"
+        if (filter.historicalStatusFilter.length > 0) {
+            const statusParams = filter.historicalStatusFilter;
+            let matches = false;
+
+            // Check if check status matches any selected filter
+            if (statusParams.includes('missed-not-reviewed')) {
+                if (check.status === 'missed' && !check.supervisorNote) matches = true;
             }
+            if (statusParams.includes('missed-reviewed')) {
+                if (check.status === 'missed' && !!check.supervisorNote) matches = true;
+            }
+            if (statusParams.includes('completed')) {
+                if (check.status === 'completed') matches = true;
+            }
+            if (statusParams.includes('completed-late')) {
+                if (check.status === 'completed-late') matches = true;
+            }
+
+            if (!matches) return false;
         }
 
         // Officer filter
@@ -239,15 +278,25 @@ export const supervisorNoteModalAtom = atom<{
  */
 export interface PanelData {
     id: string;
+    correlationGuid?: string;
     source: 'live' | 'historical';
     residents: Resident[];
     residentName: string;
     location: string;
-    status: 'missed' | 'due' | 'pending' | 'done' | 'late' | 'completing' | 'complete' | 'queued' | 'upcoming' | 'overdue' | 'completed';
+    status: string; // Keep broad to handle all UI and IA statuses
+
+    // IA-Aligned Timestamps
+    scheduledStartTime?: string;
+    scheduledEndTime?: string;
+    completedTime?: string | null;
+    missedTime?: string | null;
+
+    // Legacy mapping (keep for transition)
     timeScheduled: string;
     timeActual: string | null;
+
     varianceMinutes?: number;
-    officerName: string;
+    officerName?: string;
     officerNote?: string;
     supervisorNote?: string;
     supervisorName?: string;
@@ -255,6 +304,7 @@ export interface PanelData {
     reviewStatus?: 'pending' | 'verified';
     group?: string;
     unit?: string;
+    roomIdMethod?: 'NFC' | 'QR_CODE' | 'MANUAL_ENTRY';
     // Potential future fields
     riskType?: string;
     hasHighRisk?: boolean;

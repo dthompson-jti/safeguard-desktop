@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 ### Added
+- **Dark Mode Consolidation**:
+    - Standardized on a single high-fidelity **Dark Mode** (`dark`) based on the "Dark C" elevation standard.
+    - Removed legacy `dark-a` and `dark-b` theme blocks from `semantics.css`.
+    - Consolidated tooltip theme selectors in `tooltip.css` to use the unified `dark` theme.
+    - Implemented automatic migration of legacy dark theme preferences in `useTheme.ts`.
+    - Harmonized design specifications in `DARK_MODE.md`, `SPEC-DARK-MODE.md`, and `AGENTS.md`.
 - **Journal Design System Documentation**:
     - **Overview**: Infrastructure-focused summary of the system status and integration.
     - **Tokens**: Architectural breakdown of Primitive vs. Semantic layers.

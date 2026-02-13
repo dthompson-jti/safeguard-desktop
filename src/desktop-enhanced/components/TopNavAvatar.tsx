@@ -21,7 +21,7 @@ export const TopNavAvatar = () => {
     const hue = customHue !== undefined ? customHue : generateAvatarHue(username);
 
     const handleThemeChange = (value: string) => {
-        setTheme(value as 'light' | 'dark-a' | 'dark-b' | 'dark-c');
+        setTheme(value as 'light' | 'dark');
     };
 
     const handleHueChange = (newHue: number) => {
@@ -63,9 +63,9 @@ export const TopNavAvatar = () => {
                             id="topnav-appearance"
                             options={[
                                 { value: 'light', label: 'Light' },
-                                { value: 'dark-c', label: 'Dark' },
+                                { value: 'dark', label: 'Dark' },
                             ]}
-                            value={theme === 'light' ? 'light' : 'dark-c'}
+                            value={theme === 'light' ? 'light' : 'dark'}
                             onValueChange={handleThemeChange}
                             layout="row"
                         />

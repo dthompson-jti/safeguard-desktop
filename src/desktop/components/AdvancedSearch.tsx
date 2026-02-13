@@ -6,6 +6,7 @@ import { OFFICER_NAMES, RESIDENT_NAMES, REVIEWER_NAMES } from '../../desktop-enh
 import { Button } from '../../components/Button';
 import { SearchableSelect } from '../../components/SearchableSelect';
 import { ComboBox } from '../../components/ComboBox';
+import { MultiSelect } from '../../components/MultiSelect';
 import { Select, SelectItem } from '../../components/Select';
 import styles from './AdvancedSearch.module.css';
 
@@ -14,11 +15,10 @@ interface AdvancedSearchProps {
 }
 
 const HISTORICAL_STATUS_OPTIONS = [
-    { value: 'all', label: 'All statuses' },
-    { value: 'missed-all', label: 'Missed – all' },
     { value: 'missed-not-reviewed', label: 'Missed – not reviewed' },
     { value: 'missed-reviewed', label: 'Missed – reviewed' },
-    { value: 'completed', label: 'Completed' },
+    { value: 'completed', label: 'Completed – on time' },
+    { value: 'completed-late', label: 'Completed – late' },
 ];
 
 const SPECIAL_STATUS_OPTIONS = [
@@ -53,7 +53,7 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
         commentReason: filter.commentReason || 'any',
     });
 
-    const handleChange = useCallback((key: keyof typeof localFilter, value: string) => {
+    const handleChange = useCallback((key: keyof typeof localFilter, value: string | string[]) => {
         setLocalFilter(prev => ({ ...prev, [key]: value }));
     }, []);
 
@@ -160,15 +160,13 @@ export const AdvancedSearch = ({ onClose }: AdvancedSearchProps) => {
                 {/* Row 3 */}
                 <div className={styles.fieldGroup}>
                     <label className={styles.label}>Status</label>
-                    <Select
+                    <MultiSelect
                         value={localFilter.historicalStatusFilter}
                         onValueChange={(val) => handleChange('historicalStatusFilter', val)}
+                        placeholder="All statuses"
+                        options={HISTORICAL_STATUS_OPTIONS}
                         triggerClassName={styles.selectTrigger}
-                    >
-                        {HISTORICAL_STATUS_OPTIONS.map(opt => (
-                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                        ))}
-                    </Select>
+                    />
                 </div>
                 <div className={styles.fieldGroup}>
                     <label className={styles.label}>Enhanced observation</label>

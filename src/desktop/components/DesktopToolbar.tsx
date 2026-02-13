@@ -15,6 +15,7 @@ import { SearchInput } from '../../components/SearchInput';
 import { Button } from '../../components/Button';
 import { Modal } from '../../components/Modal';
 import { FilterSelect } from './FilterSelect';
+import { MultiFilterSelect } from './MultiFilterSelect';
 import { AdvancedSearch } from './AdvancedSearch';
 import styles from './DesktopToolbar.module.css';
 
@@ -38,11 +39,10 @@ const LIVE_STATUS_OPTIONS = [
 ];
 
 const HISTORICAL_STATUS_OPTIONS = [
-    { value: 'all', label: 'All statuses' },
-    { value: 'missed-all', label: 'Missed – all' },
     { value: 'missed-not-reviewed', label: 'Missed – not reviewed' },
     { value: 'missed-reviewed', label: 'Missed – reviewed' },
-    { value: 'completed', label: 'Completed' },
+    { value: 'completed', label: 'Completed – on time' },
+    { value: 'completed-late', label: 'Completed – late' },
 ];
 
 const TIME_RANGE_OPTIONS = [
@@ -89,8 +89,9 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
         updateFilter({ statusFilter: val as LiveStatusFilter });
     };
 
-    const handleHistoricalStatusFilterChange = (val: string) => {
-        updateFilter({ historicalStatusFilter: val as HistoricalStatusFilter });
+    const handleHistoricalStatusFilterChange = (vals: string[]) => {
+        // MultiSelect returns string[], but our atom expects HistoricalStatusFilter[]
+        updateFilter({ historicalStatusFilter: vals as HistoricalStatusFilter[] });
     };
 
     const handleTimeRangeChange = (val: string) => {
@@ -219,12 +220,12 @@ export const DesktopToolbar = ({ isEnhanced = false }: DesktopToolbarProps) => {
                             options={LIVE_STATUS_OPTIONS}
                         />
                     ) : (
-                        <FilterSelect
+                        <MultiFilterSelect
                             value={filter.historicalStatusFilter}
                             isCustomized={modifiedKeys.includes('historicalStatusFilter')}
                             onValueChange={handleHistoricalStatusFilterChange}
                             onClear={() => clearFilter('historicalStatusFilter')}
-                            placeholder="Status"
+                            placeholder="All States"
                             options={HISTORICAL_STATUS_OPTIONS}
                         />
                     )}

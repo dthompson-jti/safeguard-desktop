@@ -305,8 +305,8 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 *   **Semantic Token Selection (Primary Controls):**
     -   **Backgrounds:** Use `theme-800` (Dark) instead of `theme-700` (Light) for Primary Buttons.
     -   **Foregrounds:** Use `grey-50` (Dark) instead of `white` (Light) for text on Primary Buttons.
-*   **Verification Rule:** If you add a new semantic token pairing, you **MUST** verify it meets WCAG AA (4.5:1) in all themes (`dark-a`, `dark-b`, `dark-c`). Use the `contrast_audit.cjs` script if unsure.
-*   **Reference:** See `docs/SPEC-Dark-Mode.md` for full token mapping tables.
+*   **Verification Rule:** If you add a new semantic token pairing, you **MUST** verify it meets WCAG AA (4.5:1) in all themes. Use the `contrast_audit.cjs` script if unsure.
+*   **Reference:** See `docs/design-system/DARK_MODE.md` for full token mapping tables.
 
 ### Animation Synchronization Patterns (`The Zero-Time Protocol`)
 *   **Lesson:** CSS `animation-delay` with JS-calculated offsets is unreliable due to execution latency and main-thread variance.

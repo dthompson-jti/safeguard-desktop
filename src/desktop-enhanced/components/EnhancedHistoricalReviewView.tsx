@@ -119,11 +119,16 @@ export const EnhancedHistoricalReviewView = () => {
             if (row) {
                 const panelData: PanelData = {
                     id: row.id,
+                    correlationGuid: row.correlationGuid,
                     source: 'historical',
                     residents: row.residents,
                     residentName: row.residents.map(r => r.name).join(', '),
                     location: row.location,
                     status: row.status,
+                    scheduledStartTime: row.scheduledStartTime,
+                    scheduledEndTime: row.scheduledEndTime,
+                    completedTime: row.completedTime,
+                    missedTime: row.missedTime,
                     timeScheduled: row.scheduledTime,
                     timeActual: row.actualTime,
                     varianceMinutes: row.varianceMinutes,
@@ -135,6 +140,7 @@ export const EnhancedHistoricalReviewView = () => {
                     supervisorName: row.supervisorName,
                     reviewDate: row.reviewDate,
                     reviewStatus: row.reviewStatus,
+                    roomIdMethod: row.roomIdMethod,
                 };
                 setDetailRecord(panelData);
             } else {
@@ -479,7 +485,7 @@ export const EnhancedHistoricalReviewView = () => {
                 ),
             },
         ],
-        [loadedData, displayMode, badgeTextMode, dimBreadcrumbs, tableFontWeight, handleOpenNoteModal]
+        [displayMode, badgeTextMode, dimBreadcrumbs, tableFontWeight, handleOpenNoteModal]
     );
 
 

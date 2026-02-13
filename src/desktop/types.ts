@@ -1,6 +1,6 @@
 // src/desktop/types.ts
 
-import { SafetyCheck, Resident } from '../types';
+import { SafetyCheck, Resident, SafetyCheckReview } from '../types';
 
 /** Desktop-specific view states */
 export type DesktopView = 'live' | 'historical';
@@ -8,17 +8,30 @@ export type DesktopView = 'live' | 'historical';
 /** Historical check with audit fields */
 export interface HistoricalCheck {
     id: string;
+    correlationGuid?: string;
     residents: Resident[];
     location: string;
-    scheduledTime: string;      // ISO string - when check was scheduled
-    actualTime: string | null;  // ISO string or null if missed
+
+    // IA-Aligned Timestamps
+    scheduledStartTime: string;
+    scheduledEndTime: string;   // Maps to legacy 'scheduledTime'
+    completedTime: string | null; // Maps to legacy 'actualTime'
+    missedTime: string | null;
+
+    // Legacy Display Fields (for backward compatibility)
+    scheduledTime: string;      // Should be aliased to scheduledEndTime
+    actualTime: string | null;  // Should be aliased to completedTime
+
     varianceMinutes: number;    // Positive = late, negative = early, Infinity = missed
-    status: 'completed' | 'missed';
+    status: 'completed' | 'missed' | 'completed-late';
+
+    roomIdMethod?: 'NFC' | 'QR_CODE' | 'MANUAL_ENTRY';
     group: string;
     unit: string;
     officerName: string;
     officerNote?: string;
     supervisorNote?: string;
+    supervisorReview?: SafetyCheckReview; // Proper entity for reviews
     reviewStatus: 'pending' | 'verified';
     supervisorName?: string;
     reviewDate?: string;        // ISO string
@@ -26,7 +39,7 @@ export interface HistoricalCheck {
 }
 
 /** Combined status filter for historical view */
-export type HistoricalStatusFilter = 'all' | 'missed-all' | 'missed-not-reviewed' | 'missed-reviewed' | 'completed';
+export type HistoricalStatusFilter = 'all' | 'missed-all' | 'missed-not-reviewed' | 'missed-reviewed' | 'completed' | 'completed-late';
 
 /** Status filter for live view */
 export type LiveStatusFilter = 'all' | 'upcoming' | 'due' | 'overdue';
@@ -42,7 +55,7 @@ export interface DesktopFilter {
     search: string;    // Resident name search
     showMissedOnly: boolean;
     statusFilter: LiveStatusFilter;  // Live view status filter
-    historicalStatusFilter: HistoricalStatusFilter;  // Historical view combined status filter
+    historicalStatusFilter: HistoricalStatusFilter[];  // Historical view combined status filter (Multi-select)
     timeRangePreset: TimeRangePreset;
     dateStart: string | null; // ISO Date string (YYYY-MM-DD)
     dateEnd: string | null;   // ISO Date string (YYYY-MM-DD)

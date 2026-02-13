@@ -32,17 +32,13 @@
 }
 
 /* --- Dark Mode: Invert Tooltip --- */
-[data-theme='dark-a'] .tooltip-content,
-[data-theme='dark-b'] .tooltip-content,
-[data-theme='dark-c'] .tooltip-content {
+[data-theme='dark'] .tooltip-content {
   background-color: var(--primitives-grey-50);
   color: var(--primitives-grey-900);
   border-color: var(--primitives-grey-200);
 }
 
-[data-theme='dark-a'] .tooltip-arrow,
-[data-theme='dark-b'] .tooltip-arrow,
-[data-theme='dark-c'] .tooltip-arrow {
+[data-theme='dark'] .tooltip-arrow {
   fill: var(--primitives-grey-50);
 }
 

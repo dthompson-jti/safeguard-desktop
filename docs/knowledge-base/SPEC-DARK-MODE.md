@@ -29,13 +29,12 @@ Primary Brand buttons require specific overrides in dark mode to avoid "white te
 | `control-border-primary` | `theme-700` | **`theme-800`** |
 
 ## 3. Theme Variants
+The system standardizes on a single **Dark Mode** (`dark`) to ensure consistency and maintainability.
 
 | Theme | `data-theme` | Description |
 |:---|:---|:---|
 | Light | *(none)* | Default light mode. |
-| Dark A | `dark-a` | **High Contrast.** Cards (`grey-900`) are lighter than body (`grey-950`). |
-| Dark B | `dark-b` | **Merged Surfaces.** Cards and Body share `grey-950`. |
-| Dark C | `dark-c` | **High Fidelity.** Granular grey scale (`940` body, `910` cards). |
+| Dark | `dark` | **High Fidelity.** Granular grey scale (`940` body, `910` cards, `860` overlays). |
 
 ## 4. Reference Palette (Dark C)
 *Active as of Dec 2024*

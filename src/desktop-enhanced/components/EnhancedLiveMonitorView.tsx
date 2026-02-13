@@ -229,16 +229,22 @@ export const EnhancedLiveMonitorView = () => {
             if (row) {
                 setDetailRecord({
                     id: row.id,
+                    correlationGuid: row.originalCheck?.correlationGuid,
                     source: 'live',
                     residents: row.residents,
                     residentName: row.residents.map(r => r.name).join(', '),
                     location: row.location,
                     status: row.status,
+                    scheduledStartTime: row.originalCheck?.scheduledStartTime,
+                    scheduledEndTime: row.originalCheck?.scheduledEndTime,
+                    completedTime: row.originalCheck?.completedTime,
+                    missedTime: row.originalCheck?.missedTime,
                     timeScheduled: row.originalCheck?.dueDate || '',
                     timeActual: null,
                     officerName: '',
                     group: row.group,
                     unit: row.unit,
+                    roomIdMethod: row.originalCheck?.roomIdMethod,
                 });
             } else {
                 setDetailRecord(null);

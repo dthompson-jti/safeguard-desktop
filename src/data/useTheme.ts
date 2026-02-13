@@ -2,14 +2,15 @@ import { atom, useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { STORAGE_PREFIX } from '../config';
 
-type Theme = 'light' | 'dark-a' | 'dark-b' | 'dark-c';
+type Theme = 'light' | 'dark';
 
 // The atom holds the user's theme preference.
 export const themeAtom = atom<Theme>((() => {
     try {
-        const stored = localStorage.getItem(`${STORAGE_PREFIX}theme`) as Theme | null;
-        if (stored === 'light' || stored === 'dark-a' || stored === 'dark-b' || stored === 'dark-c') {
-            return stored;
+        const stored = localStorage.getItem(`${STORAGE_PREFIX}theme`);
+        if (stored === 'light') return 'light';
+        if (stored === 'dark' || (stored && stored.startsWith('dark-'))) {
+            return 'dark'; // Migrate dark-a, dark-b, dark-c to 'dark'
         }
         return 'light'; // Default to light
     } catch {
