@@ -13,6 +13,7 @@ interface SelectProps {
   valueLabel?: React.ReactNode;
   /** Variant style of the select: 'default' (flat) or 'filter' (skeuomorphic) */
   variant?: 'default' | 'filter';
+  isActive?: boolean;
 }
 
 interface SelectItemProps {
@@ -48,7 +49,7 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 
 SelectItem.displayName = 'SelectItem';
 
-export const Select = ({ children, value, onValueChange, placeholder, disabled, triggerClassName, valueLabel, variant = 'default' }: SelectProps) => {
+export const Select = ({ children, value, onValueChange, placeholder, disabled, triggerClassName, valueLabel, variant = 'default', isActive = false }: SelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
@@ -82,6 +83,7 @@ export const Select = ({ children, value, onValueChange, placeholder, disabled, 
           position="popper"
           sideOffset={5}
           align="end"
+          data-active={isActive}
         >
           <RadixSelect.Viewport className={styles.selectViewport}>
             {children}

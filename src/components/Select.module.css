@@ -94,6 +94,11 @@
   width: max-content;
 }
 
+.selectContent[data-active='true'] {
+  /* Match total width of split button: [Trigger] + [Gap (2px)] + [Clear Button (32px)] */
+  min-width: calc(var(--radix-select-trigger-width) + var(--spacing-0p5) + var(--spacing-8));
+}
+
 .selectItemIcon {
   color: var(--surface-fg-tertiary);
   font-size: 18px;

@@ -7,8 +7,8 @@
     bottom: 0;
     /* width explicitly handled by grid container */
     width: 100%;
-    min-width: 320px;
-    max-width: 600px;
+    min-width: 260px;
+    max-width: 450px;
     background: var(--surface-bg-primary);
     display: flex;
     flex-direction: column;

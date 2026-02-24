@@ -56,3 +56,8 @@ How do we measure the success of this token evolution?
 3.  **Developer Friction**: Does the nomenclature (`inset` vs `gap`) reduce the need to check Figma for specific pixel values during implementation?
 4.  **Touch Accessibility**: Do all rows and interactive zones naturally meet the 44px/56px targets?
 5.  **Focus Fidelity**: Does the `focus-offset` token eliminate clipped focus rings?
+
+## 4. Architectural Constraints Discovered
+During component stress-testing (Modals, Tooltips, Context Menus), we identified key constraints that inform the decision between Option A and Option B:
+- **Asymmetric Padding**: Components like Tooltips require different X and Y padding (e.g., 6px Y, 12px X). Option A requires stitching multiple variables together (`padding: var(--inset-xs) var(--inset-md)`), whereas Option B allows for clean shorthands (`padding: var(--inset-tooltip)`).
+- **Nested Intent**: A Menu and a Menu Item currently share 6px padding. Option A forces them to share the same token (`inset-xs`), entangling their visual relationship. Option B separates them (`inset-menu` vs `inset-menu-item`), ensuring independent evolution.

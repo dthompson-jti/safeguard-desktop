@@ -151,6 +151,24 @@ How each option handles real-world component complexity.
 | **Tree Row Radius** | `var(--radius-sm)` | `var(--radius-tree-row)` |
 | **Section Gap** | `var(--spacing-gap-md)` | `var(--spacing-gap-nav-section)` |
 
+### 4. Tooltips & Context Menus (The "Transient" Tier)
+
+| Component Part | Option A (Size-Graduated) | Option B (Role-Based) |
+|:---|:---|:---|
+| **Tooltip Inset (Y/X)** | `var(--spacing-inset-xs) var(--spacing-inset-md)` | `var(--spacing-inset-tooltip)` (Shorthand) |
+| **Menu Container Inset**| `var(--spacing-inset-xs)` | `var(--spacing-inset-menu)` |
+| **Menu Item Inset** | `var(--spacing-inset-xs)` | `var(--spacing-inset-menu-item)` |
+| **Tooltip Radius** | `var(--radius-sm)` | `var(--radius-tooltip)` |
+
+### 5. Modals & Complex Forms (The "Surface" Tier)
+
+| Component Part | Option A (Size-Graduated) | Option B (Role-Based) |
+|:---|:---|:---|
+| **Modal Content Inset** | `var(--spacing-inset-lg)` | `var(--spacing-inset-modal)` |
+| **Modal Header Inset** | `var(--spacing-inset-md) var(--spacing-inset-lg)` | `var(--spacing-inset-modal-header)` (Shorthand) |
+| **ComboBox Input** | `var(--spacing-inset-md)` | `var(--spacing-inset-input)` |
+| **Modal Radius** | `var(--radius-xl)` | `var(--radius-modal)` |
+
 ---
 
 ## Detailed Comparison Matrix
@@ -163,6 +181,30 @@ How each option handles real-world component complexity.
 | **Dev Learning Curve** | **Low**: Familiar t-shirt sizes. | **Medium**: Must learn the "names" of layout roles. |
 | **Consistency Risk** | **Moderate**: Devs might use `lg` where `md` was intended because they "look similar." | **Low**: `inset-card` is semantically tied to the card. |
 | **Figma Parity** | Simple mapping of variables. | Higher fidelity; matches Figma's component-level variables. |
+
+## Architectural Evaluation & Synthesis
+
+Testing both options against real codebase files (`modal.css`, `tooltip.css`, `TreeView.tsx`) reveals several friction points that must inform our final decision.
+
+### The Asymmetry Problem
+Many components require asymmetric padding (different X and Y values). For example:
+- Tooltips: `padding: var(--spacing-1p5) var(--spacing-3);` (6px Y, 12px X)
+- Modal Headers: `padding: var(--spacing-3) var(--spacing-4);` (12px Y, 16px X)
+
+**How the options handle this:**
+- **Option A** forces developers to stitch together multiple size tokens: `padding: var(--spacing-inset-xs) var(--spacing-inset-md);`. This requires memorizing which combination yields the correct visual result.
+- **Option B** allows for a dedicated shorthand token: `padding: var(--spacing-inset-tooltip);` (where the token itself is defined as `var(--spacing-1p5) var(--spacing-3)`). This is vastly superior for developer experience but requires stricter governance to prevent an explosion of highly specific tokens.
+
+### The "Same Value, Different Intent" Problem
+A Context Menu container and a Context Menu item both currently use ~6px padding (`var(--spacing-1p5)`). 
+- **Option A** makes both `.menu` and `.menuItem` use `var(--spacing-inset-xs)`. If design decides menu items need more breathing room but the outer container should stay tight, Option A requires a massive search-and-replace to disconnect the two.
+- **Option B** defines `--spacing-inset-menu` and `--spacing-inset-menu-item`. They share the same primitive value today, but can diverge instantly tomorrow.
+
+### Improvements for the Final Plan
+To make either plan viable, we must adjust the documentation:
+1. **If Option A is chosen:** We must explicitly document how to handle asymmetric padding (e.g., standardizing on "Y-axis first" or creating a few specific micro-patterns).
+2. **If Option B is chosen:** We must define strict token taxonomy boundaries. We cannot allow `--spacing-inset-modal-header-text`. We need a governance rule stating: "Tokens map to Structural Regions, not nested sub-elements."
+3. **Compound Tokens:** We should consider allowing "Shorthand Tokens" for padding structures that are inherently asymmetric (like Tooltips), regardless of which core naming strategy we pick.
 
 ---
 

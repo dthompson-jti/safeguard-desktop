@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
+- **Panel Dimension Standardisation**:
+    - Updated the default width for both the Tree Panel (left) and Side Panel (right) to **320px** for improved information density.
+    - Standardized interactive resize constraints to a range of **260px** (min) and **450px** (max).
+    - Unified the multi-device experience by ensuring both panels adhere to the same mechanical constraints.
 - **Dynamic Font Selection**:
     - Integrated **Atkinson Hyperlegible** (Google Fonts) and **Hyperlegible Sans v1.1** (locally hosted) for improved legibility.
     - Implemented `appFontAtom` and `useAppFont` hook to dynamically sync font selection to the document root without page refresh.

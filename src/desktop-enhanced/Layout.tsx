@@ -57,7 +57,7 @@ export const Layout: React.FC<LayoutProps> = ({ leftPanel, children }) => {
             const stripWidthStr = getComputedStyle(document.documentElement).getPropertyValue('--extreme-left-nav-width').trim();
             const stripWidth = parseInt(stripWidthStr) || 192;
             const newWidth = e.clientX - stripWidth;
-            if (newWidth > 200 && newWidth < 600) {
+            if (newWidth > 260 && newWidth < 450) {
                 widthRef.current = newWidth;
                 document.documentElement.style.setProperty('--desktop-panel-width', `${newWidth}px`);
             }

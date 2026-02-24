@@ -18,7 +18,7 @@ export const desktopEnhancedSelectionAtom = atom<SelectionState>({
 export const desktopEnhancedExpandedNodesAtom = atom<Set<string>>(new Set<string>());
 
 // Width of the left navigation panel
-export const desktopEnhancedPanelWidthAtom = atom<number>(280);
+export const desktopEnhancedPanelWidthAtom = atom<number>(320);
 
 // Tree layout configuration
 export type TreeLayoutMode = 'indented' | 'full-width';

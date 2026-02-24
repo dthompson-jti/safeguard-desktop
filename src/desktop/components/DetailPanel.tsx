@@ -96,7 +96,7 @@ export const DetailPanel = ({ record, selectedCount = 0, onResizeStart, onResize
         if (!isResizing) return;
 
         const newWidth = window.innerWidth - e.clientX;
-        const clampedWidth = Math.max(320, Math.min(600, newWidth));
+        const clampedWidth = Math.max(260, Math.min(450, newWidth));
 
         // Direct update (matches Left panel). The transition: none fix is the key.
         widthRef.current = clampedWidth;

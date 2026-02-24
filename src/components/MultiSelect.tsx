@@ -69,6 +69,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                     className={`menuPopover ${styles.content}`}
                     align="start"
                     sideOffset={5}
+                    data-active={isActive}
                 >
                     <div className={styles.list}>
                         {options.map(option => (

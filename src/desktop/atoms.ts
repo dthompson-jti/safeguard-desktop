@@ -327,7 +327,7 @@ export const isDetailPanelOpenAtom = atom<boolean>(false);
 export const autoOpenDetailPanelAtom = atomWithStorage<boolean>(`${STORAGE_PREFIX}auto_open_panel`, false);
 
 /** Panel width for resize functionality (min: 320, max: 600) */
-export const panelWidthAtom = atomWithStorage<number>(`${STORAGE_PREFIX}panel_width`, 400);
+export const panelWidthAtom = atomWithStorage<number>(`${STORAGE_PREFIX}panel_width`, 320);
 
 // ============================================================================
 // AUTO-REFRESH STATE
