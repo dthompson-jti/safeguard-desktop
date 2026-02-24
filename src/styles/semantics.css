@@ -72,6 +72,10 @@
   --surface-fg-info-primary: var(--primitives-blue-700);
   --surface-fg-info-secondary: var(--primitives-blue-600);
 
+  --control-fg-link-default: var(--primitives-theme-700);
+  --control-fg-link-hover: var(--primitives-theme-900);
+  --control-fg-link-active: var(--primitives-theme-975);
+
   /* Brand Logo */
   --brand-logo-text: #2C2829;
 
@@ -429,6 +433,10 @@
   /* Overlay */
   --surface-bg-overlay: #000000;
   --surface-bg-backdrop: rgba(0, 0, 0, 0.7);
+
+  --control-fg-link-default: var(--primitives-theme-300);
+  --control-fg-link-hover: var(--primitives-theme-100);
+  --control-fg-link-active: var(--primitives-theme-50);
 
   /* ================== CONTROL ================== */
 

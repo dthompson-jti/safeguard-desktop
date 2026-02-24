@@ -1,9 +1,8 @@
 import React from 'react';
 import { Resident } from '../../types'; // Import from global types
 import { StatusBadge, StatusBadgeType } from './StatusBadge';
-import { Tooltip } from '../../components/Tooltip';
 import { useAtomValue } from 'jotai';
-import { residentBadgeColorModeAtom, residentBadgeTextAtom, truncateBadgesAtom } from '../atoms';
+import { residentBadgeColorModeAtom, residentBadgeTextAtom } from '../atoms';
 import { getBadgeLabel } from '../utils/badgeUtils';
 
 interface ResidentStatusGroupProps {
@@ -21,7 +20,6 @@ interface BadgeItem {
 export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ residents, view }) => {
     const colorMode = useAtomValue(residentBadgeColorModeAtom);
     const badgeTextMode = useAtomValue(residentBadgeTextAtom);
-    const truncateBadges = useAtomValue(truncateBadgesAtom);
     // 1. Flatten all statuses from all residents into a single list of simplified objects
     // We want to know: { label: string, status: StatusBadgeType, tooltip: string }
 
@@ -65,10 +63,9 @@ export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ reside
     if (allBadges.length === 0) return null;
 
     // 3. Render
-    const limit = 1;
-    const shouldTruncate = view === 'table' && truncateBadges && allBadges.length > limit;
-    const visibleBadges = shouldTruncate ? allBadges.slice(0, limit) : allBadges;
-    const hiddenCount = allBadges.length - limit;
+    const limit = 3;
+    const isTable = view === 'table';
+    const visibleBadges = isTable ? allBadges.slice(0, limit) : allBadges;
 
     return (
         <div style={{
@@ -87,27 +84,7 @@ export const ResidentStatusGroup: React.FC<ResidentStatusGroupProps> = ({ reside
                     colorMode={colorMode}
                 />
             ))}
-            {shouldTruncate && (
-                <Tooltip content={renderTooltipContent(allBadges.slice(limit))}>
-                    <div>
-                        <StatusBadge
-                            status="special"
-                            label={`+${hiddenCount}`}
-                            fill
-                            showIcon={false}
-                            colorMode={colorMode}
-                        />
-                    </div>
-                </Tooltip>
-            )}
         </div>
     );
 };
 
-const renderTooltipContent = (badges: BadgeItem[]) => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-        {badges.map((b, i) => (
-            <div key={i}>• {b.label}</div>
-        ))}
-    </div>
-);

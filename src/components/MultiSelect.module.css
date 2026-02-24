@@ -147,10 +147,47 @@
 .item {
   text-align: left;
   width: 100%;
+  gap: var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-3);
 }
 
 .itemLabel {
   flex: 1;
+}
+
+.checkboxIndicator {
+  width: var(--control-width-checkbox);
+  height: var(--control-width-checkbox);
+  border-radius: var(--radius-button-sm);
+  border: 1px solid var(--surface-border-primary);
+  background: var(--surface-bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 120ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.checkboxIndicator::before {
+  content: "";
+  width: 12px;
+  height: 9px;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  background-image: url("data:image/svg+xml,%3csvg width='12' height='9' viewBox='0 0 12 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M10.6666 1.5L4.24992 7.91667L1.33325 5' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Checked State override */
+.item[data-state='checked'] .checkboxIndicator {
+  background: var(--control-bg-theme);
+  border-color: transparent;
+}
+
+.item[data-state='checked'] .checkboxIndicator::before {
+  transform: scale(1);
 }
 
 .footer {

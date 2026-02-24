@@ -386,8 +386,8 @@
 
 /* Link action */
 .linkAction {
-    color: var(--surface-fg-info);
-    font-weight: var(--font-weight-medium);
+    color: var(--control-fg-link-default);
+    font-weight: var(--font-weight-regular);
     cursor: pointer;
     background: none;
     border: none;
@@ -397,13 +397,18 @@
 
 @media (hover: hover) {
     .linkAction:hover {
+        color: var(--control-fg-link-hover);
         text-decoration: underline;
+    }
+
+    .linkAction:active {
+        color: var(--control-fg-link-active);
     }
 }
 
 /* Hyperlink text styling for names and room numbers */
 .linkText {
-    color: var(--control-fg-theme);
+    color: var(--control-fg-link-default);
     text-decoration: underline;
     text-decoration-style: solid;
     text-decoration-skip-ink: auto;
@@ -411,14 +416,18 @@
     text-underline-offset: auto;
     text-underline-position: from-font;
     cursor: pointer;
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-regular);
 }
 
 @media (hover: hover) {
     .linkText:hover {
-        color: var(--control-fg-theme-hover);
+        color: var(--control-fg-link-hover);
         text-decoration: underline;
         text-decoration-thickness: 20%;
+    }
+
+    .linkText:active {
+        color: var(--control-fg-link-active);
     }
 }
 

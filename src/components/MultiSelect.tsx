@@ -78,12 +78,10 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                                 onClick={() => handleSelect(option.value)}
                                 data-state={value.includes(option.value) ? 'checked' : 'unchecked'}
                                 type="button"
+                                role="menuitemcheckbox"
+                                aria-checked={value.includes(option.value)}
                             >
-                                <div className="menuCheckmark">
-                                    {value.includes(option.value) && (
-                                        <span className="material-symbols-rounded">check</span>
-                                    )}
-                                </div>
+                                <div className={styles.checkboxIndicator} />
                                 <span className={styles.itemLabel}>{option.label}</span>
                             </button>
                         ))}

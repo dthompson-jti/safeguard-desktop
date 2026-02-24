@@ -7,43 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
-### Added
-- **Dark Mode Consolidation**:
-    - Standardized on a single high-fidelity **Dark Mode** (`dark`) based on the "Dark C" elevation standard.
-    - Removed legacy `dark-a` and `dark-b` theme blocks from `semantics.css`.
-    - Consolidated tooltip theme selectors in `tooltip.css` to use the unified `dark` theme.
-    - Implemented automatic migration of legacy dark theme preferences in `useTheme.ts`.
-    - Harmonized design specifications in `DARK_MODE.md`, `SPEC-DARK-MODE.md`, and `AGENTS.md`.
-- **Journal Design System Documentation**:
-    - **Overview**: Infrastructure-focused summary of the system status and integration.
-    - **Tokens**: Architectural breakdown of Primitive vs. Semantic layers.
-    - **CSS Principles**: Professional standards for implementation and migration compliance.
-    - Updated `SPEC-CSS.md` to reference the new system documentation.
-- **Search Restoration**: Restored the "Has the words" free-text input to the Advanced Search panel (top left) for broad matching across names and locations.
-- **No Results UI**: Implemented a two-line design for empty search/filter states (Title + Message) using tertiary typography tokens.
-- **Header Synchronization**: The application header now dynamically updates to "No search results" when filtered data returns zero records.
-- **Multi-Edit Info Banner**: Relocated the batch record count in `SupervisorNoteModal` from the header to a semantic info banner in the modal body, positioned above form fields.
-- **Hidden Features**: Temporarily hidden the **Export** button/menu across all views (code maintained for future restoration).
-- **Stabilization & Debugging**:
-    - Resolved runtime evaluation error in `mockData.ts` caused by HMR/export syntax conflicts.
-    - Cleaned up deleted `historicalRowUpdateAtom` references across the codebase to resolve build and lint regressions.
-    - Fixed React Hook dependency warnings and unsafe type usages.
-- **Live Monitor Sorting**: Updated default Live View sorting to prioritize **Scheduled time** (ascending), ensuring immediate and overdue checks appear at the top.
-- **Advanced Search Filters**:
-    - **Resident Dropdown**: Replaced free-text input with a searchable resident dropdown in Advanced Search.
-    - **Reviewer**: Added a dedicated "Reviewer" dropdown filter.
-    - **Data Source**: Integrated valid mock data lists for both new dropdowns.
-- **UI Adjustments**:
-    - Simplified regular search placeholder to "**Find records**".
-    - Restored the "**X**" (close) icon to the Advanced Search panel header.
-    - **Menu Cleanup**: Removed configuration toggles for "**Reason required**", "**Table font weight**", and "**Dimmed breadcrumbs**". These behaviors are now enforced defaults.
-    - **Form Styling**: Updated the mandatory field asterisk (`*`) to use the semantic `var(--surface-fg-alert-primary)` token.
-- **Radii Standardization**:
-    - Implemented a hierarchical semantic radii system: **Toolbar** (16px), **Structural** (12px), **Interactive** (8px), and **Dense** (6px).
-    - Mapped all component `border-radius` properties to semantic tokens (e.g., `--radius-input`, `--radius-container`, `--radius-button-md`).
-    - Standardized Popovers, Menus, Modals, Toasts, and the Bulk Action Bar.
-    - Added developer documentation at `docs/design-system/SEMANTIC_RADII.md`.
-    - Aligned primitive radii variables in `primitives.css` with Figma (radius-xs: 4px).
+- **Dynamic Font Selection**:
+    - Integrated **Atkinson Hyperlegible** (Google Fonts) and **Hyperlegible Sans v1.1** (locally hosted) for improved legibility.
+    - Implemented `appFontAtom` and `useAppFont` hook to dynamically sync font selection to the document root without page refresh.
+    - Added a Typography section to the main menu for instant font switching (Inter, Hyperlegible, Atkinson).
+    - Fixed FOUC (Flash of Unstyled Content) by applying the stored font preference in a small blocking script in `index.html`.
+- **Badge Refinements**:
+    - Standardized all badge and chip components to use **Medium (500)** font weight.
+    - Implemented a hard limit for resident status badges, capping display to a maximum of **3** badges in table views.
+    - Removed the redundant `truncateBadges` toggle and the `+N` count indicator for a cleaner, high-density visual profile.
+- **MultiSelect Dropdown Evolution**:
+    - Replaced traditional checkmarks with themed checkbox indicators for multi-selection dropdowns.
+    - Implemented high-fidelity checkbox styling using SVG data URIs for perfect parity with standard form controls.
+    - Enhanced accessibility by adding `role="menuitemcheckbox"` and `aria-checked` to dropdown items.
+    - Refined item spacing and padding for a high-density, professional appearance.
 
 ### Changed
 - **Default Application Settings**: Updated the prototype's factory defaults to align with operational preferences:

@@ -227,9 +227,8 @@ export const SupervisorNoteModal = () => {
             <Modal.Content>
                 <div className={styles.body}>
                     {modalState.selectedIds.length > 1 && (
-                        <div className={styles.infoBanner}>
-                            <span className="material-symbols-rounded">info</span>
-                            <span>Updating {modalState.selectedIds.length} records</span>
+                        <div className={styles.multiEditLabel}>
+                            Updating {modalState.selectedIds.length} records
                         </div>
                     )}
                     <div className={styles.field}>

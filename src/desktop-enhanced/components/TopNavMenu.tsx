@@ -1,7 +1,7 @@
 import * as Popover from '@radix-ui/react-popover';
 import { useAtom } from 'jotai';
 import { desktopEnhancedTreeLayoutAtom } from '../atoms';
-import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, residentBadgeColorModeAtom, truncateBadgesAtom, reasonSelectionModeAtom, appFontAtom } from '../../desktop/atoms';
+import { residentDisplayModeAtom, residentBadgeTextAtom, autoOpenDetailPanelAtom, residentBadgeColorModeAtom, reasonSelectionModeAtom, appFontAtom } from '../../desktop/atoms';
 
 import { Switch } from '../../components/Switch';
 import styles from './TopNavMenu.module.css';
@@ -12,7 +12,6 @@ export const TopNavMenu = () => {
     const [residentBadgeText, setResidentBadgeText] = useAtom(residentBadgeTextAtom);
     const [badgeColorMode, setBadgeColorMode] = useAtom(residentBadgeColorModeAtom);
     const [autoOpenPanel, setAutoOpenPanel] = useAtom(autoOpenDetailPanelAtom);
-    const [truncateBadges, setTruncateBadges] = useAtom(truncateBadgesAtom);
     const [reasonSelectionMode, setReasonSelectionMode] = useAtom(reasonSelectionModeAtom);
     const [appFont, setAppFont] = useAtom(appFontAtom);
 
@@ -77,16 +76,6 @@ export const TopNavMenu = () => {
                         />
                     </div>
 
-                    <div className={styles.menuRow}>
-                        <div className={styles.menuRowText}>
-                            <span>Truncate more than 1 badge</span>
-                        </div>
-                        <Switch
-                            checked={truncateBadges}
-                            onCheckedChange={setTruncateBadges}
-                            id="truncate-badges-toggle"
-                        />
-                    </div>
 
                     <div className={styles.divider} />
 
@@ -153,19 +142,19 @@ export const TopNavMenu = () => {
                         </button>
                         <button
                             className={styles.optionButton}
-                            data-active={appFont === 'atkinson'}
-                            onClick={() => setAppFont('atkinson')}
-                            title="Atkinson"
-                        >
-                            <span>Atkinson</span>
-                        </button>
-                        <button
-                            className={styles.optionButton}
                             data-active={appFont === 'hyperlegible'}
                             onClick={() => setAppFont('hyperlegible')}
                             title="Hyperlegible Sans"
                         >
                             <span>Hyperlegible</span>
+                        </button>
+                        <button
+                            className={styles.optionButton}
+                            data-active={appFont === 'atkinson'}
+                            onClick={() => setAppFont('atkinson')}
+                            title="Atkinson"
+                        >
+                            <span>Atkinson</span>
                         </button>
                     </div>
 

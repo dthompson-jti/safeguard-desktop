@@ -14,22 +14,10 @@
     overflow: hidden;
 }
 
-.infoBanner {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-3);
-    padding: var(--spacing-3) var(--spacing-4);
-    background-color: var(--surface-bg-info);
-    border: 1px solid var(--surface-border-info_subtle);
-    border-radius: var(--radius-md);
-    color: var(--surface-fg-info-primary);
+.multiEditLabel {
+    color: var(--surface-fg-secondary);
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-}
-
-.infoBanner span:first-child {
-    font-size: 20px;
-    color: var(--surface-fg-info-secondary);
+    /* margin-bottom default spacing is enough for "a bit more gap" since flex parent has row gap */
 }
 
 .body {

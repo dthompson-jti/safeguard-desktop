@@ -22,8 +22,8 @@
 }
 
 .primary {
-    color: var(--surface-fg-theme-strong, #276fe3);
-    font-weight: var(--font-weight-bold, 700);
+    color: var(--control-fg-link-default);
+    font-weight: var(--font-weight-regular);
 }
 
 .ghost {
@@ -76,7 +76,11 @@
 }
 
 .primary:hover {
-    color: var(--surface-fg-theme-strong, #276fe3);
+    color: var(--control-fg-link-hover);
+}
+
+.primary:active {
+    color: var(--control-fg-link-active);
 }
 
 .ghost:hover {
