@@ -172,13 +172,13 @@ export function DataTable<T>({
 
 
     // Compute column widths and pinned offsets once per render
-    const tableStyles = {
+    const tableStyles: React.CSSProperties & Record<string, string | number> = {
         width: table.getTotalSize(),
-    } as React.CSSProperties;
+    };
 
     table.getVisibleFlatColumns().forEach((column, index, allCols) => {
         const safeId = column.id.replace(/[^a-zA-Z0-9-]/g, '-');
-        (tableStyles as any)[`--col-${safeId}-width`] = `${column.getSize()}px`;
+        tableStyles[`--col-${safeId}-width`] = `${column.getSize()}px`;
 
         if (column.getIsPinned() === 'left') {
             let leftOffset = 0;
@@ -187,7 +187,7 @@ export function DataTable<T>({
                     leftOffset += allCols[i].getSize();
                 }
             }
-            (tableStyles as any)[`--col-${safeId}-left`] = `${leftOffset}px`;
+            tableStyles[`--col-${safeId}-left`] = `${leftOffset}px`;
         }
     });
 
@@ -265,7 +265,7 @@ export function DataTable<T>({
                         {/* Skeleton Loading State */}
                         {isLoading && data.length === 0 && Array.from({ length: 15 }).map((_, idx) => (
                             <tr key={`skeleton-${idx}`} className={styles.skeletonRow}>
-                                {table.getVisibleFlatColumns().map((column, colIndex) => {
+                                {table.getVisibleFlatColumns().map((column) => {
                                     const isPinned = column.getIsPinned();
                                     const isSpacer = column.id === 'spacer';
                                     const safeId = column.id.replace(/[^a-zA-Z0-9-]/g, '-');
@@ -333,7 +333,7 @@ export function DataTable<T>({
                                     }
                                 }}
                             >
-                                {row.getVisibleCells().map((cell, cellIndex) => {
+                                {row.getVisibleCells().map((cell) => {
                                     const isPinned = cell.column.getIsPinned();
                                     const isSpacer = cell.column.id === 'spacer';
                                     const safeId = cell.column.id.replace(/[^a-zA-Z0-9-]/g, '-');
@@ -365,7 +365,7 @@ export function DataTable<T>({
                         ))}
                         {hasMore && (
                             <tr ref={sentinelRef} className={styles.skeletonRow}>
-                                {table.getVisibleFlatColumns().map((column, colIndex) => {
+                                {table.getVisibleFlatColumns().map((column) => {
                                     const isPinned = column.getIsPinned();
                                     const isSpacer = column.id === 'spacer';
                                     const safeId = column.id.replace(/[^a-zA-Z0-9-]/g, '-');
