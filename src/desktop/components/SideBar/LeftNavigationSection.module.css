@@ -27,6 +27,16 @@
     color: var(--nav-group-fg-hover);
 }
 
+.header[data-open="true"] {
+    background-color: var(--nav-group-bg-selected);
+    color: var(--nav-group-fg-selected);
+}
+
+.header[data-open="true"]:hover {
+    background-color: var(--nav-group-bg-selected-hover);
+    color: var(--nav-group-fg-selected);
+}
+
 .label {
     flex: 1;
     text-align: left;

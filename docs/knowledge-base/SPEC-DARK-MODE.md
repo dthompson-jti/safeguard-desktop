@@ -1,52 +1,71 @@
-# Dark Mode Strategy & Specification
+# Dark Mode Strategy and Specification
 
-## 1. Core Philosophy: Elevation = Lightness
-In dark mode, **lighter surfaces are higher** in the elevation hierarchy. This mirrors how light naturally falls on raised surfaces.
+Date: 2026-03-04
+Primary implementation file: `src/styles/semantics.css`
 
-- **Deepest (Background):** Darkest Grey (e.g., `grey-950`)
-- **Elevated (Cards):** Lighter Grey (e.g., `grey-900`)
-- **Overlay (Modals):** Lightest Grey (e.g., `grey-800`)
+## 1. Runtime Contract
 
-## 2. Accessibility & Contrast Strategy
-All dark themes must meet **WCAG AA (4.5:1)** contrast ratios. This requires specific semantic overrides that differ from light mode patterns.
+Only two runtime themes are supported:
 
-### The "Light-on-Dark" Contrast Shift
-Primitives that work in light mode (e.g., `red-600` on white) usually fail in dark mode. We use a **"Shift to 400"** strategy for status colors.
+1. `light`
+2. `dark`
 
-| Semantic Token | Light Mode Primitive | Dark Mode Primitive | Rationale |
-|:---|:---|:---|:---|
-| `--surface-fg-alert-primary` | `red-600` | **`red-400`** | `600` is too dark against `grey-900`. `400` maintains 4.5:1. |
-| `--surface-fg-warning-primary` | `yellow-600` | **`yellow-400`** | `yellow-600` fails on dark. `400` pops. |
-| `--surface-fg-success-primary` | `green-600` | **`green-400`** | `green-600` blends into dark backgrounds. |
+`useTheme.ts` migrates legacy `dark-*` persisted values into canonical `dark`.
 
-### Primary Button Contrast
-Primary Brand buttons require specific overrides in dark mode to avoid "white text on light brand color" or low-contrast borders.
+## 2. Elevation Contract (Dark)
 
-| Semantic Token | Light Mode Value | Dark Mode Value |
-|:---|:---|:---|
-| `control-bg-theme` | `theme-700` | **`theme-800`** (Deep Brand) |
-| `control-fg-on-solid` | `white` | **`grey-50`** (Soft White) |
-| `control-border-primary` | `theme-700` | **`theme-800`** |
+Dark mode uses lighter values for elevated surfaces:
 
-## 3. Theme Variants
-The system standardizes on a single **Dark Mode** (`dark`) to ensure consistency and maintainability.
+- Deep layout floor: `--surface-bg-secondary` (`grey-930`)
+- Main panel/content surface: `--surface-bg-primary` (`grey-910`)
+- Elevated layers: `--surface-bg-tertiary` (`grey-880`) and `--surface-bg-quaternary` (`grey-860`)
 
-| Theme | `data-theme` | Description |
-|:---|:---|:---|
-| Light | *(none)* | Default light mode. |
-| Dark | `dark` | **High Fidelity.** Granular grey scale (`940` body, `910` cards, `860` overlays). |
+## 3. Navigation Contract (Current)
 
-## 4. Reference Palette (Dark C)
-*Active as of Dec 2024*
+### Top Nav
 
-| Token | Hex | OKLCH L | Purpose |
-|:---|:---|:---|:---|
-| `grey-950` | `#0A0C12` | ~6% | Deepest |
-| `grey-940` | `#0E1017` | ~8% | Dark C body |
-| `grey-910` | `#161A24` | ~14% | Dark C cards |
-| `theme-800` | *(mapped)* | ~30% | Primary Action Background |
+- `--top-nav-bg: var(--primitives-theme-975)`
+- `--top-nav-fg: var(--surface-fg-primary)`
+- `--top-nav-search-bg: var(--primitives-grey-900)`
+- `--top-nav-search-bg-hover: var(--primitives-grey-880)`
 
-## 5. Implementation Guide
-- **File:** `src/styles/semantics.css` (Contains all `[data-theme='...']` blocks).
-- **Rule:** Never use primitives (e.g., `var(--primitives-red-400)`) directly in components. usage.
-- **Hook:** `useTheme.ts` manages persistence and DOM application. **ALWAYS use this hook, never the atom directly.**
+### Left Nav Container
+
+- `--nav-bg: var(--surface-bg-primary)` (intentionally aligned with adjacent panel)
+
+### Left Nav Group Rows
+
+- `--nav-group-bg: var(--primitives-theme-950)`
+- `--nav-group-bg-hover: var(--primitives-theme-900)`
+- `--nav-group-bg-selected: var(--primitives-theme-950)`
+- `--nav-group-bg-selected-hover: var(--primitives-theme-900)`
+
+### Mode Toggle
+
+`Historical / Live` toggle uses dedicated `--nav-toggle-*` tokens to ensure identical hierarchy behavior in light and dark themes.
+
+## 4. Control Contrast and Border Softening
+
+Dark mode border tokens were intentionally stepped down to reduce edge harshness:
+
+- `--control-border-secondary: grey-600`
+- `--control-border-secondary-hover: grey-500`
+- `--control-border-secondary-pressed: grey-500`
+- `--control-border-selected: theme-600`
+- `--control-border-selected-hover: theme-500`
+- `--control-border-selected-pressed: theme-400`
+
+Additional UI changes matching this contract:
+
+1. Checkboxes use 1px borders in table/forms.
+2. Quick filter and multi-select lower inset lip reduced (`-1px`).
+
+## 5. Verification Checklist
+
+1. Toggle `light` / `dark` in app menu and verify:
+   - Top-nav remains darkest chrome.
+   - Left-nav container matches panel surface.
+   - Group rows are brand-tinted but even across open/closed state.
+2. Run:
+   - `npm run build`
+   - `npm run audit:tokens`

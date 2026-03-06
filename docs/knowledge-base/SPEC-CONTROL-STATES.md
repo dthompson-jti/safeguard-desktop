@@ -29,7 +29,7 @@ box-shadow:
 
 ## Required Tokens
 
-The following tokens MUST exist in `semantics.css` for ALL themes (light, dark-a, dark-b, dark-c):
+The following tokens MUST exist in `semantics.css` for ALL themes (light, dark-a, dark-b, dark):
 
 ### Background
 - `--control-bg-selected`
@@ -75,3 +75,4 @@ Filter dropdowns have special styling when in "customized" state:
 1. **Silent shadow failure**: Check if `--control-border-selected-pressed` exists in semantics.css
 2. **Wrong colors on hover**: Check CSS specificity - variant styles may have `!important`
 3. **Wrong radius**: Check split button geometry rules above
+

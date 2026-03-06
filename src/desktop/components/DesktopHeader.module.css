@@ -23,7 +23,7 @@
 }
 
 .header[data-header-style="quaternary"] {
-    background-color: var(--surface-bg-quaternary-translucent);
+    background-color: var(--surface-bg-secondary-translucent);
     backdrop-filter: blur(var(--blur-glass));
     -webkit-backdrop-filter: blur(var(--blur-glass));
 }

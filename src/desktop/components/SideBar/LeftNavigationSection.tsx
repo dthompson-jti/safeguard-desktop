@@ -28,6 +28,7 @@ export const LeftNavigationSection: React.FC<LeftNavigationSectionProps> = ({
                 onClick={handleToggle}
                 aria-expanded={isOpen}
                 aria-controls={contentId}
+                data-open={isOpen}
             >
                 <span className={styles.label}>{label}</span>
                 <svg

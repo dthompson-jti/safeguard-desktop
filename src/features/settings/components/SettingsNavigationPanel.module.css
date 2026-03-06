@@ -1,0 +1,49 @@
+.navPanel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--surface-bg-primary);
+}
+
+.header {
+    height: 48px;
+    padding: 0 var(--spacing-4);
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--surface-border-secondary);
+    background-color: var(--surface-bg-tertiary);
+    justify-content: space-between;
+}
+
+.header h2 {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--surface-fg-primary);
+    margin: 0;
+}
+
+.headerActions {
+    display: flex;
+    align-items: center;
+}
+
+/* Specific to the tiny header menu button */
+.menuBtnOverride {
+    width: 28px !important;
+    height: 28px !important;
+    color: var(--surface-fg-tertiary) !important;
+}
+
+.menuBtnOverride span {
+    font-size: 20px !important;
+}
+
+.menuBtnOverride:hover {
+    color: var(--surface-fg-primary) !important;
+    background-color: var(--surface-bg-tertiary_hover) !important;
+}
+
+.treeWrapper {
+    flex: 1;
+    overflow-y: auto;
+}

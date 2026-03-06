@@ -1,0 +1,94 @@
+.container {
+  padding: 24px;
+  max-width: 800px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--surface-fg-primary);
+}
+
+.description {
+  font-size: 14px;
+  color: var(--surface-fg-secondary);
+  margin-bottom: 32px;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  padding-bottom: 8px;
+  color: var(--surface-fg-primary);
+  border-bottom: 1px solid var(--surface-border-secondary);
+}
+
+.formField {
+  margin-bottom: 32px;
+}
+
+.inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldInfo {
+  flex: 1;
+}
+
+.fieldLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--surface-fg-primary);
+  margin-bottom: 4px;
+}
+
+.fieldDescription {
+  font-size: 13px;
+  color: var(--surface-fg-secondary);
+  line-height: 1.5;
+  max-width: 600px;
+}
+
+.stack .fieldDescription {
+  margin-bottom: 12px;
+}
+
+
+.stack .fieldControl {
+  width: 100%;
+}
+
+.inline .fieldControl {
+  width: auto;
+  flex-shrink: 0;
+}
+
+/* Ensure TextInput and Select within fieldControl take full width if they aren't already */
+.fieldControl>div,
+.fieldControl>input {
+  width: 100%;
+}
+
+/* Special handling for Switch - it should stay compact and not stretch */
+.fieldControl :global(.rt-SwitchRoot) {
+  width: auto;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+}

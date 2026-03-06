@@ -35,7 +35,7 @@
 
 .scrollArea::-webkit-scrollbar-thumb {
     /* Rest State: 20% opacity (Visible but subtle) */
-    background-color: rgba(var(--surface-fg-quaternary-rgb), 0.2);
+    background-color: color-mix(in srgb, var(--surface-fg-quaternary) 20%, transparent);
     border-radius: var(--radius-sm);
     border: 3px solid transparent;
     background-clip: content-box;
@@ -45,7 +45,7 @@
 
 /* Container Hover: 60% opacity (Clear interaction cue) */
 .scrollArea:hover::-webkit-scrollbar-thumb {
-    background-color: rgba(var(--surface-fg-quaternary-rgb), 0.6);
+    background-color: color-mix(in srgb, var(--surface-fg-quaternary) 60%, transparent);
 }
 
 /* Thumb Hover/Active: 100% opacity (Full control visibility) */
@@ -57,7 +57,7 @@
 /* Firefox: Always-visible thin scrollbar (browser limitation, no hover) */
 .scrollArea {
     scrollbar-width: thin;
-    scrollbar-color: rgba(var(--surface-fg-quaternary-rgb), 0.3) transparent;
+    scrollbar-color: color-mix(in srgb, var(--surface-fg-quaternary) 30%, transparent) transparent;
 }
 
 .table {
@@ -533,7 +533,7 @@
 
 @media (hover: hover) {
     .checkbox:hover {
-        border: 1.5px solid var(--control-border-secondary-hover);
+        border: 1px solid var(--control-border-secondary-hover);
         background: var(--control-bg-secondary-hover);
     }
 }
@@ -541,7 +541,7 @@
 /* Checked state for native checkbox */
 .checkbox:checked {
     background: var(--control-bg-theme);
-    border: 1.5px solid transparent;
+    border: 1px solid transparent;
 }
 
 @media (hover: hover) {

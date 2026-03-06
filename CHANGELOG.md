@@ -7,6 +7,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
+### Changed (2026-03-04) - Navigation and Dark Mode Refinement
+- **Top Nav Dark Chrome**:
+    - Dark mode top-nav background deepened to `--primitives-theme-975` for stronger brand contrast.
+    - Top-nav search field remains neutral dark (`grey-900` -> hover `grey-880`) for legibility.
+- **Left Nav Surface Alignment**:
+    - Dark mode left-nav container (`--nav-bg`) now maps to `--surface-bg-primary` to match adjacent panel surfaces.
+    - Light mode left-nav surfaces restored to primary white family for consistency.
+- **Dark Brand Group Rows (Left Nav)**:
+    - Group rows (`Quick Access`, `Workspace`, etc.) now use dark brand tokens:
+        - base/selected: `theme-950`
+        - hover/selected-hover: `theme-900`
+    - Open/closed group states normalized to avoid uneven row color shifts.
+- **Mode Toggle Stability**:
+    - Added explicit `--nav-toggle-*` semantics and migrated `ModeToggle` to these tokens.
+    - Prevents light/dark inversion artifacts in `Historical / Live` toggle elevation.
+- **Control Edge Softening (Dark Mode)**:
+    - Stepped down border intensity for secondary/selected controls:
+        - `control-border-secondary`: `grey-600`, hover/pressed `grey-500`
+        - `control-border-selected`: `theme-600`, hover `theme-500`, pressed `theme-400`
+    - Reduced checkbox border weight to 1px in table and form contexts.
+    - Reduced quick-filter/multi-select inset "bottom lip" shadows (`-2px` -> `-1px`).
+
 - **Panel Dimension Standardisation**:
     - Updated the default width for both the Tree Panel (left) and Side Panel (right) to **320px** for improved information density.
     - Standardized interactive resize constraints to a range of **260px** (min) and **450px** (max).

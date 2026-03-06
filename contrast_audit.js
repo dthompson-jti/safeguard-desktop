@@ -60,7 +60,7 @@ const themes = {
     'root': {}, // Light/Default
     'dark-a': {},
     'dark-b': {},
-    'dark-c': {}
+    'dark': {}
 };
 
 function parseCssFile(filePath, isPrimitives) {
@@ -73,7 +73,7 @@ function parseCssFile(filePath, isPrimitives) {
         // Check for theme blocks
         if (line.includes('[data-theme=\'dark-a\']')) currentTheme = 'dark-a';
         else if (line.includes('[data-theme=\'dark-b\']')) currentTheme = 'dark-b';
-        else if (line.includes('[data-theme=\'dark-c\']')) currentTheme = 'dark-c';
+        else if (line.includes('[data-theme=\'dark\']')) currentTheme = 'dark';
         else if (line.includes(':root')) currentTheme = 'root';
 
         // Very basic parsing for --variable: value;
@@ -264,3 +264,4 @@ Object.keys(themes).forEach(themeName => {
 });
 
 console.log(report.join('\n'));
+

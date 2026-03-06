@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { sidebarExpandedAtom, sidebarSearchQueryAtom } from '../../atoms';
+import { activePageAtom } from '../../../data/activePageAtom';
 import { SearchController } from './SearchController';
 import { LeftNavigationSection } from './LeftNavigationSection';
 import { LeftNavigationSubSection } from './LeftNavigationSubSection';
@@ -15,6 +16,7 @@ interface NavNode {
     label: string;
     icon?: React.ReactNode;
     href?: string;
+    action?: () => void;
     children?: NavNode[];
 }
 
@@ -24,6 +26,8 @@ const NAVIGATION_DATA: NavNode[] = [
         id: 'quick-access',
         label: 'Quick Access',
         children: [
+            { type: 'link', id: 'settings', label: 'System Properties' },
+            { type: 'link', id: 'settings-tabs', label: 'System Properties (Tabs)' },
             { type: 'link', id: 'action-items', label: 'Action Items' },
             { type: 'link', id: '22stcp00011', label: '22STCP00011' },
             { type: 'link', id: '22stcp00013', label: '22STCP00013' },
@@ -109,6 +113,7 @@ const NAVIGATION_DATA: NavNode[] = [
 export function SideBar() {
     const isExpanded = useAtomValue(sidebarExpandedAtom);
     const searchQuery = useAtomValue(sidebarSearchQueryAtom);
+    const [activePage, setActivePage] = useAtom(activePageAtom);
 
     const filteredData = useMemo(() => {
         if (!searchQuery) return NAVIGATION_DATA;
@@ -157,7 +162,13 @@ export function SideBar() {
                     </LeftNavigationSubSection>
                 );
             case 'link': {
-                const isSelected = node.label === 'Safeguard checks';
+                const isSettings = node.id === 'settings';
+                const isSafeguard = node.id === 'safeguard';
+                const isSelected = isSettings
+                    ? activePage === 'settings'
+                    : isSafeguard
+                        ? activePage === 'checks'
+                        : false;
                 return (
                     <LeftNavigationLinkItem
                         key={node.id}
@@ -165,7 +176,12 @@ export function SideBar() {
                         icon={node.icon}
                         href="#"
                         selected={isSelected}
-                        onClick={(e) => e.preventDefault()}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            if (node.id === 'settings') setActivePage('settings');
+                            else if (node.id === 'settings-tabs') setActivePage('settings-tabs');
+                            else if (isSafeguard) setActivePage('checks');
+                        }}
                         level={depth}
                     />
                 );

@@ -1,7 +1,7 @@
 .toggleContainer {
     display: flex;
     align-items: stretch;
-    background-color: var(--surface-bg-tertiary);
+    background-color: var(--nav-toggle-bg);
     border-radius: var(--radius-md);
     /* 8px */
     padding: var(--spacing-0p5);
@@ -9,7 +9,7 @@
     /* Match search bar margins/layout */
     height: 38px;
     box-sizing: border-box;
-    border: 1px solid var(--surface-border-tertiary);
+    border: 1px solid var(--nav-toggle-border);
     gap: var(--spacing-0p5);
 }
 
@@ -17,7 +17,7 @@
     flex: 1;
     background: none;
     border: none;
-    color: var(--surface-fg-tertiary);
+    color: var(--nav-toggle-fg);
     background-color: transparent;
     padding: 0;
     border-radius: var(--radius-sm);
@@ -44,9 +44,9 @@
 }
 
 .toggleButton.active {
-    background-color: var(--surface-bg-primary);
-    color: var(--surface-fg-primary);
-    box-shadow: var(--surface-shadow-sm);
+    background-color: var(--nav-toggle-pill-bg);
+    color: var(--nav-toggle-pill-fg);
+    box-shadow: var(--nav-toggle-pill-shadow);
 }
 
 /* Divider removed as per request */

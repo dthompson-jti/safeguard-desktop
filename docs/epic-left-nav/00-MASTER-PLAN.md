@@ -23,7 +23,7 @@ The following planning documents will be created to govern this epic:
 2.  **Semantic First**: We never hardcode hex values. We find the matching Semantic Token.
 3.  **State Completeness**: Every component must document: `Default`, `Hover`, `Active` (Pressed), `Selected`, `Focus`, and `Disabled` states.
 4.  **Accessibility First**: Keyboard navigation (Arrow keys, Enter/Space) and ARIA roles are defined *before* code is written.
-5.  **Dark Mode First**: All mapping decisions *must* account for `dark-a`, `dark-b`, and `dark-c` themes.
+5.  **Dark Mode First**: All mapping decisions *must* account for `dark-a`, `dark-b`, and `dark` themes.
 
 ## Risk Assessment & Mitigation
 *   **Risk**: Figma uses "local" or ad-hoc colors not in `semantics.css`.
@@ -37,3 +37,4 @@ The following planning documents will be created to govern this epic:
 1.  Review and Approve `01-STRATEGY-spec-extraction.md`.
 2.  Review and Approve `02-STRATEGY-token-mapping.md`.
 3.  Execute Phase 2 (Extraction) to populate `04-DATA-figma-audit.md`.
+

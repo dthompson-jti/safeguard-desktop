@@ -30,6 +30,7 @@ export const LeftNavigationSubSection: React.FC<LeftNavigationSubSectionProps> =
                 onClick={handleToggle}
                 aria-expanded={isOpen}
                 aria-controls={contentId}
+                data-open={isOpen}
             >
                 <svg
                     className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`}

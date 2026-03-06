@@ -283,7 +283,7 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
 ### Feature Flag Presets
 *   **Lesson:** For "Demo" or "Playground" modes, distinct "Unlock" and "Lock" actions are safer than individual toggles.
 *   **Pattern:**
-    *   **Unlock:** Applies a curated "Best View" preset (e.g., Dark C + Haptics + Glass Tint).
+    *   **Unlock:** Applies a curated "Best View" preset (e.g., Dark + Haptics + Glass Tint).
     *   **Lock:** Performs a **strict reset** to a known safe state (Light Mode, All Flags Off).
     *   **Implementation:** See `src/data/featureFlags.ts` -> `lock()` / `unlock()`.
 
@@ -568,3 +568,4 @@ For any non-trivial task (e.g., implementing a PRD), the agent must follow this 
     3.  **Hardware Acceleration:** Apply `will-change: width` to promote the resizable container to its own compositor layer.
     4.  **Sync Control (Framer Motion):** If using Framer Motion wrappers, set `duration: 0` during `isResizing=true` to eliminate the 300ms transition lag. Use `animate={{ width: isResizing ? 'var(--panel-width)' : panelWidth }}` to bind the width directly to the live CSS variable during drag.
 *   **Reference:** See `SPEC-ANIMATION.md` Section 3.D and `SPEC-CSS.md` Section 13.
+

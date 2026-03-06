@@ -55,8 +55,7 @@
 .verticalDivider {
     width: 1px;
     height: 20px;
-    background-color: var(--top-nav-fg);
-    opacity: 0.2;
+    background-color: var(--top-nav-divider);
 }
 
 .iconMd {

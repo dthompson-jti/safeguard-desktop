@@ -6,6 +6,7 @@ import { SideBar } from '../desktop/components/SideBar/SideBar';
 // import { ExtremeLeftNav } from './components/ExtremeLeftNav'; // Removed
 import { desktopEnhancedPanelWidthAtom, desktopEnhancedSelectionAtom } from './atoms';
 import { desktopFilterAtom } from '../desktop/atoms';
+import { activePageAtom } from '../data/activePageAtom';
 import { useLayoutRegistration } from '../data/useLayoutRegistration';
 import { headerHeightAtom } from '../data/layoutAtoms';
 
@@ -18,12 +19,15 @@ export const Layout: React.FC<LayoutProps> = ({ leftPanel, children }) => {
     const [width, setWidth] = useAtom(desktopEnhancedPanelWidthAtom);
     const selection = useAtomValue(desktopEnhancedSelectionAtom);
     const setFilter = useSetAtom(desktopFilterAtom);
+    const activePage = useAtomValue(activePageAtom);
     const [isResizing, setIsResizing] = useState(false);
     const widthRef = useRef(width);
     const topNavRef = useLayoutRegistration(headerHeightAtom);
 
     // Sync selection to filter
     useEffect(() => {
+        if (activePage !== 'checks') return; // Guard: skip filter sync on settings
+        
         if (selection.type === 'root') {
             setFilter(prev => ({ ...prev, group: 'all', unit: 'all' }));
         } else if (selection.type === 'group') {
@@ -35,7 +39,7 @@ export const Layout: React.FC<LayoutProps> = ({ leftPanel, children }) => {
                 unit: selection.id
             }));
         }
-    }, [selection, setFilter]);
+    }, [selection, setFilter, activePage]);
 
     const startResizing = useCallback((e: React.MouseEvent) => {
         setIsResizing(true);

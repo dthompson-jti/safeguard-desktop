@@ -32,7 +32,8 @@ export const useTheme = () => {
         if (theme === 'light') {
             root.removeAttribute('data-theme');
         } else {
-            root.setAttribute('data-theme', theme);
+            // Canonical dark selector across projects.
+            root.setAttribute('data-theme', 'dark');
         }
 
         // Persist choice
@@ -45,3 +46,5 @@ export const useTheme = () => {
 
     return { theme, setTheme };
 };
+
+

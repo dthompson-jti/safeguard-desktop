@@ -42,8 +42,7 @@
   fill: var(--primitives-grey-50);
 }
 
-[data-theme='dark-a'] .tooltip-secondary-text,
-[data-theme='dark-b'] .tooltip-secondary-text,
-[data-theme='dark-c'] .tooltip-secondary-text {
+[data-theme='dark'] .tooltip-secondary-text {
   color: var(--primitives-grey-500);
 }
+
